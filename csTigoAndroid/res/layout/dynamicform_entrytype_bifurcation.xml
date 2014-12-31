@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/dynamicformEntryTypeBifurcationTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:textAppearance="@style/textSize" />
+
+    <RadioGroup
+        android:id="@+id/dynamicformEntryTypeBifurcationRadioGroup"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dynamicformEntryTypeBifurcationTitle"
+        android:orientation="vertical" >
+
+        <RadioButton
+            android:id="@+id/dynamicformEntryTypeBifurcationItem1"
+            style="@style/servicesItemText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <RadioButton
+            android:id="@+id/dynamicformEntryTypeBifurcationItem2"
+            style="@style/servicesItemText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <RadioButton
+            android:id="@+id/dynamicformEntryTypeBifurcationItem3"
+            style="@style/servicesItemText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <RadioButton
+            android:id="@+id/dynamicformEntryTypeBifurcationItem4"
+            style="@style/servicesItemText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <RadioButton
+            android:id="@+id/dynamicformEntryTypeBifurcationItem5"
+            style="@style/servicesItemText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/dynamicformEntryTypeBifurcationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dynamicformEntryTypeBifurcationRadioGroup"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+</RelativeLayout>

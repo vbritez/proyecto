@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:csui="http://java.sun.com/jsf/composite/uicomponents" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/screenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.client.reportconfig.screenname']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="reportautomconf" value="#{i18n['web.client.reportconfig.screenname']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="crudForm">
+
+                    <div class="tablebox">
+                        <div class="head">
+                            #{i18n['web.client.reportconfig.screen.title.ListOf']}
+                            <h:outputText value="#{i18n['web.client.screen.admin.phoneUsers.title.OfClient']} #{reportAutomConfigBean.client.nameChr}" rendered="#{reportAutomConfigBean.client ne null}" />
+                        </div>
+                        <!-- SEARCH BOX -->
+                        <h:panelGroup id="searchBoxGroupPanel">
+                            <p:focus for="crudForm:listSearchOption" />
+                            <div class="headcontainer">
+                                <table class="tablesearch">
+                                    <tr>
+                                        <th>#{i18n['web.client.search.field.FindBy']}</th>
+                                        <td><h:selectOneMenu id="listSearchOption" value="#{reportAutomConfigBean.filterSelectedField}" onchange="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{reportAutomConfigBean.entity ne null}">
+                                                <f:selectItem itemLabel="(#{i18n['web.client.search.field.OptionSelect']})" itemValue="-1" />
+                                                <f:selectItems value="#{reportAutomConfigBean.filterFields}" />
+                                            </h:selectOneMenu></td>
+                                        <th>#{i18n['web.client.search.field.Criteria']}</th>
+                                        <td><h:inputText id="textSearchCriteria" value="#{reportAutomConfigBean.filterCriteria}" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{reportAutomConfigBean.entity ne null}" /></td>
+                                        <td><h:commandButton id="btnSearch" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Find']}" action="#{reportAutomConfigBean.applyFilter}" disabled="#{reportAutomConfigBean.entity ne null}">
+                                                <f:ajax execute=":crudForm:searchBoxGroupPanel" render=":crudForm:listTablePanelGroup :crudForm:btnClean" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton> <h:commandButton id="btnClean" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Clean']}" action="#{reportAutomConfigBean.cleanFilter}" disabled="#{reportAutomConfigBean.filterCriteria eq '' or reportAutomConfigBean.entity ne null }">
+                                                <f:ajax execute="@this" render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton></td>
+                                        <th>#{i18n['web.client.search.field.Show']}</th>
+                                        <td class="thin"><h:selectOneMenu id="listRowQuant" value="#{reportAutomConfigBean.rowQuantSelected}" disabled="#{reportAutomConfigBean.entity ne null }" valueChangeListener="#{reportAutomConfigBean.applyQuantity}">
+                                                <!--onchange="return showStdConfirmShowAllRegistries(this);"-->
+                                                <f:selectItems value="#{reportAutomConfigBean.rowQuantList}" />
+                                                <f:ajax event="change" execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:selectOneMenu></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <!-- SCRIPTS -->
+                            <script type="text/javascript" charset="UTF-8">
+																													if (document
+																															.getElementById('crudForm:listSearchOption').disabled == false) {
+																														searchFieldOnchange(
+																																'crudForm:listSearchOption',
+																																'crudForm:textSearchCriteria',
+																																'crudForm:btnSearch');
+																													}
+																													//
+
+																													
+
+																													function yesButton(
+																															callerObject) {
+																														return true;
+																													}
+
+																													function noButton(
+																															callerObject) {
+																														return false;
+																													}
+																												</script>
+                        </h:panelGroup>
+                        <h:panelGroup id="listTablePanelGroup">
+                            <!-- LIST TABLE **********************************************************************************************-->
+                            <div class="body">
+                                <h:dataTable id="crudListTable" value="#{reportAutomConfigBean.dataModel}" var="item" rendered="#{reportAutomConfigBean.dataModel.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <h:selectBooleanCheckbox id="chkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{reportAutomConfigBean.entity ne null }" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                        </f:facet>
+                                        <h:selectBooleanCheckbox id="chkBoxSelected" value="#{reportAutomConfigBean.selectedItems[item.reportConfigCod]}" disabled="#{reportAutomConfigBean.entity ne null }" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.reportconfig.screen.field.ReportConfigCod']}" action="#{reportAutomConfigBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.reportconfig.screen.field.ReportConfigCod']}" disabled="#{reportAutomConfigBean.entity ne null }">
+                                                    <f:setPropertyActionListener value="#{not reportAutomConfigBean.sortHelper.ascending}" target="#{reportAutomConfigBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="reportConfigCod" target="#{reportAutomConfigBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{reportAutomConfigBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{reportAutomConfigBean.sortHelper.field eq 'reportConfigCod'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.reportConfigCod}">
+                                            <f:convertNumber groupingUsed="true" integerOnly="true" />
+                                        </h:outputText>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.reportconfig.screen.field.Description']}" action="#{reportAutomConfigBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.reportconfig.screen.field.Description']}" disabled="#{reportAutomConfigBean.entity ne null }">
+                                                    <f:setPropertyActionListener value="#{not reportAutomConfigBean.sortHelper.ascending}" target="#{reportAutomConfigBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="descriptionChr" target="#{reportAutomConfigBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{reportAutomConfigBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{reportAutomConfigBean.sortHelper.field eq 'descriptionChr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{item.descriptionChr}" header="#{i18n['web.client.reportconfig.screen.field.Description']}" />
+                                    </h:column>
+                                    
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.reportconfig.screen.field.ConfigType']}" action="#{reportAutomConfigBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.reportconfig.screen.field.ConfigType']}" disabled="#{reportAutomConfigBean.entity ne null }">
+                                                    <f:setPropertyActionListener value="#{not reportAutomConfigBean.sortHelper.ascending}" target="#{reportAutomConfigBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="configTypeChr" target="#{reportAutomConfigBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{reportAutomConfigBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{reportAutomConfigBean.sortHelper.field eq 'configTypeChr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{item.configTypeChr}" header="#{i18n['web.client.reportconfig.screen.field.ConfigType']}" />
+                                    </h:column>
+
+                                </h:dataTable>
+                            </div>
+                            <!-- PAGINATION -->
+                            <div class="foot">
+                                <h:panelGroup rendered="#{reportAutomConfigBean.dataModel.rowCount gt 0}">
+                                    <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{reportAutomConfigBean.previousPage}" disabled="#{not reportAutomConfigBean.paginationHelper.hasPreviousPage or reportAutomConfigBean.entity ne null }">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                    &#160;|&#160;
+                                    <h:outputText value="#{reportAutomConfigBean.paginationHelper.pageFirstItem + 1}..#{reportAutomConfigBean.paginationHelper.pageLastItem + 1} / #{reportAutomConfigBean.paginationHelper.itemsCount}" />&#160;|&#160;
+                                    <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{reportAutomConfigBean.nextPage}" disabled="#{not reportAutomConfigBean.paginationHelper.hasNextPage or reportAutomConfigBean.entity ne null }">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{reportAutomConfigBean.dataModel.rowCount le 0}">
+                                    <div style="text-align: center; font-weight: bold;">
+                                        <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                    <!-- BUTTONS -->
+                    <h:panelGroup id="buttonPanelGroup">
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['web.admin.screen.button.New']}" styleClass="btn_std_small" action="#{reportAutomConfigBean.newEntity}">
+                                <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:editingPanelGroup :crudForm:buttonPanelGroup :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.admin.screen.button.Edit']}" styleClass="btn_std_small" action="#{reportAutomConfigBean.editEntityDetail}" rendered="#{reportAutomConfigBean.dataModel.rowCount gt 0}">
+                                <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:editingPanelGroup :crudForm:buttonPanelGroup :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.admin.screen.button.Delete']}" styleClass="btn_std_small" disabled="#{reportAutomConfigBean.entity ne null}" rendered="#{reportAutomConfigBean.dataModel.rowCount gt 0}" onclick="return showStdConfirmDeleteReportConfigMessage(this);" action="#{reportAutomConfigBean.deleteEditingDetail}">
+                                <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:searchBoxGroupPanel" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+
+                    <!--                     EDIT SECTION -->
+                    <h:panelGroup id="editingPanelGroup">
+                        <h:panelGroup rendered="#{reportAutomConfigBean.entity ne null}">
+                            <p:focus for="crudForm:chkReportList" />
+                            <div class="tablebox">
+                                <div class="body">
+                                    <div class="head">
+                                        #{i18n['web.client.reportconfig.screen.title.ReportConfigDetail']} '
+                                        <h:outputText value="  #{reportAutomConfigBean.entity.descriptionChr}" />
+                                        '
+                                    </div>
+                                    <table width="100%">
+                                        <tr>
+                                            <th>#{i18n['web.client.reportconfig.screen.field.Reportlist']}</th>
+                                            <td colspan="5">
+                                                <table>
+                                                    <tr>
+                                                        <td><h:panelGroup>
+                                                                <h:selectBooleanCheckbox id="chkReportList" value="#{reportAutomConfigBean.validatedAllReports}">
+                                                                    <f:ajax event="change" listener="#{reportAutomConfigBean.selectAllReports}" execute=":crudForm:chkReportList" render=":crudForm:listReports" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                                </h:selectBooleanCheckbox>
+
+                                                                <h:outputLabel for="chkReportList" value="(#{i18n['web.client.selectonemenu.All']})" />
+                                                            </h:panelGroup></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><h:selectManyListbox id="listReports" value="#{reportAutomConfigBean.selectedScreenclientList}" converter="screenclientConverter" size="5" style="width: auto;" disabled="#{reportAutomConfigBean.validatedAllReports}">
+                                                                <f:selectItems value="#{reportAutomConfigBean.screenclientList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{i18n[uLItem.descriptionChr]}" />
+                                                            </h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+
+                                         <tr>
+                                            <th>#{i18n['web.client.reportconfig.screen.field.ReportType']}</th>
+                                            <td colspan="5"><h:selectOneMenu id="reportOption" value="#{reportAutomConfigBean.entity.reportTypeChr}" tabindex="20">
+                                                    <f:selectItem itemLabel="(#{i18n['web.client.reportconfig.label.SelectOneOption']})" itemValue="#{null}" />
+                                                    <f:selectItem itemLabel="#{i18n['web.client.reportconfig.screen.option.PDF']}" itemValue="PDF" />
+                                                    <f:selectItem itemLabel="#{i18n['web.client.reportconfig.screen.option.XLS']}" itemValue="XLS" />
+                                                </h:selectOneMenu></td>
+                                        </tr>
+                                        
+
+                                        <tr>
+                                            <th>#{i18n['web.client.reportconfig.screen.field.ConfigType']}</th>
+                                            <td colspan="5"><h:selectOneMenu id="configOption" value="#{reportAutomConfigBean.entity.configTypeChr}" tabindex="40">
+                                                    <f:selectItem itemLabel="(#{i18n['web.client.reportconfig.label.SelectOneOption']})" itemValue="#{null}" />
+                                                    <f:selectItem itemLabel="#{i18n['web.client.reportconfig.screen.option.Daily']}" itemValue="DAILY" />
+                                                    <f:selectItem itemLabel="#{i18n['web.client.reportconfig.screen.option.Weekly']}" itemValue="WEEKLY" />
+                                                    <f:selectItem itemLabel="#{i18n['web.client.reportconfig.screen.option.Monthly']}" itemValue="MONTHLY" />
+                                                    <f:ajax event="valueChange" execute=":crudForm:editingPanelGroup" render=":crudForm:editingPanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:selectOneMenu></td>
+                                        </tr>
+
+
+                                        <h:panelGroup id="dailyPanelGroup" rendered="#{reportAutomConfigBean.entity.configTypeChr == 'DAILY'}">
+                                            <tr>
+                                                <th></th>
+                                                <td><h:outputText value="#{i18n['web.client.reportconfig.screen.field.Time']} " /> <p:calendar value="#{reportAutomConfigBean.entity.timeDat}" pattern="HH:mm" timeOnly="true" locale="#{iBean.locale}" /></td>
+                                            </tr>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup id="weeklyPanelGroup" rendered="#{reportAutomConfigBean.entity.configTypeChr == 'WEEKLY'}">
+                                            <tr>
+                                                <th></th>
+                                                <td><h:outputText value="#{i18n['web.client.reportconfig.screen.field.DayOfWeek']} " /><h:selectOneMenu id="dayofweekOption" value="#{reportAutomConfigBean.entity.dayNum}" tabindex="20">
+                                                        <f:selectItem itemLabel="(#{i18n['web.client.reportconfig.label.SelectOneOption']})" itemValue="#{null}" />
+                                                        <f:selectItem itemLabel="#{i18n['web.client.guardroundconf.screen.field.Monday']}" itemValue="2" />
+                                                        <f:selectItem itemLabel="#{i18n['web.client.guardroundconf.screen.field.Tuesday']}" itemValue="3" />
+                                                        <f:selectItem itemLabel="#{i18n['web.client.guardroundconf.screen.field.Wednesday']}" itemValue="4" />
+                                                        <f:selectItem itemLabel="#{i18n['web.client.guardroundconf.screen.field.Thursday']}" itemValue="5" />
+                                                        <f:selectItem itemLabel="#{i18n['web.client.guardroundconf.screen.field.Friday']}" itemValue="6" />
+                                                        <f:selectItem itemLabel="#{i18n['web.client.guardroundconf.screen.field.Saturday']}" itemValue="7" />
+                                                        <f:selectItem itemLabel="#{i18n['web.client.guardroundconf.screen.field.Sunday']}" itemValue="1" />
+                                                    </h:selectOneMenu></td>                                                
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <td><h:outputText value="#{i18n['web.client.reportconfig.screen.field.Time']} " /> <p:calendar value="#{reportAutomConfigBean.entity.timeDat}" pattern="HH:mm" timeOnly="true" locale="#{iBean.locale}" /></td>
+                                            </tr>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup id="monthlyPanelGroup" rendered="#{reportAutomConfigBean.entity.configTypeChr == 'MONTHLY'}">
+                                            <tr>
+                                                <th></th>
+                                                <td><h:outputText value="#{i18n['web.client.reportconfig.screen.field.DayOfMonth']} " /><h:selectOneMenu id="dayOfMonthOption" value="#{reportAutomConfigBean.entity.dayNum}">
+                                                        <f:selectItem itemLabel="(#{i18n['web.client.reportconfig.label.SelectOneOption']})" itemValue="#{null}" />
+                                                        <f:selectItems value="#{reportAutomConfigBean.dayOfMonthList}" var="sLItem" itemValue="#{sLItem}" itemLabel="#{sLItem}" />
+                                                    </h:selectOneMenu></td>                                                
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <td><h:outputText value="#{i18n['web.client.reportconfig.screen.field.Time']} " /> <p:calendar value="#{reportAutomConfigBean.entity.timeDat}" pattern="HH:mm" timeOnly="true" locale="#{iBean.locale}" /></td>
+                                            </tr>
+                                        </h:panelGroup>
+                                       
+                                        <h:panelGroup id="mailsPanelGroup">
+                                            <tr>
+                                                <th>#{i18n['web.client.reportconfig.label.Mails']}</th>
+                                                <td colspan="5"><h:inputText id="mailEdit" value="#{reportAutomConfigBean.newMail}" maxlength="100" size="40" tabindex="30" /> <h:commandButton styleClass="btn_std_small" value="#{i18n['web.client.reportconfig.button.AddToList']}" action="#{reportAutomConfigBean.addToList}">
+                                                        <f:ajax execute=":crudForm:editingPanelGroup" render=":crudForm:editingPanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandButton></td>
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <td colspan="5"><h:selectOneListbox value="#{reportAutomConfigBean.selectedMail}">
+                                                        <f:selectItems value="#{reportAutomConfigBean.mailList}" />
+                                                    </h:selectOneListbox> <h:commandButton styleClass="btn_std_small" value="#{i18n['web.client.reportconfig.button.RemoveFromList']}" action="#{reportAutomConfigBean.removeFromList}">
+                                                        <f:ajax execute=":crudForm:editingPanelGroup" render=":crudForm:editingPanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandButton></td>
+                                            </tr>
+                                        </h:panelGroup>
+
+                                        <tr>
+                                            <th>#{i18n['web.client.reportconfig.label.Clasifications']}</th>
+                                            <td><table>
+                                                    <tr>
+                                                        <td><h:panelGroup>
+                                                                <h:selectBooleanCheckbox id="chkClassificationList" value="#{reportAutomConfigBean.validatedAllClassifications}">
+                                                                    <f:ajax event="change" listener="#{reportAutomConfigBean.selectAllClassifications}" execute=":crudForm:chkClassificationList" render=":crudForm:listClassifications" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                                </h:selectBooleanCheckbox>
+
+                                                                <h:outputLabel for="chkClassificationList" value="(#{i18n['web.client.selectonemenu.All']})" />
+                                                            </h:panelGroup></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><h:selectManyListbox id="listClassifications" value="#{reportAutomConfigBean.selectedClassificationList}" converter="classificationConverter" size="5" style="width: auto;" disabled="#{reportAutomConfigBean.validatedAllClassifications}">
+                                                                <f:selectItems value="#{reportAutomConfigBean.classificationList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.descriptionChr}" />
+                                                            </h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+
+                                                    </tr>
+                                                </table></td>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="buttons_bottom">
+                                <h:commandButton value="#{i18n['web.admin.screen.button.Save']}" styleClass="btn_std_small" action="#{reportAutomConfigBean.saveEditing}" onclick="return showProcessExecutingMessage(this);">
+                                    <f:ajax execute=":crudForm:editingPanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                                <h:commandButton value="#{i18n['web.admin.screen.button.Delete']}" styleClass="btn_std_small" action="#{reportAutomConfigBean.deleteEditingDetail}" disabled="#{reportAutomConfigBean.entity.reportConfigCod eq null}" onclick="return showStdConfirmDeleteReportConfigMessage(this);">
+                                    <f:ajax execute=":crudForm:editingPanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                                <h:commandButton value="#{i18n['web.admin.screen.button.Cancel']}" styleClass="btn_std_small" action="#{reportAutomConfigBean.cancelEditing}">
+                                    <f:ajax execute=":crudForm:editingPanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                            </div>
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

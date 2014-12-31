@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+    
+    <TextView
+            android:id="@+id/pdvLoggedTitle"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="3dp"
+            android:gravity="center"
+            android:text="@string/tigomoney_pdv_logged"
+            android:textStyle="bold" />
+    
+    <Button
+        android:id="@+id/tigomoneyLogoutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/pdvLoggedTitle"
+        android:layout_below="@+id/pdvLoggedTitle"
+        android:layout_marginTop="44dp"
+        android:background="@drawable/button_selector"
+        android:text="@string/tigomoney_logout" />
+
+</RelativeLayout>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/screenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.client.report.CurrierReport']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+        &#160;/&#160;<h:commandLink action="repvisitfull" value="#{i18n['web.client.report.CurrierReport']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <f:event type="preRenderComponent" listener="#{reportVisitFullBean.destroyScope}" id="destroyScope" />
+        <div id="page_col">
+            <div id="cent_full">
+
+                <h:form id="repVisitFullForm">
+                    <p:focus for="repVisitFullForm:textDateFrom" />
+                    <div class="tablebox">
+                        <div class="head">#{i18n['web.client.reportvisit.screen.title.reportParameters']}</div>
+                        <!-- PARAMETERS BOX -->
+                        <h:panelGroup id="tablePanelGroup">
+                            <div class="body">
+                                <table class="tablesearch">
+                                    <tr>
+                                        <th>#{i18n['web.client.search.field.FromDate']}</th>
+                                        <td><p:calendar id="textDateFrom" locale="#{iBean.locale}" value="#{reportVisitFullBean.dateFrom}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.search.field.ToDate']}</th>
+                                        <td><p:calendar id="textDateTo" locale="#{iBean.locale}" value="#{reportVisitFullBean.dateTo}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.search.field.User']}</th>
+                                        <!--	 <td>
+                                                <h:selectOneMenu id="listUserphone" value="#{reportVisitFullBean.selectedUserphone}" converter="userphoneConverter">
+                                                    <f:selectItem itemValue="#{null}" itemLabel="(#{i18n['web.client.selectonemenu.All']})" />
+                                                    <f:selectItems value="#{reportVisitFullBean.userphoneList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.nameChr}" />
+                                                </h:selectOneMenu>
+                                            </td> -->
+
+                                        <td><h:selectManyListbox id="listUserphone" value="#{reportVisitFullBean.selectedUserphoneList}" converter="userphoneConverter" size="5" style="width: auto;" disabled="#{reportVisitFullBean.validatedAllUsers}">
+                                                <f:selectItems value="#{reportVisitFullBean.userphoneList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{dLItem.nameChr}" />
+                                            </h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --> &nbsp;&nbsp; <h:selectBooleanCheckbox id="chkUserphoneList" value="#{reportVisitFullBean.validatedAllUsers}">
+                                                <f:ajax event="change" listener="#{reportVisitFullBean.selectAllUserphones}" execute=":repVisitFullForm:chkUserphoneList" render=":repVisitFullForm:listUserphone" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:selectBooleanCheckbox> <h:outputLabel for="chkUserphoneList" value="(#{i18n['web.client.selectonemenu.All']})" /></td>
+
+
+
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.table.tip.OrderBy']}</th>
+                                        <td><h:selectOneMenu id="listOrderby" value="#{reportVisitFullBean.selectedOrderby}">
+                                                <f:selectItems value="#{reportVisitFullBean.orderByList}" />
+                                            </h:selectOneMenu></td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>#{i18n['web.client.label.ChartReportOption']}</th>
+                                        <td><h:selectOneRadio id="graphicReportOption" value="#{reportVisitFullBean.chartReportOption}" layout="pageDirection" style="width: auto; border: none;">
+                                                <f:selectItem itemValue="userphone" itemLabel="#{i18n['visit.chart.option.Userphone']}" />
+                                                <f:selectItem itemValue="motive" itemLabel="#{i18n['visit.chart.option.Motive']}" />
+                                                <f:ajax event="valueChange" execute=":repVisitFullForm:tablePanelGroup" render=":repVisitFullForm:tablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:selectOneRadio></td>
+                                    </tr>
+                                    <tr>
+                                        <th><h:outputText value="#{i18n['visit.chart.label.SelectMotives']}" rendered="#{reportVisitFullBean.chartReportOption eq 'motive'}" /></th>
+                                        <td><p:pickList id="pickList" value="#{reportVisitFullBean.categories}" var="motive" itemLabel="#{motive}" itemValue="#{motive}" style="width: auto; border: none;" rendered="#{reportVisitFullBean.chartReportOption eq 'motive'}" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.label.ChartType']}</th>
+                                        <td><h:selectOneRadio id="graphicReportType" value="#{reportVisitFullBean.chartType}" layout="pageDirection" style="width: auto; border: none;">
+                                                <f:selectItem itemValue="bar" itemLabel="#{i18n['web.client.option.BarChart']}" />
+                                                <f:selectItem itemValue="pie" itemLabel="#{i18n['web.client.option.PieChart']}" />
+                                            </h:selectOneRadio></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                    <div class="buttons_bottom">
+                        <h:commandButton id="btnGenerateChart" value="#{i18n['web.client.report.title.ChartReport']}" action="#{reportVisitFullBean.validateParametersChart}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="chart" target="#{reportVisitFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGeneratePDF" value="#{i18n['web.client.report.title.PDFReport']}" action="#{reportVisitFullBean.validateParameters}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="pdf" target="#{reportVisitFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGenerateXLS" value="#{i18n['web.client.report.title.XLSReport']}" action="#{reportVisitFullBean.validateParameters}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="xls" target="#{reportVisitFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGenerate" action="#{reportVisitFullBean.generateReport}" style="display: none;" rendered="#{reportVisitFullBean.parametersValidated}" />
+                        <h:commandButton id="btnGenerateChartReport" action="#{reportVisitFullBean.generateReportChart}" style="display: none;" rendered="#{reportVisitFullBean.parametersValidatedChart}" />
+                    </div>
+                    <!-- SCRIPTS -->
+                    <h:panelGroup rendered="#{reportVisitFullBean.parametersValidated}">
+                        <script type="text/javascript" charset="UTF-8">
+																									//         
+																									function autoGenerateReport() {
+																										document
+																												.getElementById('repVisitFullForm').target = '_blank';
+																										document
+																												.getElementById(
+																														'repVisitFullForm:btnGenerate')
+																												.click();
+																										document
+																												.getElementById('repVisitFullForm').target = '';
+																									}
+
+																									$(
+																											document)
+																											.ready(
+																													function() {
+																														setTimeout(
+																																"autoGenerateReport()",
+																																500);
+																													});
+																									//
+																								</script>
+                    </h:panelGroup>
+
+                    <h:panelGroup rendered="#{reportVisitFullBean.parametersValidatedChart}">
+                        <script type="text/javascript" charset="UTF-8">
+																									//         
+																									function autoGenerateReportChart() {
+																										document
+																												.getElementById('repVisitFullForm').target = '_blank';
+																										document
+																												.getElementById(
+																														'repVisitFullForm:btnGenerateChartReport')
+																												.click();
+																										document
+																												.getElementById('repVisitFullForm').target = '';
+																									}
+																									$(
+																											document)
+																											.ready(
+																													function() {
+																														setTimeout(
+																																"autoGenerateReportChart()",
+																																500);
+																													});
+
+																									//
+																								</script>
+                    </h:panelGroup>
+                    <!-- <script type="text/javascript" charset="UTF-8">
+                            //<![CDATA[
+                            function handleTransfer(e) {
+                                //item = e.item
+                                //fromList = e.from
+                                //toList = e.toList
+                                //type = e.type (type of transfer; command, dblclick or dragdrop)
+                                var count = e.toList.count();
+                            }                            
+                            //]]>
+                   </script> -->
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

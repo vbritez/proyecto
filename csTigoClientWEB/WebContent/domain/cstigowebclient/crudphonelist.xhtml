@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" 
+xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" 
+xmlns:csui="http://java.sun.com/jsf/composite/uicomponents" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/screenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.servicename.configuration.PhoneList']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+        &#160;/&#160;
+        <h:commandLink action="crudphonelist" value="#{i18n['web.servicename.configuration.PhoneList']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="crudForm">
+                    <div class="tablebox">
+                        <div class="head">#{i18n['web.client.screen.phoneList.ListOf']}</div>
+                        <!-- SEARCH BOX -->
+                        <h:panelGroup id="searchBoxGroupPanel">
+                            <p:focus for="crudForm:listSearchOption" />
+                            <div class="headcontainer">
+                                <table class="tablesearch">
+                                    <tr>
+                                        <th>#{i18n['web.client.search.field.FindBy']}</th>
+                                        <td>
+                                            <h:selectOneMenu id="listSearchOption" value="#{crudPhoneListBean.filterSelectedField}" onchange="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{crudPhoneListBean.entity ne null}">
+                                                <f:selectItem itemLabel="(#{i18n['web.client.search.field.OptionSelect']})" itemValue="-1" />
+                                                <f:selectItems value="#{crudPhoneListBean.filterFields}" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                        <th>#{i18n['web.client.search.field.Criteria']}</th>
+                                        <td>
+                                            <h:inputText id="textSearchCriteria" value="#{crudPhoneListBean.filterCriteria}" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{crudPhoneListBean.entity ne null}" />
+                                        </td>
+                                        <td>
+                                            <h:commandButton id="btnSearch" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Find']}" action="#{crudPhoneListBean.applyFilter}" disabled="#{crudPhoneListBean.entity ne null}">
+                                                <f:ajax execute=":crudForm:searchBoxGroupPanel" render=":crudForm:listTablePanelGroup :crudForm:btnClean" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton>
+                                            <h:commandButton id="btnClean" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Clean']}" action="#{crudPhoneListBean.cleanFilter}" disabled="#{crudPhoneListBean.filterCriteria eq '' or crudPhoneListBean.entity ne null}">
+                                                <f:ajax execute="@this" render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton>
+                                        </td>
+                                        <th>#{i18n['web.client.search.field.Show']}</th>
+                                        <td class="thin">
+                                            <h:selectOneMenu id="listRowQuant" value="#{crudPhoneListBean.rowQuantSelected}" disabled="#{crudPhoneListBean.entity ne null}" valueChangeListener="#{crudPhoneListBean.applyQuantity}">
+                                                <!--onchange="return showStdConfirmShowAllRegistries(this);"-->
+                                                <f:selectItems value="#{crudPhoneListBean.rowQuantList}" />
+                                                <f:ajax event="change" execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <!-- SCRIPTS -->
+                            <script type="text/javascript" charset="UTF-8">
+								if (document.getElementById('crudForm:listSearchOption').disabled == false) {
+									searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');
+								}
+							</script>
+                        </h:panelGroup>
+                        <h:panelGroup id="listTablePanelGroup">
+                            <!-- LIST TABLE -->
+                            <div class="body">
+                                <h:dataTable id="crudListTable" value="#{crudPhoneListBean.dataModel}" var="item" rendered="#{crudPhoneListBean.dataModel.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <h:selectBooleanCheckbox id="chkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{crudPhoneListBean.entity ne null}" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                        </f:facet>
+                                        <h:selectBooleanCheckbox id="chkBoxSelected" value="#{crudPhoneListBean.selectedItems[item.phoneListCod]}" disabled="#{crudPhoneListBean.entity ne null}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.phoneList.PhoneListCode']}" action="#{crudPhoneListBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.phoneList.PhoneListCode']}" disabled="#{crudPhoneListBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not crudPhoneListBean.sortHelper.ascending}" target="#{crudPhoneListBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="phoneListCod" target="#{crudPhoneListBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudPhoneListBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudPhoneListBean.sortHelper.field eq 'phoneListCod'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.phoneListCod}">
+                                            <f:convertNumber groupingUsed="true" integerOnly="true" />
+                                        </h:outputText>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.phoneList.Description']}" action="#{crudPhoneListBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.phoneList.Description']}" disabled="#{crudPhoneListBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not crudPhoneListBean.sortHelper.ascending}" target="#{crudPhoneListBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="descriptionChr" target="#{crudPhoneListBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudPhoneListBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudPhoneListBean.sortHelper.field eq 'descriptionChr'}" />
+                                            </span>
+                                        </f:facet>
+                                         <csui:columnWidthChar value="#{item.descriptionChr}" header="#{i18n['web.client.screen.phoneList.Description']}"/>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.phoneList.Type']}" action="#{crudPhoneListBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.phoneList.Type']}" disabled="#{crudPhoneListBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not crudPhoneListBean.sortHelper.ascending}" target="#{crudPhoneListBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="typeChr" target="#{crudPhoneListBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudPhoneListBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudPhoneListBean.sortHelper.field eq 'typeChr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{item.type}" header="#{i18n['web.client.screen.phoneList.Type']}"/>
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+                            <!-- PAGINATION -->
+                            <div class="foot">
+                                <h:panelGroup rendered="#{crudPhoneListBean.dataModel.rowCount gt 0}">
+                                    <h:commandLink value="&#9668;#{i18n['web.admin.table.row.Previous']}" action="#{crudPhoneListBean.previousPage}" disabled="#{not crudPhoneListBean.paginationHelper.hasPreviousPage or crudPhoneListBean.entity ne null}">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                    &#160;|&#160;
+                                    <h:outputText value="#{crudPhoneListBean.paginationHelper.pageFirstItem + 1}..#{crudPhoneListBean.paginationHelper.pageLastItem + 1} / #{crudPhoneListBean.paginationHelper.itemsCount}" />
+                                    &#160;|&#160;
+                                    <h:commandLink value="#{i18n['web.admin.table.row.Next']}&#9658;" action="#{crudPhoneListBean.nextPage}" disabled="#{not crudPhoneListBean.paginationHelper.hasNextPage or crudPhoneListBean.entity ne null}">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{crudPhoneListBean.dataModel.rowCount le 0}">
+                                    <div style="text-align: center; font-weight: bold;">
+                                        <h:outputText value="#{i18n['web.admin.table.row.NoData']}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                    <!-- BUTTONS -->
+                    <div class="buttons_bottom">
+                        <h:commandButton value="#{i18n['web.client.metadata.screen.button.New']}" styleClass="btn_std_small" action="#{crudPhoneListBean.newEntity}" disabled="#{crudPhoneListBean.entity ne null}">
+                            <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton value="#{i18n['web.client.metadata.screen.button.Edit']}" styleClass="btn_std_small" action="#{crudPhoneListBean.editEntity}" disabled="#{crudPhoneListBean.entity ne null}">
+                            <f:ajax execute=":crudForm:listTablePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton value="#{i18n['web.client.metadata.screen.button.Delete']}" styleClass="btn_std_small" action="#{crudPhoneListBean.deleteEntities}" disabled="#{crudPhoneListBean.entity ne null}" onclick="return showStdSonfirmDeleteRegistryCollection(this);">
+                            <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                    </div>
+                    <!-- EDITING SECTION -->
+                    <h:panelGroup id="editingPanelGroup" rendered="#{crudPhoneListBean.entity ne null}">
+                        <p:focus for="crudForm:textDescEdit" />
+                        <div class="tablebox">
+                            <div class="head">#{i18n['web.client.screen.phoneList.DetailsOf']}</div>
+                            <div class="body">
+                                <table width="100%">
+                                    <tr>
+                                        <th>#{i18n['web.client.screen.phoneList.Description']}</th>
+                                        <td>
+                                            <h:inputText id="textDescEdit" value="#{crudPhoneListBean.entity.descriptionChr}" maxlength="200" size="40" disabled="#{crudPhoneListBean.newPhone or crudPhoneListBean.massPhone}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.screen.phoneList.Type']}</th>
+                                        <td>
+                                            <h:selectOneRadio id="type" value="#{crudPhoneListBean.entity.typeChr}" layout="pageDirection" disabled="#{crudPhoneListBean.newPhone or crudPhoneListBean.massPhone}">  
+            									<f:selectItem itemLabel="White List" itemValue="W" />  
+            									<f:selectItem itemLabel="Black List" itemValue="B" />  
+        									</h:selectOneRadio>  
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.screen.phoneList.Phone']}</th>
+                                        <td>
+                                            <p:pickList id="phones" value="#{crudPhoneListBean.listPhones}" iconOnly="true" var="phone" itemValue="#{phone}" itemLabel="#{phone.cellphoneNum} - #{phone.nameChr}" converter="phoneConverter" disabled="#{crudPhoneListBean.newPhone or crudPhoneListBean.massPhone}">
+												
+												<f:facet name="sourceCaption">#{i18n['web.client.screen.phoneList.phoneNotAssociated']}</f:facet>  
+        										<f:facet name="targetCaption">#{i18n['web.client.screen.phoneList.phoneAssociated']}</f:facet>
+        									</p:pickList> 
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="buttons_bottom">
+                        	<h:commandButton value="#{i18n['web.client.screen.button.AdminPhones']}" styleClass="btn_std_large" action="#{crudPhoneListBean.addPhone}" rendered="#{crudPhoneListBean.entity ne null}" disabled="#{crudPhoneListBean.newPhone or crudPhoneListBean.massPhone}">
+                                <f:ajax execute=":crudForm:editingPanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        
+                            <h:commandButton value="#{i18n['web.client.screen.button.MassLoad']}" styleClass="btn_std_large" action="#{crudPhoneListBean.massLoad}" rendered="#{crudPhoneListBean.entity ne null}" disabled="#{crudPhoneListBean.newPhone or crudPhoneListBean.massPhone}">
+                                <f:ajax execute=":crudForm:editingPanelGroup" render="@form"  onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        
+                        	 <h:commandButton value="#{i18n['web.client.screen.button.Save']}" styleClass="btn_std_small" action="#{crudPhoneListBean.saveEditing}" rendered="#{crudPhoneListBean.entity ne null}" disabled="#{crudPhoneListBean.newPhone or crudPhoneListBean.massPhone}">
+                                <f:ajax execute=":crudForm:editingPanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                          
+                            <h:commandButton value="#{i18n['web.client.screen.button.Cancel']}" styleClass="btn_std_small" action="#{crudPhoneListBean.cancelEditing}" rendered="#{crudPhoneListBean.entity ne null}" disabled="#{crudPhoneListBean.newPhone or crudPhoneListBean.massPhone}">
+                                <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+                    
+                     <!-- EDITING PHONE SECTION -->
+                     <h:panelGroup id="editingPhonePanelGroup" rendered="#{crudPhoneListBean.newPhone}"> 
+                     <div class="tablebox">
+                     <!-- tabla -->
+                     <table width="100%">
+                    	<tr>
+                            <td style="vertical-align: top;width: 57%;"><h:panelGroup>
+                                <div class="body">
+                                    <h:dataTable id="detailListTable" value="#{crudPhoneListBean.dataModelDetail}" var="itemDetail" rendered="#{crudPhoneListBean.dataModelDetail.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                        <f:facet name="header">#{i18n['list.client.phone']}</f:facet> 
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <h:selectBooleanCheckbox id="chkBoxSelectedDetailAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{crudPhoneListBean.editing}" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                            </f:facet>
+                                            <h:selectBooleanCheckbox id="chkBoxSelectedDetail" value="#{crudPhoneListBean.selectedItemsDetail[itemDetail.phoneCod]}" disabled="#{crudPhoneListBean.editing}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:outputText value="#{i18n['entity.phone.cellphoneNum']}" />
+                                                </span>
+                                            </f:facet>
+                                            <h:outputText value="#{itemDetail.cellphoneNum}" converter="cellphoneConverter"/>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:outputText value="#{i18n['entity.phone.name']}" />
+                                                </span>
+                                            </f:facet>
+                                            <csui:columnWidthChar value="#{itemDetail.nameChr}" header="#{i18n['entity.phone.cellphoneNum']}"/>
+                                                
+                                        </h:column>
+                                    </h:dataTable>
+                                </div>
+                                <!-- PAGINATION -->
+                                <div class="foot">
+                                    <h:panelGroup rendered="#{crudPhoneListBean.dataModelDetail.rowCount gt 0}">
+                                        <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{crudPhoneListBean.previousPageDetail}" disabled="#{not crudPhoneListBean.paginationHelperDetail.hasPreviousPage or crudPhoneListBean.editing }">
+                                            <f:ajax execute="@this" render=":crudForm:editingPhonePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandLink>
+                                    &#160;|&#160;
+                                    <h:outputText value="#{crudPhoneListBean.paginationHelperDetail.pageFirstItem + 1}..#{crudPhoneListBean.paginationHelperDetail.pageLastItem + 1} / #{crudPhoneListBean.paginationHelperDetail.itemsCount}" />&#160;|&#160;
+                                    <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{crudPhoneListBean.nextPageDetail}" disabled="#{not crudPhoneListBean.paginationHelperDetail.hasNextPage or crudPhoneListBean.editing }">
+                                            <f:ajax execute="@this" render=":crudForm:editingPhonePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors"  />
+                                        </h:commandLink>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{crudPhoneListBean.dataModelDetail.rowCount le 0}">
+                                        <div style="text-align: center; font-weight: bold;">
+                                            <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                        </div>
+                                    </h:panelGroup>
+                                </div>
+                                
+                          		<div class="buttons_bottom">
+                          			<h:commandButton value="#{i18n['web.client.screen.button.Edit']}" styleClass="btn_std_small" action="#{crudPhoneListBean.editEntityDetail}" disabled="#{crudPhoneListBean.editing}" rendered="#{crudPhoneListBean.dataModelDetail.rowCount gt 0}" >
+                                 		<f:ajax execute=":crudForm:editingPhonePanelGroup" render=":crudForm:editingPhonePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                             		</h:commandButton>
+                             		
+                             		<h:commandButton value="#{i18n['web.client.screen.button.Delete']}" styleClass="btn_std_small" disabled="#{crudPhoneListBean.editing}"  onclick="return showStdSonfirmDeleteRegistryCollection(this);" action="#{crudPhoneListBean.deleteEditingDetail}" rendered="#{crudPhoneListBean.dataModelDetail.rowCount gt 0}" >
+                                        <f:ajax execute=":crudForm:editingPhonePanelGroup" render=":crudForm:editingPhonePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandButton>
+                             	</div>
+                            </h:panelGroup></td>
+                            
+                            <td style="float: right;vertical-align: top;">
+                            <h:panelGroup id="editingSection">
+                        	<!-- <p:focus for="crudForm:textPhoneEdit" /> -->
+                            	<div class="tablebox">
+                                	<div class="body">
+                                    <table width="100%">
+                                        <tr>
+                                            <th>#{i18n['web.client.screen.phone.PhoneNumber']}</th>
+                                            <td>
+                                             	<csui:cellphoneInputText id="textPhoneEdit" value="#{crudPhoneListBean.phone.cellphoneNum}"  tabindex="1" maxlength="200" size="40" /> 
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>#{i18n['web.client.screen.phone.Description']}</th>
+                                            <td>
+                                                 <h:inputText id="textPhoneDescEdit" value="#{crudPhoneListBean.phone.nameChr}" tabindex="2" maxlength="200" size="40" /> 
+                                            </td>
+                                        </tr>
+                                        </table>
+                                	</div>
+                                 </div>
+                                 <div class="buttons_bottom">
+                                     <h:commandButton value="#{i18n['web.client.screen.button.Save']}" styleClass="btn_std_small" action="#{crudPhoneListBean.savePhone}">
+                                    	<f:ajax execute=":crudForm:editingPhonePanelGroup" render=":crudForm:editingPhonePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                	</h:commandButton>
+                                                                 	
+                                     <h:commandButton value="#{i18n['web.client.screen.button.Cancel']}" styleClass="btn_std_small" action="#{crudPhoneListBean.cancelPhone}">
+                                    	<f:ajax execute="@this" render=":crudForm:editingPhonePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                	</h:commandButton>                               
+                                	
+                            	</div>
+                          	</h:panelGroup></td>
+                       </tr>
+                       <tr>
+                       	<td></td>
+                       		<td style="float: right;vertical-align: top;">
+                       			 <div class="buttons_bottom">
+                       			 	<h:commandButton value="#{i18n['web.client.screen.button.Back']}" styleClass="btn_std_small" action="#{crudPhoneListBean.back}" >
+                                 		<f:ajax execute=":crudForm:editingPhonePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                             		</h:commandButton>
+                             	</div>
+                       		</td>
+                       </tr>
+                    </table>
+                   </div>
+               </h:panelGroup> 
+                      
+                      <!-- UPLOAD FILE SECTION -->
+                    <h:panelGroup id="filePanelGroup" rendered="#{crudPhoneListBean.massPhone}">
+                        <div class="tablebox">
+                            <div class="head">#{i18n['web.client.metadata.screen.title.FileDetails']}</div>
+                            <div class="body">
+                                <table width="100%">
+                                    <tr>
+                                        <th>#{i18n['web.client.metadata.screen.title.File']}</th>
+                                        <td>
+                                            <h:outputText id="fileDataEditing" value="#{crudPhoneListBean.fileName}" />
+                                        </td>
+                                        <td>
+                                            <p:fileUpload id="fileUploader" allowTypes="/(\.|\/)(csv)$/" fileUploadListener="#{crudPhoneListBean.handleFileUpload}" auto="true" update=":crudForm:btnProcessFile :crudForm:fileDataEditing" label="#{i18n['web.client.metadata.screen.title.Explore']}" sizeLimit="#{applicationBean.fileUploadMaxFileSize}" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['web.client.metadata.screen.button.Process']}" styleClass="btn_std_small" id="btnProcessFile" action="#{crudPhoneListBean.procesarArchivo}" disabled="#{not crudPhoneListBean.fileReady}">
+                                <f:ajax execute=":crudForm:filePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.metadata.screen.button.Cancel']}" styleClass="btn_std_small" action="#{crudPhoneListBean.cancelUpload}">
+                                <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+                       
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

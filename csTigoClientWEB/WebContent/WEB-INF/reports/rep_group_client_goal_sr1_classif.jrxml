@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_group_client_goal_sr1_classif.jrxml" pageWidth="539" pageHeight="842" columnWidth="539" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="LOGO" class="java.lang.Object" isForPrompting="false"/>
+	<parameter name="CLIENT_LOGO" class="java.lang.Object" isForPrompting="false"/>
+	<parameter name="PARAMETERS_DESCRIPTION" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USER" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[Loggedin user]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COD_META" class="java.lang.Long" isForPrompting="false">
+		<defaultValueExpression><![CDATA[10L]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PERIODO_DESDE" class="java.sql.Timestamp"/>
+	<parameter name="PERIODO_HASTA" class="java.sql.Timestamp"/>
+	<parameter name="DIA_DESDE" class="java.lang.String"/>
+	<parameter name="DIA_HASTA" class="java.lang.String"/>
+	<parameter name="WHERE" class="java.lang.String">
+		<parameterDescription><![CDATA[SQL Criteria]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USERPHONE_LIST" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CICLO" class="java.lang.String"/>
+	<parameter name="SERVICE_NAME" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="SQL_RANGO_FECHAS" class="java.lang.String">
+		<parameterDescription><![CDATA[""]]></parameterDescription>
+	</parameter>
+	<parameter name="GOAL_NUM" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="FECHA_INI" class="java.util.Date"/>
+	<parameter name="FECHA_FIN" class="java.util.Date"/>
+	<parameter name="FECHA_DESDE" class="java.util.Date"/>
+	<parameter name="FECHA_HASTA" class="java.util.Date"/>
+	<parameter name="COD_META_LIST" class="java.lang.String">
+		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USERPHONE_CODE_LIST" class="java.util.Collection" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CLASSIFICATION_COD" class="java.math.BigDecimal"/>
+	<parameter name="WHERE_CLASSIF" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select
+cg.DESCRIPTION_CHR AS NOMBRE_META,
+cg.GOAL_NUM ,
+cg.CLIENT_GOAL_COD as COD_META,
+to_char(cg.DAY_FROM_NUM) AS DIA_DESDE,
+to_char(cg.DAY_TO_NUM) AS DIA_HASTA,
+TO_CHAR(cg.VALIDITY_DATE_FROM_DAT, 'dd/MM/yyyy') AS PERIODO_DESDE,
+cg.VALIDITY_DATE_TO_DAT,
+CASE
+WHEN cg.VALIDITY_DATE_TO_DAT IS NULL THEN TO_CHAR($P{FECHA_HASTA}, 'dd/mm/yyyy')
+WHEN cg.VALIDITY_DATE_TO_DAT IS NOT NULL AND trunc(cg.VALIDITY_DATE_TO_DAT) > trunc($P{FECHA_HASTA}) THEN TO_CHAR($P{FECHA_HASTA}, 'dd/mm/yyyy')
+ELSE TO_CHAR(cg.VALIDITY_DATE_TO_DAT, 'dd/mm/yyyy') END PERIODO_HASTA
+FROM CLIENT_GOAL cg
+join CLIENT_GOAL_USERPHONE cgu1 on cg.CLIENT_GOAL_COD = cgu1.COD_CLIENT_GOAL
+where cg.CLIENT_GOAL_COD in ($P!{COD_META_LIST})
+AND EXISTS(SELECT CGU.COD_CLIENT_GOAL FROM CLIENT_GOAL_USERPHONE CGU WHERE CGU.COD_CLIENT_GOAL = cg.CLIENT_GOAL_COD )
+AND EXISTS (
+            select * from USERPHONE_CLASSIFICATION uc
+            where uc.cod_userphone = cgu1.COD_USERPHONE
+            AND uc.cod_classification = $P{CLASSIFICATION_COD}
+)
+group by cg.DESCRIPTION_CHR,cg.GOAL_NUM,cg.CLIENT_GOAL_COD,
+to_char(cg.DAY_FROM_NUM),
+to_char(cg.DAY_TO_NUM),TO_CHAR(cg.VALIDITY_DATE_FROM_DAT, 'dd/MM/yyyy'),cg.VALIDITY_DATE_TO_DAT]]>
+	</queryString>
+	<field name="NOMBRE_META" class="java.lang.String"/>
+	<field name="GOAL_NUM" class="java.lang.Integer"/>
+	<field name="COD_META" class="java.lang.Long"/>
+	<field name="DIA_DESDE" class="java.lang.String"/>
+	<field name="DIA_HASTA" class="java.lang.String"/>
+	<field name="PERIODO_DESDE" class="java.lang.String"/>
+	<field name="VALIDITY_DATE_TO_DAT" class="java.sql.Timestamp"/>
+	<field name="PERIODO_HASTA" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="539" height="15" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+				<parametersMapExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}]]></parametersMapExpression>
+				<subreportParameter name="REPORT_LOCALE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_LOCALE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="WHERE">
+					<subreportParameterExpression><![CDATA[$P{WHERE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="WHERE_CLASSIF">
+					<subreportParameterExpression><![CDATA[$P{WHERE_CLASSIF}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="COD_META">
+					<subreportParameterExpression><![CDATA[$F{COD_META}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="DIA_DESDE">
+					<subreportParameterExpression><![CDATA[$F{DIA_DESDE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="DIA_HASTA">
+					<subreportParameterExpression><![CDATA[$F{DIA_HASTA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="GOAL_NUM">
+					<subreportParameterExpression><![CDATA[$F{GOAL_NUM}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="USERPHONE_LIST">
+					<subreportParameterExpression><![CDATA[$P{USERPHONE_LIST}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="NOMBRE_META">
+					<subreportParameterExpression><![CDATA[$F{NOMBRE_META}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="PERIODO_HASTA">
+					<subreportParameterExpression><![CDATA[$F{PERIODO_HASTA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_RESOURCE_BUNDLE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="PERIODO_DESDE">
+					<subreportParameterExpression><![CDATA[$F{PERIODO_DESDE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "rep_group_client_goal_sr2_classif.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>

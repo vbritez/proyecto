@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<ui:composition
+	template="/resources/templates/screenDefaultClient.xhtml">
+	<!-- TITLE -->
+	<ui:define name="title">#{i18n['web.client.report.ClientGoal']}</ui:define>
+	<!-- STATUS LOCATION -->
+	<ui:define name="status">
+		<h:commandLink action="home" value="Home" />
+        &#160;/&#160;<h:commandLink action="reportclientgoal"
+			value="#{i18n['web.client.report.ClientGoal']}" />
+	</ui:define>
+	<!-- PRINCIPAL CONTAINER -->
+	<ui:define name="container">
+		<div id="page_col">
+			<div id="cent_full">
+				<h:form id="repClientGoalForm">
+					<p:focus for="repClientGoalForm:textDateFrom" />
+					<div class="tablebox">
+						<div class="head">#{i18n['web.client.reportclientgoal.screen.title.reportParameters']}</div>
+						<!-- PARAMETERS BOX -->
+						<h:panelGroup id="tablePanelGroup">
+							<div class="body">
+								<table class="tablesearch">
+									<tr>
+										<th>#{i18n['web.client.search.field.FromDate']}</th>
+										<td><p:calendar id="textDateFrom"
+												locale="#{iBean.locale}"
+												value="#{reportClientGoalBean.dateFrom}"
+												timeZone="#{applicationBean.defaultTimeZoneID}"
+												pattern="#{applicationBean.defaultInputDateFormat}">
+												<p:ajax event="dateSelect"
+													listener="#{reportClientGoalBean.valueChangeDate1}"
+													update="periodo" />
+											</p:calendar></td>
+									</tr>
+									<tr>
+										<th>#{i18n['web.client.search.field.ToDate']}</th>
+										<td><p:calendar id="textDateTo" locale="#{iBean.locale}"
+												value="#{reportClientGoalBean.dateTo}"
+												timeZone="#{applicationBean.defaultTimeZoneID}"
+												pattern="#{applicationBean.defaultInputDateFormat}">
+												<p:ajax event="dateSelect"
+													listener="#{reportClientGoalBean.valueChangeDate2}"
+													update="periodo" />
+											</p:calendar></td>
+									</tr>
+									<tr>
+										<th>#{i18n['web.client.search.field.Service']}</th>
+										<td><h:selectOneMenu id="listService"
+												value="#{reportClientGoalBean.selectedService}"
+												converter="serviceConverter">
+												<f:selectItem
+													itemLabel="(#{i18n['web.client.search.field.OptionSelect']})"
+													itemValue="#{null}" />
+												<f:selectItems value="#{reportClientGoalBean.serviceList}"
+													var="sLItem" itemValue="#{sLItem}"
+													itemLabel="#{sLItem.descriptionChr}" />
+												<p:ajax listener="#{reportClientGoalBean.periodsAvailable}"
+													update="periodo" />
+											</h:selectOneMenu></td>
+									</tr>
+
+									<tr>
+										<th>#{i18n['web.client.search.field.Period']}</th>
+										<td><h:selectOneMenu id="periodo"
+												value="#{reportClientGoalBean.selectedPeriod}"
+												converter="clientGoalConverter">
+												<f:selectItem
+													itemLabel="(#{i18n['web.client.search.field.OptionSelect']})"
+													itemValue="#{null}" />
+												<f:selectItems var="period"
+													value="#{reportClientGoalBean.periodsList}"
+													itemLabel="#{period.description}" itemValue="#{period}" />
+												<p:ajax listener="#{reportClientGoalBean.valueChangePeriod}"
+													update="listUserphone,listRanges" />
+											</h:selectOneMenu></td>
+									</tr>
+
+									<tr>
+									<th>#{i18n['web.client.screen.admin.webUsers.field.Classification']}</th>
+
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkClassificationList"
+															value="#{reportClientGoalBean.validatedAllClassification}"
+															disabled="#{reportClientGoalBean.selectedUserphoneList.size() gt 0 or reportClientGoalBean.validatedAllUsers}">
+															<f:ajax event="change"
+																listener="#{reportClientGoalBean.selectAll}"
+																execute=":repClientGoalForm:chkClassificationList"
+																render=":repClientGoalForm:listClasification :repClientGoalForm:chkUserphoneList :repClientGoalForm:listUserphone"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkClassificationList"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listClasification"
+														value="#{reportClientGoalBean.selectedClassificationList}"
+														converter="classificationConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportClientGoalBean.validatedAllClassification or reportClientGoalBean.validatedAllUsers 
+														or reportClientGoalBean.selectedUserphoneList.size() gt 0}">
+														<f:selectItems
+															value="#{reportClientGoalBean.classificationList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.descriptionChr}" />
+														<f:ajax
+															execute=":repClientGoalForm:listClasification"
+															render=":repClientGoalForm:chkUserphoneList :repClientGoalForm:listUserphone"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+								<tr>
+									<th>#{i18n['web.client.search.field.User']}</th>
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkUserphoneList"
+															value="#{reportClientGoalBean.validatedAllUsers}"
+															disabled="#{reportClientGoalBean.selectedClassificationList.size() gt 0 or reportClientGoalBean.validatedAllClassification}">
+															<f:ajax event="change"
+																listener="#{reportClientGoalBean.selectAll}"
+																execute=":repClientGoalForm:chkUserphoneList"
+																render=":repClientGoalForm:listUserphone :repClientGoalForm:listClasification :repClientGoalForm:chkClassificationList"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkUserphoneList"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listUserphone"
+														value="#{reportClientGoalBean.selectedUserphoneList}"
+														converter="userphoneConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportClientGoalBean.validatedAllUsers or reportClientGoalBean.validatedAllClassification 
+														or reportClientGoalBean.selectedClassificationList.size() gt 0}">
+
+														<f:selectItems
+															value="#{reportClientGoalBean.userphoneList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.nameChr}" />
+
+														<f:ajax
+															
+															execute=":repClientGoalForm:listUserphone"
+															render=":repClientGoalForm:chkClassificationList :repClientGoalForm:listClasification"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+
+
+									<tr>
+										<th>#{i18n['clientgoal.field.field.Period']}</th>
+										<td>
+											<table>
+												<!--                                                 <tr> -->
+												<!--                                                     <td> -->
+												<!--                                                         <h:panelGroup> -->
+												<!--                                                             <h:selectBooleanCheckbox id="chkRangeList" value="#{reportClientGoalBean.allRanges}"> -->
+												<!--                                                                 <f:ajax event="change" listener="#{reportClientGoalBean.selectAllRanges}" execute=":repClientGoalForm:chkRangeList" render=":repClientGoalForm:listRanges" onevent="manageAjaxEvents" onerror="manageAjaxErrors" /> -->
+												<!--                                                             </h:selectBooleanCheckbox> -->
+
+												<!--                                                             <h:outputLabel for="chkRangeList" value="(#{i18n['web.client.selectonemenu.All']})" /> -->
+												<!--                                                         </h:panelGroup> -->
+												<!--                                                     </td> -->
+												<!--                                                 </tr> -->
+												<tr>
+													<!--                                                     <td> -->
+													<!--                                                         <h:selectManyListbox id="listRanges" value="#{reportClientGoalBean.selectedRangeList}" style="width: auto;"> -->
+													<!--                                                             <f:selectItems value="#{reportClientGoalBean.rangeList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem}" /> -->
+													<!--                                                         </h:selectManyListbox> -->
+													<!--                                                         se agrega el checkbox de todos los usuarios -->
+													<!--                                                     </td> -->
+
+													<td><h:selectOneMenu id="listRanges"
+															value="#{reportClientGoalBean.selectedRangeList}">
+															<f:selectItem itemValue="#{null}"
+																itemLabel="(#{i18n['web.client.selectonemenu.All']})" />
+															<f:selectItems value="#{reportClientGoalBean.rangeList}"
+																var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem}" />
+														</h:selectOneMenu></td>
+
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</h:panelGroup>
+					</div>
+					<div class="buttons_bottom">
+						<h:commandButton id="btnGeneratePDF"
+							value="#{i18n['web.client.report.title.PDFReport']}"
+							action="#{reportClientGoalBean.validateParameters}"
+							styleClass="btn_std_large">
+							<f:setPropertyActionListener value="pdf"
+								target="#{reportClientGoalBean.reportType}" />
+							<f:ajax execute="@form" render="@form" onevent="manageAjaxEvents"
+								onerror="manageAjaxErrors" />
+						</h:commandButton>
+						<h:commandButton id="btnGenerateXLS"
+							value="#{i18n['web.client.report.title.XLSReport']}"
+							action="#{reportClientGoalBean.validateParameters}"
+							styleClass="btn_std_large">
+							<f:setPropertyActionListener value="xls"
+								target="#{reportClientGoalBean.reportType}" />
+							<f:ajax execute="@form" render="@form" onevent="manageAjaxEvents"
+								onerror="manageAjaxErrors" />
+						</h:commandButton>
+						<h:commandButton id="btnGenerate"
+							action="#{reportClientGoalBean.generateReport}"
+							style="display: none;"
+							rendered="#{reportClientGoalBean.parametersValidated}" />
+					</div>
+					<!-- SCRIPTS -->
+					<h:panelGroup
+						rendered="#{reportClientGoalBean.parametersValidated}">
+						<script type="text/javascript" charset="UTF-8">
+							//         
+							function autoGenerateReport() {
+								document.getElementById('repClientGoalForm').target = '_blank';
+								document.getElementById(
+										'repClientGoalForm:btnGenerate')
+										.click();
+								document.getElementById('repClientGoalForm').target = '';
+							}
+
+							$(document).ready(function() {
+								setTimeout("autoGenerateReport()", 500);
+							});
+							//
+						</script>
+					</h:panelGroup>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
+</html>

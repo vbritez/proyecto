@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_no_visit_subreport1" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="LocaleBundle">
+	<property name="ireport.zoom" value="1.6105100000000012"/>
+	<property name="ireport.x" value="283"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="FECHA" class="java.lang.String"/>
+	<parameter name="CLIENT_COD" class="java.lang.Long"/>
+	<parameter name="WHERE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT distinct
+    u.CELLPHONE_NUM, u.NAME_CHR, u.USERPHONE_COD
+FROM
+    USERPHONE u
+    inner join USERPHONE_CLIENT_SER_FUNC ucs on ucs.COD_USERPHONE = u.USERPHONE_COD
+    inner join USERPHONE_CLASSIFICATION uc on uc.COD_USERPHONE = u.USERPHONE_COD
+WHERE
+    1= 1
+AND u.COD_CLIENT = $P!{CLIENT_COD}
+and u.ENABLED_CHR = '1'
+$P!{WHERE}
+AND NOT EXISTS
+    (SELECT
+            sv.COD_USERPHONE
+        FROM
+            SERVICE_VALUE sv
+            inner join USERPHONE us on sv.COD_USERPHONE = us.USERPHONE_COD
+        WHERE
+            sv.COD_SERVICE =1
+        AND us.COD_CLIENT =$P!{CLIENT_COD}
+        AND sv.ENABLED_CHR = '1'
+        AND TO_CHAR(sv.RECORDDATE_DAT,'dd/MM/yyyy') like '$P!{FECHA}'
+        AND sv.COD_USERPHONE = u.USERPHONE_COD
+        )
+order by u.NAME_CHR,u.USERPHONE_COD]]>
+	</queryString>
+	<field name="CELLPHONE_NUM" class="java.math.BigDecimal"/>
+	<field name="NAME_CHR" class="java.lang.String"/>
+	<field name="USERPHONE_COD" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="314" y="0" width="281" height="15"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{FECHA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="103" y="0" width="211" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NAME_CHR}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="103" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{CELLPHONE_NUM}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_client_goal_sr2" pageWidth="539" pageHeight="99" whenNoDataType="AllSectionsNoDetail" columnWidth="539" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true">
+	<property name="ireport.zoom" value="1.7715610000000013"/>
+	<property name="ireport.x" value="354"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="USERPHONE_COD" class="java.lang.Long"/>
+	<parameter name="FECHA_INI" class="java.util.Date"/>
+	<parameter name="FECHA_FIN" class="java.util.Date"/>
+	<parameter name="WHERE" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[SQL Criteria]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COD_META" class="java.lang.Long" isForPrompting="false">
+		<defaultValueExpression><![CDATA[10L]]></defaultValueExpression>
+	</parameter>
+	<parameter name="GOAL_NUM" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="CELLPHONE_NUM" class="java.math.BigDecimal"/>
+	<parameter name="NAME_CHR" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select cg.CLIENT_GOAL_COD, cg.GOAL_NUM, u.CELLPHONE_NUM, u.NAME_CHR
+from SERVICE_VALUE sv
+join SERVICE_VALUE_DETAIL svd on (sv.SERVICEVALUE_COD = svd.COD_SERVICEVALUE)
+join USERPHONE u on (sv.COD_USERPHONE = u.USERPHONE_COD)
+join CLIENT_GOAL_USERPHONE cu on (u.USERPHONE_COD = cu.COD_USERPHONE)
+join CLIENT_GOAL cg on (cu.COD_CLIENT_GOAL = cg.CLIENT_GOAL_COD)
+where u.USERPHONE_COD = $P{USERPHONE_COD}
+and TRUNC(svd.RECORDDATE_DAT) between $P{FECHA_INI} and $P{FECHA_FIN}
+AND cu.COD_CLIENT_GOAL = $P{COD_META}
+$P!{WHERE}]]>
+	</queryString>
+	<field name="CLIENT_GOAL_COD" class="java.math.BigDecimal"/>
+	<field name="GOAL_NUM" class="java.lang.Integer"/>
+	<field name="CELLPHONE_NUM" class="java.math.BigDecimal"/>
+	<field name="NAME_CHR" class="java.lang.String"/>
+	<variable name="CLIENT_GOAL_COD_1" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{CLIENT_GOAL_COD}]]></variableExpression>
+	</variable>
+	<variable name="PORCENTAJE" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[new java.math.BigDecimal($V{CLIENT_GOAL_COD_1}).divide(new java.math.BigDecimal($P{GOAL_NUM}),new Integer("3"),RoundingMode.HALF_UP).multiply(new java.math.BigDecimal(100))]]></variableExpression>
+	</variable>
+	<group name="GROUP_BY">
+		<groupExpression><![CDATA[]]></groupExpression>
+	</group>
+	<group name="CLIENT_GOAL_GROUP">
+		<groupExpression><![CDATA[$F{CLIENT_GOAL_COD}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<textField evaluationTime="Group" evaluationGroup="CLIENT_GOAL_GROUP">
+					<reportElement x="341" y="0" width="99" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[($F{CLIENT_GOAL_COD} != null ? $V{CLIENT_GOAL_COD_1} : 0)]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="CLIENT_GOAL_GROUP" pattern="#,##0.0;-#,##0.0">
+					<reportElement x="440" y="0" width="83" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[($F{CLIENT_GOAL_COD} != null ? $V{PORCENTAJE} : new java.math.BigDecimal(0))]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="CLIENT_GOAL_GROUP">
+					<reportElement x="260" y="0" width="81" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$P{GOAL_NUM}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="151" y="0" width="109" height="15" backcolor="#FFFFFF"/>
+					<box leftPadding="2">
+						<pen lineColor="#999999"/>
+						<topPen lineWidth="0.0" lineColor="#999999"/>
+						<leftPen lineColor="#999999"/>
+						<bottomPen lineColor="#999999"/>
+						<rightPen lineColor="#999999"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="7"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$P{CELLPHONE_NUM}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="1" y="0" width="150" height="15" backcolor="#FFFFFF"/>
+					<box leftPadding="2">
+						<pen lineColor="#999999"/>
+						<topPen lineWidth="0.0" lineColor="#999999"/>
+						<leftPen lineColor="#999999"/>
+						<bottomPen lineColor="#999999"/>
+						<rightPen lineColor="#999999"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{NAME_CHR}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="CLIENT_GOAL_GROUP" pattern="">
+					<reportElement x="523" y="0" width="16" height="15"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[" %"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<pageFooter>
+		<band/>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

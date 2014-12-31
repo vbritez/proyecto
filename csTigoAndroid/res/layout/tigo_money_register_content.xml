@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+    
+    <TextView
+        android:id="@+id/tigoMoneyNameView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/tigomoney_user_name"
+        android:textAppearance="@style/textSize" />
+    
+    <EditText
+        android:id="@+id/tigoMoneyNameText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tigoMoneyNameView"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:inputType="none"
+        android:focusable="false"
+        android:ems="10" >
+    </EditText>
+
+    <TextView
+        android:id="@+id/birthDateView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_below="@+id/tigoMoneyNameText"
+        android:text="@string/tigomoney_birth_date"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/birthDateEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/birthDateView"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:ems="10"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:focusable="false"
+        android:inputType="date" >
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/addressView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/birthDateEdit"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/tigomoney_address"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/addressEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/addressView"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:ems="10"
+        android:inputType="text" >
+    </EditText>
+
+<!--      <TextView -->
+<!--         android:id="@+id/cityView" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_below="@+id/addressEdit" -->
+<!--         android:layout_marginLeft="7dp" -->
+<!--         android:layout_marginRight="7dp" -->
+<!--         android:text="@string/tigomoney_city" -->
+<!--         android:textAppearance="@style/textSize" /> -->
+
+<!--     <EditText -->
+<!--         android:id="@+id/cityEdit" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_alignParentLeft="true" -->
+<!--         android:layout_below="@+id/cityView" -->
+<!--         android:layout_marginLeft="7dp" -->
+<!--         android:layout_marginRight="7dp" -->
+<!--         android:ems="10" -->
+<!--         android:inputType="text" /> -->
+    
+    
+    <TextView
+        android:id="@+id/cityAutocompleteView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addressEdit"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/tigomoney_city"
+        android:textAppearance="@style/textSize" />
+
+    <AutoCompleteTextView
+        android:id="@+id/cityAutocompleteEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/cityAutocompleteView"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:ems="10"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/tigoMoneyNextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/cityAutocompleteEdit"
+        android:layout_below="@+id/cityAutocompleteEdit"
+        android:layout_marginTop="44dp"
+        android:background="@drawable/button_selector"
+        android:text="@string/tigomoney_go_next" />
+
+</RelativeLayout>

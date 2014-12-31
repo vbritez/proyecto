@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:csui="http://java.sun.com/jsf/composite/uicomponents" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/fileUploadDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.client.meta.ARPInvoiceType']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="crudmetadataarptipofact" value="#{i18n['web.client.meta.ARPInvoiceType']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+    <!-- GOOGLE MAPS API -->
+<!-- 		<script src="https://maps.google.com/maps/api/js?client=#{applicationBean.appKey}&amp;sensor=false" type="text/javascript" /> -->
+        <div id="page_col">
+            <div id="cent_full">
+            <h:form id="fastReportForm" target="_blank">
+                    <div class="buttons_top">
+                        <h:commandButton styleClass="btn_xls" title="#{i18n['web.client.report.tip.XLSReport']}" action="#{crudMetaDataARPTipoFacturaBean.viewXLS}" />
+                        <h:commandButton styleClass="btn_pdf" title="#{i18n['web.client.report.tip.PDFReport']}" action="#{crudMetaDataARPTipoFacturaBean.viewPDF}" />
+                    </div>
+                </h:form>
+                <h:form id="crudForm">
+                    <div class="tablebox">
+                        <div class="head">#{i18n['web.client.metadataARPInvoiceType.screen.title.ListOf']}</div>
+                        <!-- SEARCH BOX -->
+                        <h:panelGroup id="searchBoxGroupPanel">
+                            <p:focus for="crudForm:listSearchOption" />
+                            <div class="headcontainer">
+                                <table class="tablesearch">
+                                    <tr>
+                                        <th>#{i18n['web.client.search.field.FindBy']}</th>
+                                        <td>
+                                            <h:selectOneMenu id="listSearchOption" value="#{crudMetaDataARPTipoFacturaBean.filterSelectedField}" onchange="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{crudMetaDataARPTipoFacturaBean.data ne null}">
+                                                <f:selectItem itemLabel="(#{i18n['web.client.search.field.OptionSelect']})" itemValue="-1" />
+                                                <f:selectItems value="#{crudMetaDataARPTipoFacturaBean.filterFields}" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                        <th>#{i18n['web.client.search.field.Criteria']}</th>
+                                        <td>
+                                            <h:inputText id="textSearchCriteria" value="#{crudMetaDataARPTipoFacturaBean.filterCriteria}" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{crudMetaDataARPTipoFacturaBean.data ne null}" />
+                                        </td>
+                                        <td>
+                                            <h:commandButton id="btnSearch" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Find']}" action="#{crudMetaDataARPTipoFacturaBean.applyFilter}" disabled="#{crudMetaDataARPTipoFacturaBean.data ne null}">
+                                                <f:ajax execute=":crudForm:searchBoxGroupPanel" render=":crudForm:listTablePanelGroup :crudForm:btnClean" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton>
+                                            <h:commandButton id="btnClean" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Clear']}" action="#{crudMetaDataARPTipoFacturaBean.cleanFilter}" disabled="#{crudMetaDataARPTipoFacturaBean.filterCriteria eq '' or crudMetaDataARPTipoFacturaBean.data ne null}">
+                                                <f:ajax execute="@this" render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton>
+                                        </td>
+                                        <th>#{i18n['web.client.search.field.Show']}</th>
+                                        <td class="thin">
+                                            <h:selectOneMenu id="listRowQuant" value="#{crudMetaDataARPTipoFacturaBean.rowQuantSelected}" disabled="#{crudMetaDataARPTipoFacturaBean.data ne null}" valueChangeListener="#{crudMetaDataARPTipoFacturaBean.applyQuantity}">
+                                                <f:selectItems value="#{crudMetaDataARPTipoFacturaBean.rowQuantList}" />
+                                                <f:ajax event="change" execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <!-- SCRIPTS -->
+                            <script type="text/javascript" charset="UTF-8">
+																													//         
+																													if (document
+																															.getElementById('crudForm:listSearchOption').disabled == false) {
+																														searchFieldOnchange(
+																																'crudForm:listSearchOption',
+																																'crudForm:textSearchCriteria',
+																																'crudForm:btnSearch');
+																													}
+																													//
+																												</script>
+                        </h:panelGroup>
+                        <h:panelGroup id="listTablePanelGroup">
+                            <!-- LIST TABLE -->
+                            <div class="body">
+                                <h:dataTable id="crudListTable" value="#{crudMetaDataARPTipoFacturaBean.dataModelSpecific}" var="item" rendered="#{crudMetaDataARPTipoFacturaBean.dataModelSpecific.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <h:selectBooleanCheckbox id="chkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{crudMetaDataARPTipoFacturaBean.data ne null}" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                        </f:facet>
+                                        <h:selectBooleanCheckbox id="chkBoxSelected" value="#{crudMetaDataARPTipoFacturaBean.selectedItems[item.dataPK]}" disabled="#{crudMetaDataARPTipoFacturaBean.data ne null}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.metadatadeliverer.screen.field.DelivererCode']}" action="#{crudMetaDataARPTipoFacturaBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.metadatadeliverer.screen.field.DelivererCode']}" disabled="#{crudMetaDataARPTipoFacturaBean.data ne null}">
+                                                    <f:setPropertyActionListener value="#{not crudMetaDataARPTipoFacturaBean.sortHelper.ascending}" target="#{crudMetaDataARPTipoFacturaBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="dataPK.codigo" target="#{crudMetaDataARPTipoFacturaBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudMetaDataARPTipoFacturaBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudMetaDataARPTipoFacturaBean.sortHelper.field eq 'dataPK.codigo'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.dataPK.codigo}">
+                                            <f:convertNumber groupingUsed="true" integerOnly="true" />
+                                        </h:outputText>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.metadatadeliverer.screen.field.Deliverer']}" action="#{crudMetaDataARPTipoFacturaBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.metadatadeliverer.screen.field.Deliverer']}" disabled="#{crudMetaDataARPTipoFacturaBean.data ne null}">
+                                                    <f:setPropertyActionListener value="#{not crudMetaDataARPTipoFacturaBean.sortHelper.ascending}" target="#{crudMetaDataARPTipoFacturaBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="tipoFactura" target="#{crudMetaDataARPTipoFacturaBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudMetaDataARPTipoFacturaBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudMetaDataARPTipoFacturaBean.sortHelper.field eq 'tipoFactura'}" />
+                                            </span>
+                                        </f:facet>
+                                       <csui:columnWidthChar value="#{item.tipoFactura}" header="#{i18n['web.client.metadatadeliverer.screen.field.Deliverer']}"/>
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+                            <!-- PAGINATION -->
+                            <div class="foot">
+                                <h:panelGroup rendered="#{crudMetaDataARPTipoFacturaBean.dataModel.rowCount gt 0}">
+                                    <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{crudMetaDataARPTipoFacturaBean.previousPage}" disabled="#{not crudMetaDataARPTipoFacturaBean.paginationHelper.hasPreviousPage or crudMetaDataARPTipoFacturaBean.data ne null}">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                        &#160;|&#160;<h:outputText value="#{crudMetaDataARPTipoFacturaBean.paginationHelper.pageFirstItem + 1}..#{crudMetaDataARPTipoFacturaBean.paginationHelper.pageLastItem + 1} / #{crudMetaDataARPTipoFacturaBean.paginationHelper.itemsCount}" />&#160;|&#160;
+                                        <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{crudMetaDataARPTipoFacturaBean.nextPage}" disabled="#{not crudMetaDataARPTipoFacturaBean.paginationHelper.hasNextPage or crudMetaDataARPTipoFacturaBean.data ne null}">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{crudMetaDataARPTipoFacturaBean.dataModel.rowCount le 0}">
+                                    <div style="text-align: center; font-weight: bold;">
+                                        <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                    <!-- BUTTONS -->
+                    <div class="buttons_bottom">
+                    	<h:commandButton value="#{i18n['web.client.metadata.screen.button.AssociateUserphone']}" styleClass="btn_std_large" action="#{crudMetaDataARPTipoFacturaBean.associatePlusMember}" disabled="#{crudMetaDataARPTipoFacturaBean.data ne null or crudMetaDataARPTipoFacturaBean.uploadSectionVisible}">
+                            <f:ajax execute=":crudForm:listTablePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton value="#{i18n['web.client.metadata.screen.button.MassDelete']}" styleClass="btn_std_large" action="#{crudMetaDataARPTipoFacturaBean.deleteEntitiesMass}" disabled="#{crudMetaDataARPTipoFacturaBean.data ne null or crudMetaDataARPTipoFacturaBean.uploadSectionVisible}" onclick="return showStdSonfirmDeleteRegistryMeta(this);">
+                            <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton value="#{i18n['web.client.metadata.screen.button.MassLoad']}" styleClass="btn_std_large" action="#{crudMetaDataARPTipoFacturaBean.showUploadSection}" disabled="#{crudMetaDataARPTipoFacturaBean.data ne null or crudMetaDataARPTipoFacturaBean.uploadSectionVisible}">
+                            <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton value="#{i18n['web.client.metadata.screen.button.New']}" styleClass="btn_std_small" action="#{crudMetaDataARPTipoFacturaBean.newEntity}" disabled="#{crudMetaDataARPTipoFacturaBean.data ne null or crudMetaDataARPTipoFacturaBean.uploadSectionVisible}">
+                            <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton value="#{i18n['web.client.metadata.screen.button.Edit']}" styleClass="btn_std_small" action="#{crudMetaDataARPTipoFacturaBean.editEntityPlusMember}" disabled="#{crudMetaDataARPTipoFacturaBean.data ne null or crudMetaDataARPTipoFacturaBean.uploadSectionVisible}">
+                            <f:ajax execute=":crudForm:listTablePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton value="#{i18n['web.client.metadata.screen.button.Delete']}" styleClass="btn_std_small" action="#{crudMetaDataARPTipoFacturaBean.deleteEntitiesPlusMember}" disabled="#{crudMetaDataARPTipoFacturaBean.data ne null or crudMetaDataARPTipoFacturaBean.uploadSectionVisible}" onclick="return showStdSonfirmDeleteRegistryCollection(this);">
+                            <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                    </div>
+                    <!-- EDITING SECTION -->
+                    <h:panelGroup id="editingPanelGroup" rendered="#{crudMetaDataARPTipoFacturaBean.data ne null and not crudMetaDataARPTipoFacturaBean.associateSectionVisible}">
+                        <p:focus for="crudForm:codEdit" />
+                        <div class="tablebox">
+                            <div class="head">#{i18n['web.client.metadataARPInvoiceType.screen.title.InvoiceTypeDetails']}</div>
+                            <div class="body">
+                                <table width="100%">
+                                    <tr>
+                                        <th>#{i18n['web.client.metadataARPInvoiceType.screen.field.InvoiceTypeCode']}</th>
+                                        <td>
+                                            <h:inputText id="codEdit" value="#{crudMetaDataARPTipoFacturaBean.data.dataPK.codigo}" maxlength="200" size="40" disabled="#{crudMetaDataARPTipoFacturaBean.data.dataPK.codigo ne null}" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.metadataARPInvoiceType.screen.field.InvoiceTypeDescription']}</th>
+                                        <td>
+                                            <h:inputText id="textClientEdit" value="#{crudMetaDataARPTipoFacturaBean.data.tipoFactura}" maxlength="200" size="40" />
+                                        </td>
+                                    </tr>
+                                    			<tr>
+										<th>#{i18n['web.metadata.title.userphone']}</th>
+										<td><h:panelGroup id="userphonePanelGroup">
+												<table class="listmultiplecheckbox">
+													<tr style="border-bottom: 1px dotted #D2E2F4;">
+														<th>#{i18n['web.client.metadataclient.screen.field.UserphoneNotAssigned']}</th>
+														<th>#{i18n['web.client.metadataclient.screen.field.UserphoneAssigned']}</th>
+													</tr>
+													<tr>
+														<td>
+															<table>
+																<tr>
+																	<td>
+																	<h:panelGroup>
+																		<h:selectBooleanCheckbox id="chkUserphoneList"
+																			value="#{crudMetaDataARPTipoFacturaBean.validatedAllUserphones}"
+																			disabled="#{crudMetaDataARPTipoFacturaBean.userphoneList.size() eq 0}">
+																			<f:ajax event="change"
+																				execute=":crudForm:chkUserphoneList"
+																				render=":crudForm:listUserphone"
+																				onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+																		</h:selectBooleanCheckbox>
+		
+																		<h:outputLabel for="chkUserphoneList"
+																			value="(#{i18n['web.client.selectonemenu.All']})" />
+																	</h:panelGroup></td>
+																</tr>
+															<tr>
+																<td><h:selectManyListbox id="listUserphone"
+																	value="#{crudMetaDataARPTipoFacturaBean.selectedUserphoneList}"
+																	converter="userphoneConverter" size="5"
+																	style="width: auto;"
+																	disabled="#{crudMetaDataARPTipoFacturaBean.validatedAllUserphones or crudMetaDataARPTipoFacturaBean.userphoneList.size() eq 0}">
+	
+																	<f:selectItems
+																		value="#{crudMetaDataARPTipoFacturaBean.userphoneList}"
+																		var="uLItem" itemValue="#{uLItem}"
+																		itemLabel="#{dLItem.nameChr}" />
+																</h:selectManyListbox>&#160;&#160;<h:commandButton styleClass="btn_std_small"
+																	value="#{i18n['web.client.reportconfig.button.AddToList']}"
+																	action="#{crudMetaDataARPTipoFacturaBean.addToList}"
+																	disabled="#{crudMetaDataARPTipoFacturaBean.userphoneList.size() eq 0}">
+																	<f:ajax execute=":crudForm:userphonePanelGroup"
+																		render=":crudForm:userphonePanelGroup"
+																		onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+																</h:commandButton>
+																<!-- se agrega el checkbox de todos los usuarios --></td>
+															</tr>
+															</table>	
+														</td>
+														
+														<td>
+															<table>
+																<tr><td>
+																	<h:panelGroup>
+																		<h:selectBooleanCheckbox id="chkUserphoneAssociatedList"
+																			value="#{crudMetaDataARPTipoFacturaBean.validatedAllUserphonesAssociated}"
+																			disabled="#{crudMetaDataARPTipoFacturaBean.associatedUserphonesList.size() eq 0}">
+																			<f:ajax event="change"
+																				execute=":crudForm:chkUserphoneAssociatedList"
+																				render=":crudForm:listUserphoneAssociated"
+																				onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+																		</h:selectBooleanCheckbox>
+		
+																		<h:outputLabel for="chkUserphoneList"
+																			value="(#{i18n['web.client.selectonemenu.All']})" />
+																	</h:panelGroup></td>
+																</tr>
+															<tr>
+																<td><h:selectManyListbox id="listUserphoneAssociated"
+																		value="#{crudMetaDataARPTipoFacturaBean.selectedAssociatedUserphones}"
+																		converter="userphoneConverter" style="width: auto;"
+																		disabled="#{crudMetaDataARPTipoFacturaBean.validatedAllUserphonesAssociated or crudMetaDataARPTipoFacturaBean.associatedUserphonesList.size() eq 0}"
+																		size="5">
+																		<f:selectItems
+																			value="#{crudMetaDataARPTipoFacturaBean.associatedUserphonesList}" />
+																	</h:selectManyListbox>&#160;&#160;<h:commandButton styleClass="btn_std_small"
+																		value="#{i18n['web.client.reportconfig.button.RemoveFromList']}"
+																		action="#{crudMetaDataARPTipoFacturaBean.removeFromList}"
+																		disabled="#{crudMetaDataARPTipoFacturaBean.associatedUserphonesList.size() eq 0}">
+																		<f:ajax execute=":crudForm:userphonePanelGroup"
+																			render=":crudForm:userphonePanelGroup"
+																			onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+																	</h:commandButton></td>
+															</tr>
+															</table>	
+														</td>
+													</tr>
+												</table>
+											</h:panelGroup></td>
+									</tr>
+                                <tr>
+										<th>#{i18n['web.metadata.title.geoCoord']}</th>
+										<td><h:selectBooleanCheckbox id="chkGeoCoord"
+												value="#{crudMetaDataARPTipoFacturaBean.geoCoor}"
+												oncomplete="document.getElementById('crudForm:mapGroup').reload();">
+												<f:ajax event="change" execute=":crudForm:editingPanelGroup"
+													render="@form"
+													listener="#{crudMetaDataARPTipoFacturaBean.listenerCheckGeoCoor}"
+													onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+											</h:selectBooleanCheckbox></td>
+									</tr>
+
+									<h:panelGroup id="iconPanel">
+										<h:panelGroup id="iconPanelGroupEdit"
+											rendered="#{crudMetaDataARPTipoFacturaBean.geoCoor}">
+											<tr>
+
+												<th>#{i18n['web.metadataicon.title.icon']}</th>
+												<td><h:panelGroup id="iconPanelGroupEdit2">
+														<table class="listmultiplecheckbox">
+															<ui:repeat value="#{crudMetaDataARPTipoFacturaBean.dataIconList}"
+																var="item"
+																rendered="#{crudMetaDataARPTipoFacturaBean.dataIconList ne null and crudMetaDataARPTipoFacturaBean.dataIconList.size() gt 0}">
+																<h:panelGroup id="ff">
+																	<tr>
+																		<td style="vertical-align: top;"><h:selectBooleanCheckbox
+																				id="iconCheck"
+																				value="#{crudMetaDataARPTipoFacturaBean.selectedDataIconMap[item.valueChr]}">
+																				<f:ajax event="change"
+																					execute=":crudForm:editingPanelGroup"
+																					render="@form"
+																					listener="#{crudMetaDataARPTipoFacturaBean.listenerDataIconSelect(item)}"
+																					onevent="manageAjaxEvents"
+																					onerror="manageAjaxErrors" />
+																			</h:selectBooleanCheckbox> &#160;&#160; <h:graphicImage url="#{item.valueChr}"
+																				width="20" />
+																				&#160;&#160; <h:outputText value="#{crudMetaDataARPTipoFacturaBean.dataIconDescription[item.valueChr]}" /></td>
+																	</tr>
+																</h:panelGroup>
+															</ui:repeat>
+														</table>
+													</h:panelGroup></td>
+
+											</tr>
+										</h:panelGroup>
+									</h:panelGroup>
+								</table>
+							</div>
+						</div>
+
+						<f:view contentType="text/html">
+							<!-- GOOGLE MAP -->
+							<h:panelGroup id="mapGroup"
+								rendered="#{crudMetaDataARPTipoFacturaBean.selectedDataIcon ne null}">
+								<div class="tablebox">
+									<div class="head">#{i18n['web.client.screen.subtitle.LocalizationMap']}</div>
+									<h:panelGroup id="map">
+										<div class="body" style="padding-left: 1px; padding-top: 2px;">
+											<p:gmap center="#{crudMetaDataARPTipoFacturaBean.mapCenterStr}"
+												zoom="#{crudMetaDataARPTipoFacturaBean.mapZoom}"
+												type="#{crudMetaDataARPTipoFacturaBean.mapType}"
+												style="width:979px;height:600px"
+												model="#{crudMetaDataARPTipoFacturaBean.mapModel}">
+												<p:ajax event="overlaySelect"
+													listener="#{crudMetaDataARPTipoFacturaBean.onMarkerSelect}"
+													update="textbox" />
+												<p:ajax event="stateChange"
+													listener="#{crudMetaDataARPTipoFacturaBean.onMapStateChange}" />
+												<p:ajax event="pointSelect"
+													listener="#{crudMetaDataARPTipoFacturaBean.onPointSelect}"
+													update="map" />
+												<p:gmapInfoWindow maxWidth="4">
+													<p:outputPanel id="textbox">
+
+														<h:outputText
+															value="#{crudMetaDataARPTipoFacturaBean.selectedMarker.data}"
+															rendered="#{not crudMetaDataARPTipoFacturaBean.clientMarker}"
+															escape="false" />
+														<h:panelGroup style="width:320px;height:150px"
+															id="clientMark"
+															rendered="#{crudMetaDataARPTipoFacturaBean.clientMarker}">
+															<table style="width: 300px; height: 120px">
+																<tr>
+																	<td><h:outputText id="descriptionClientMarkerOut"
+																			value="#{i18n['web.client.abstractServiceBean.map.Title']}" /></td>
+																	<td><h:inputText id="descriptionClientMarker"
+																			value="#{crudMetaDataARPTipoFacturaBean.selectedMarker.title}" /></td>
+																</tr>
+																<tr>
+																	<td><h:outputText id="titleClientMarkerOut"
+																			value="#{i18n['web.client.abstractServiceBean.map.Description']}" /></td>
+																	<td><h:inputText id="titleClientMarker"
+																			value="#{crudMetaDataARPTipoFacturaBean.selectedMarker.data}" /></td>
+																</tr>
+																<tr>
+																	<td colspan="2" style="text-align: right;"><h:commandButton
+																			id="btnSaveMark" styleClass="btn_std_small"
+																			value="#{i18n['web.client.abstractServiceBean.map.button.SaveMark']}"
+																			action="#{crudMetaDataARPTipoFacturaBean.saveClientMarker}">
+																			<f:ajax execute=":crudForm:mapGroup" render="map"
+																				onevent="manageAjaxEvents"
+																				onerror="manageAjaxErrors" />
+																		</h:commandButton> <h:commandButton id="DeleteMark"
+																			styleClass="btn_std_small"
+																			value="#{i18n['web.client.abstractServiceBean.map.button.DeleteMark']}"
+																			action="#{crudMetaDataARPTipoFacturaBean.deleteClientMarker}">
+																			<f:ajax execute=":crudForm:mapGroup" render="map"
+																				onevent="manageAjaxEvents"
+																				onerror="manageAjaxErrors" />
+																		</h:commandButton></td>
+																</tr>
+															</table>
+														</h:panelGroup>
+													</p:outputPanel>
+												</p:gmapInfoWindow>
+											</p:gmap>
+										</div>
+									</h:panelGroup>
+								</div>
+							</h:panelGroup>
+						</f:view>
+						
+						<div class="buttons_bottom">
+							<h:commandButton
+								value="#{i18n['web.client.metadata.screen.button.Save']}"
+								styleClass="btn_std_small"
+								action="#{crudMetaDataARPTipoFacturaBean.savePlusMember}">
+								<f:ajax execute=":crudForm:editingPanelGroup" render="@form"
+									onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+							</h:commandButton>
+							<h:commandButton
+								value="#{i18n['web.client.metadata.screen.button.Delete']}"
+								styleClass="btn_std_small"
+								action="#{crudMetaDataARPTipoFacturaBean.deleteEditingPlusMember}"
+								disabled="#{crudMetaDataARPTipoFacturaBean.data.dataPK.codigo eq null}"
+								onclick="return showStdConfirmDeleteRegistryMessage(this);">
+								<f:ajax execute="@this" render="@form"
+									onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+							</h:commandButton>
+							<h:commandButton
+								value="#{i18n['web.client.metadata.screen.button.Cancel']}"
+								styleClass="btn_std_small"
+								action="#{crudMetaDataARPTipoFacturaBean.cancelEditing}">
+								<f:ajax execute="@this" render="@form"
+									onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+							</h:commandButton>
+						</div>
+					</h:panelGroup>
+                    <!-- UPLOAD FILE SECTION -->
+                    <h:panelGroup id="filePanelGroup" rendered="#{crudMetaDataARPTipoFacturaBean.uploadSectionVisible}">
+                        <div class="tablebox">
+                            <div class="head">#{i18n['web.client.metadata.screen.title.FileDetails']}</div>
+                            <div class="body">
+                                <table width="100%">
+                                    <tr>
+                                        <th>#{i18n['web.client.metadata.screen.title.File']}</th>
+                                        <td>
+                                            <h:outputText id="fileDataEditing" value="#{crudMetaDataARPTipoFacturaBean.fileName}" />
+                                            <h:inputHidden id="saveuserphone" value="#{crudMetaDataARPTipoFacturaBean.saveUserphone}" />		
+                                        </td>
+                                        <td>
+                                            <p:fileUpload id="fileUploader" allowTypes="/(\.|\/)(csv)$/" fileUploadListener="#{crudMetaDataARPTipoFacturaBean.handleFileUpload}" auto="true" update=":crudForm:btnProcessFile :crudForm:fileDataEditing" label="#{i18n['web.client.metadata.screen.title.Explore']}" sizeLimit="#{applicationBean.fileUploadMaxFileSize}" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['web.client.metadata.screen.button.Process']}" styleClass="btn_std_small" id="btnProcessFile"
+                             action="#{crudMetaDataARPTipoFacturaBean.procesarArchivo}" disabled="#{not crudMetaDataARPTipoFacturaBean.fileReady}" onclick="return showStdConfirmUserphoneSaveMessage(this); ">
+                                <f:ajax execute=":crudForm:filePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.metadata.screen.button.Cancel']}" styleClass="btn_std_small" action="#{crudMetaDataARPTipoFacturaBean.cancelUpload}">
+                                <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        </div>
+                        
+                         <!-- MENSAJE DE CONFIRMACION PARA SI EL ARCHIVO CSV TIENE RELACION CON USERPHONE -->
+	                    <h:panelGroup id="confirmDialogPanelGroup">
+	                        <p:confirmDialog id="confirmDialogSaveUserphone" message="#{i18n['web.client.screen.message.saveUserphonemetaMessage']}" severity="alert" widgetVar="confirmationSaveUserphone">
+	                            <p:commandButton id="confirmUserphoneSave" value="#{i18n['web.client.screen.field.Yes']}" oncomplete="confirmationSaveUserphone.hide()" onclick="confirmUserphoneYesButtonClick()" />
+	                            <p:commandButton id="declineUserphoneSave" value="#{i18n['web.client.screen.field.No']}" oncomplete="confirmationSaveUserphone.hide()" onclick="confirmUserphoneNoButtonClick()" />
+	                        </p:confirmDialog>
+	                    </h:panelGroup>
+                    </h:panelGroup>
+                    <!-- ASSOCIATE SECTION -->
+                    <h:panelGroup id="associatePanelGroup" rendered="#{crudMetaDataARPTipoFacturaBean.associateSectionVisible}">
+                        <div class="tablebox">
+                            <div class="head">#{i18n['web.client.metadata.screen.title.AssociateUserphone']}</div>
+                            <div class="body">
+                                <table width="100%">
+                                    <tr>
+										<th>#{i18n['web.metadata.title.userphone']}</th>
+										<td>
+											<table>
+												<tr>
+													<td><h:panelGroup>
+															<h:selectBooleanCheckbox id="chkUserphoneListMassive"
+																value="#{crudMetaDataARPTipoFacturaBean.validatedAllUserphones}"
+																disabled="#{crudMetaDataARPTipoFacturaBean.userphoneList.size() eq 0}">
+																<f:ajax event="change"
+																	execute=":crudForm:chkUserphoneListMassive"
+																	render=":crudForm:listUserphoneMassive"
+																	onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+															</h:selectBooleanCheckbox>
+
+															<h:outputLabel for="chkUserphoneListMassive"
+																value="(#{i18n['web.client.selectonemenu.All']})" />
+														</h:panelGroup></td>
+												</tr>
+												<tr>
+													<td><h:selectManyListbox id="listUserphoneMassive"
+															value="#{crudMetaDataARPTipoFacturaBean.selectedUserphoneList}"
+															converter="userphoneConverter" size="5"
+															style="width: auto;"
+															disabled="#{crudMetaDataARPTipoFacturaBean.validatedAllUserphones}">
+
+															<f:selectItems
+																value="#{crudMetaDataARPTipoFacturaBean.userphoneList}"
+																var="uLItem" itemValue="#{uLItem}"
+																itemLabel="#{dLItem.nameChr}" />
+														</h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['web.client.metadata.screen.button.Associate']}" styleClass="btn_std_small" id="btnAssociateFile" action="#{crudMetaDataARPTipoFacturaBean.saveAssociatePlusMember}">
+                                <f:ajax execute=":crudForm:associatePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.metadata.screen.button.Cancel']}" styleClass="btn_std_small" action="#{crudMetaDataARPTipoFacturaBean.cancelAssociate}">
+                                <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+                    
+                    <p:dialog id="dialog" header="#{i18n['web.client.metadata.screen.header.resumen']}" widgetVar="dlg" resizable="true" modal="true" height="100">
+							<h:outputText id="salida" value="#{crudMetaDataARPTipoFacturaBean.messageUserphonesNotExist}" styleClass="metadataDialog" />
+					</p:dialog>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

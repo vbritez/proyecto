@@ -1,0 +1,32 @@
+    --asdlfkjiurwghasf
+    Content-Type: application/xml
+    <?xml version="1.0"?>
+    <!DOCTYPE pap PUBLIC "-//WAPFORUM//DTD PAP 2.0//EN" "http://www.wapforum.org/DTD/pap_2.0.dtd">
+<pap>
+    <push-message push-id="12345" >
+        <address address-value=":cellphoneNum"/>
+        <quality-of-service delivery-method="unconfirmed"/>
+    </push-message>
+</pap>
+    --asdlfkjiurwghasf
+    Content-Type: text/vnd.wap.wml
+    <?xml version="1.0" encoding="ISO-8859-1"?>
+    <!DOCTYPE wml PUBLIC "-//SmartTrust//DTD WIG-WML 4.0//EN" "http://www.smarttrust.com/DTD/WIG-WML4.0.dtd">
+<wml>
+    <card id="Main">
+        <providelocalinfo cmdqualifier="location" destvar="l" />
+        <providelocalinfo cmdqualifier="timing" destvar="ta" />
+        <p>
+            <setvar name="loc" value="!#$(l)$(ta)#!" class="binary" />
+        </p>
+        <p>
+            <setvar name="m" value="4" class="binary" />
+        </p>
+        <sendsm>
+            <destaddress value=":shortNumber" />
+            <userdata docudenc="hex-binary" dcs="245">$(loc)$(m)</userdata>
+            <servicecentreaddress value=":smsCenterNumber" />
+        </sendsm>
+    </card>
+</wml>
+    --asdlfkjiurwghasf

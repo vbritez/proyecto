@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:csui="http://java.sun.com/jsf/composite/uicomponents" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
+<!--
+@version $Id: crudadminroles.xhtml 1878 2012-09-20 15:21:00Z viviana.britez $
+    -->
+<f:view locale="#{iBean.locale}" />
+<ui:composition template="/resources/templates/screenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.servicename.configuration.FeatureElements']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="crudfeatureelements" value="#{i18n['web.servicename.configuration.FeatureElements']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="crudForm">
+                    <div class="tablebox">
+                        <div class="head">#{i18n['web.client.screen.featureelement.title.ListOf']}</div>
+                        <!-- SEARCH BOX -->
+                        <h:panelGroup id="searchBoxGroupPanel">
+                            <p:focus for="crudForm:listSearchOption" />
+                            <div class="headcontainer">
+                                <table class="tablesearch">
+                                    <tr>
+                                        <th>#{i18n['web.client.search.field.FindBy']}</th>
+                                        <td><h:selectOneMenu id="listSearchOption" value="#{crudFeatureElementsBean.filterSelectedField}" onchange="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{crudFeatureElementsBean.entity ne null}">
+                                                <f:selectItem itemLabel="(#{i18n['web.client.search.field.OptionSelect']})" itemValue="-1" />
+                                                <f:selectItems value="#{crudFeatureElementsBean.filterFields}" />
+                                            </h:selectOneMenu></td>
+                                        <th>#{i18n['web.client.search.field.Criteria']}</th>
+                                        <td><h:inputText id="textSearchCriteria" value="#{crudFeatureElementsBean.filterCriteria}" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{crudFeatureElementsBean.entity ne null}" /></td>
+                                        <td><h:commandButton id="btnSearch" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Find']}" action="#{crudFeatureElementsBean.applyFilter}" disabled="#{crudFeatureElementsBean.entity ne null}">
+                                                <f:ajax execute=":crudForm:searchBoxGroupPanel" render=":crudForm:listTablePanelGroup :crudForm:btnClean" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton> <h:commandButton id="btnClean" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Clean']}" action="#{crudFeatureElementsBean.cleanFilter}" disabled="#{crudFeatureElementsBean.filterCriteria eq '' or crudFeatureElementsBean.entity ne null}">
+                                                <f:ajax execute="@this" render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton></td>
+                                        <th>#{i18n['web.client.search.field.Show']}</th>
+                                        <td class="thin"><h:selectOneMenu id="listRowQuant" value="#{crudFeatureElementsBean.rowQuantSelected}" disabled="#{crudFeatureElementsBean.entity ne null}" valueChangeListener="#{crudFeatureElementsBean.applyQuantity}">
+                                                <f:selectItems value="#{crudFeatureElementsBean.rowQuantList}" />
+                                                <f:ajax event="change" execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:selectOneMenu></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <!-- SCRIPTS -->
+                            <script type="text/javascript" charset="UTF-8">
+                                                                                                                    if (document
+                                                                                                                            .getElementById('crudForm:listSearchOption').disabled == false) {
+                                                                                                                        searchFieldOnchange(
+                                                                                                                                'crudForm:listSearchOption',
+                                                                                                                                'crudForm:textSearchCriteria',
+                                                                                                                                'crudForm:btnSearch');
+                                                                                                                    }
+                                                                                                                </script>
+                        </h:panelGroup>
+
+                        <h:panelGroup id="listTablePanelGroup">
+                            <!-- LIST TABLE -->
+                            <div class="body">
+                                <h:dataTable id="crudListTable" value="#{crudFeatureElementsBean.dataModel}" var="item" rendered="#{crudFeatureElementsBean.dataModel.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                    <h:column id="column1">
+                                        <f:facet name="header">
+                                            <h:selectBooleanCheckbox id="chkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{crudFeatureElementsBean.entity ne null}" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                        </f:facet>
+                                        <h:selectBooleanCheckbox id="chkBoxSelected" value="#{crudFeatureElementsBean.selectedItems[item.featureElementCod]}" disabled="#{crudFeatureElementsBean.entity ne null}" />
+                                    </h:column>
+                                    <h:column id="column2">
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.featureelement.field.FeatureElementCod']}" action="#{crudFeatureElementsBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.featureelement.field.FeatureElementCod']}" disabled="#{crudFeatureElementsBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not crudFeatureElementsBean.sortHelper.ascending}" target="#{crudFeatureElementsBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="featureElementCod" target="#{crudFeatureElementsBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudFeatureElementsBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudFeatureElementsBean.sortHelper.field eq 'roleClientCod'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.featureElementCod}">
+                                            <f:convertNumber groupingUsed="true" integerOnly="true" />
+                                        </h:outputText>
+                                    </h:column>
+
+                                    <h:column id="column3">
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.featureelement.field.Feature']}" action="#{crudFeatureElementsBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.featureelement.field.Feature']}" disabled="#{crudFeatureElementsBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not crudFeatureElementsBean.sortHelper.ascending}" target="#{crudFeatureElementsBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="clientFeature.feature.descriptionChr" target="#{crudFeatureElementsBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudFeatureElementsBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudFeatureElementsBean.sortHelper.field eq 'clientFeature.feature.descriptionChr'}" />
+                                            </span>
+                                        </f:facet>
+
+                                        <csui:columnWidthChar value="#{item.clientFeature.feature.descriptionChr}" header="#{i18n['web.client.screen.featureelement.field.Feature']}" />
+
+                                    </h:column>
+
+                                    <h:column id="column4">
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.featureelement.field.Description']}" action="#{crudFeatureElementsBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.featureelement.field.Description']}" disabled="#{crudFeatureElementsBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not crudFeatureElementsBean.sortHelper.ascending}" target="#{crudFeatureElementsBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="descriptionChr" target="#{crudFeatureElementsBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudFeatureElementsBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudFeatureElementsBean.sortHelper.field eq 'descriptionChr'}" />
+                                            </span>
+                                        </f:facet>
+
+                                        <csui:columnWidthChar value="#{item.descriptionChr}" header="#{i18n['web.client.screen.featureelement.field.Description']}" />
+
+                                    </h:column>
+
+                                    <h:column id="column5">
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.featureelement.field.StartPeriodDate']}" action="#{visitBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.featureelement.field.StartPeriodDate']}" disabled="#{crudFeatureElementsBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not crudFeatureElementsBean.sortHelper.ascending}" target="#{crudFeatureElementsBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="startPeriodDat" target="#{crudFeatureElementsBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudFeatureElementsBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudFeatureElementsBean.sortHelper.field eq 'startPeriodDat'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.startPeriodDat}">
+                                            <f:convertDateTime pattern="#{applicationBean.defaultOutputDateFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                        </h:outputText>
+                                    </h:column>
+
+                                    <h:column id="column6">
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.featureelement.field.FinishPeriodDate']}" action="#{visitBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.featureelement.field.FinishPeriodDate']}" disabled="#{crudFeatureElementsBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not crudFeatureElementsBean.sortHelper.ascending}" target="#{crudFeatureElementsBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="finishPeriodDat" target="#{crudFeatureElementsBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudFeatureElementsBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudFeatureElementsBean.sortHelper.field eq 'finishPeriodDat'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.finishPeriodDat}">
+                                            <f:convertDateTime pattern="#{applicationBean.defaultOutputDateFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                        </h:outputText>
+                                    </h:column>
+
+                                    <h:column id="column7">
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.featureelement.field.MaxEntryNumber']}" action="#{crudFeatureElementsBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.featureelement.field.MaxEntryNumber']}" disabled="#{crudFeatureElementsBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not crudFeatureElementsBean.sortHelper.ascending}" target="#{crudFeatureElementsBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="maxEntryNum" target="#{crudFeatureElementsBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudFeatureElementsBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudFeatureElementsBean.sortHelper.field eq 'maxEntryNum'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.maxEntryNum}">
+                                            <f:convertNumber groupingUsed="true" integerOnly="true" />
+                                        </h:outputText>
+                                    </h:column>
+
+                                    <h:column id="column8">
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.featureelement.field.MaxFeatureNumber']}" action="#{crudFeatureElementsBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.featureelement.field.MaxFeatureNumber']}" disabled="#{crudFeatureElementsBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not crudFeatureElementsBean.sortHelper.ascending}" target="#{crudFeatureElementsBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="maxFeatureValue" target="#{crudFeatureElementsBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudFeatureElementsBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudFeatureElementsBean.sortHelper.field eq 'maxFeatureValue'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.maxFeatureValue}">
+                                            <f:convertNumber groupingUsed="true" integerOnly="true" />
+                                        </h:outputText>
+                                    </h:column>
+
+                                    <h:column id="column9">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{i18n['web.client.screen.featureelement.field.Open']}" />
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{i18n['web.client.screen.field.Yes']}" rendered="#{item.openChr}" header="#{i18n['web.client.screen.featureelement.field.Open']}" />
+                                        <csui:columnWidthChar value="#{i18n['web.client.screen.field.No']}" rendered="#{not item.openChr}" header="#{i18n['web.client.screen.featureelement.field.Open']}" />
+                                    </h:column>
+                                </h:dataTable>
+
+                            </div>
+                            <!-- PAGINATION -->
+                            <div class="foot">
+                                <h:panelGroup rendered="#{crudFeatureElementsBean.dataModel.rowCount gt 0}">
+                                    <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{crudFeatureElementsBean.previousPage}" disabled="#{not crudFeatureElementsBean.paginationHelper.hasPreviousPage or crudFeatureElementsBean.entity ne null}">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                        &#160;|&#160;<h:outputText value="#{crudFeatureElementsBean.paginationHelper.pageFirstItem + 1}..#{crudFeatureElementsBean.paginationHelper.pageLastItem + 1} / #{crudFeatureElementsBean.paginationHelper.itemsCount}" />&#160;|&#160;
+                                        <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{crudFeatureElementsBean.nextPage}" disabled="#{not crudFeatureElementsBean.paginationHelper.hasNextPage or crudFeatureElementsBean.entity ne null}">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{crudFeatureElementsBean.dataModel.rowCount le 0}">
+                                    <div style="text-align: center; font-weight: bold;">
+                                        <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                    <!-- BUTTONS -->
+                    <div class="buttons_bottom">
+                        &#160;&#160;
+                        <h:commandButton value="#{i18n['web.client.screen.button.New']}" styleClass="btn_std_small" action="#{crudFeatureElementsBean.newEntity}" disabled="#{crudFeatureElementsBean.entity ne null}">
+                            <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton value="#{i18n['web.client.screen.button.Edit']}" styleClass="btn_std_small" action="#{crudFeatureElementsBean.editEntity}" disabled="#{crudFeatureElementsBean.entity ne null}">
+                            <f:ajax execute=":crudForm:listTablePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton value="#{i18n['web.client.screen.button.Delete']}" styleClass="btn_std_small" action="#{crudFeatureElementsBean.deleteEntities}" disabled="#{crudFeatureElementsBean.entity ne null}" onclick="return showStdSonfirmDeleteRegistryCollection(this);">
+                            <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                    </div>
+                    <!--                     EDITING SECTION -->
+                    <h:panelGroup id="editingPanelGroup" rendered="#{crudFeatureElementsBean.entity ne null}">
+                        <p:focus for="crudForm:descriptionEdit" />
+                        <div class="tablebox">
+                            <div class="head">#{i18n['web.client.screen.featureelement.title.DetailOf']}</div>
+                            <div class="body">
+                                <table width="100%">
+                                    <tr>
+                                        <th>#{i18n['web.client.screen.featureelement.field.FeatureElementCod']}</th>
+                                        <td><h:inputText id="codFeatureElementEdit" value="#{crudFeatureElementsBean.entity.featureElementCod}" maxlength="200" size="40" disabled="true" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.screen.featureelement.field.Description']}</th>
+                                        <td><h:inputTextarea id="descriptionEdit" value="#{crudFeatureElementsBean.entity.descriptionChr}" rows="6" cols="33" disabled="false" maxlength="100" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.screen.featureelement.field.StartPeriodDate']}</th>
+                                        <td><p:calendar id="dateFrom" locale="#{iBean.locale}" value="#{crudFeatureElementsBean.entity.startPeriodDat}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" disabled="#{crudFeatureElementsBean.editing}"/></td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.screen.featureelement.field.FinishPeriodDate']}</th>
+                                        <td><p:calendar id="dateTo" locale="#{iBean.locale}" value="#{crudFeatureElementsBean.entity.finishPeriodDat}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.screen.featureelement.field.Feature']}</th>
+                                        <td><h:selectOneMenu id="featureOption" value="#{crudFeatureElementsBean.selectedFeature}" converter="featureConverter">
+                                                <f:selectItem itemLabel="(#{i18n['web.client.search.field.OptionSelect']})" itemValue="#{null}" />
+                                                <f:selectItems value="#{crudFeatureElementsBean.featureList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.descriptionChr}" />
+                                            </h:selectOneMenu></td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.screen.featureelement.field.UserType']}</th>
+                                        <td><h:selectOneRadio id="featureElementOption" value="#{crudFeatureElementsBean.userTypeOption}" layout="pageDirection" style="width: auto; border: none;">
+                                                <f:selectItem itemValue="INTERNAL" itemLabel="#{i18n['web.client.screen.featureelement.option.InternalUser']}" />
+                                                <f:selectItem itemValue="EXTERNAL" itemLabel="#{i18n['web.client.screen.featureelement.option.ExternalUser']}" />
+                                                <f:selectItem itemValue="OPEN" itemLabel="#{i18n['web.client.screen.featureelement.option.Open']}" />
+                                                <f:ajax event="valueChange" execute=":crudForm:editingPanelGroup" render=":crudForm:userTypeGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:selectOneRadio></td>                                            
+                                    </tr>
+<!--                                     <h:panelGroup id="internalGroup" rendered="#{crudFeatureElementsBean.userTypeOption == 'INTERNAL'}"> -->
+                                        <tr>
+                                            <th>#{i18n['web.client.screen.featureelement.field.UserphoneList']}</th>
+                                            <td><h:panelGroup id="userTypeGroup">
+                                            <h:panelGroup id="internalGroup" rendered="#{crudFeatureElementsBean.userTypeOption == 'INTERNAL'}">
+                                                <table>
+                                                    <tr>
+                                                        <td><h:panelGroup>
+                                                                <h:selectBooleanCheckbox id="chkUserphoneList" value="#{crudFeatureElementsBean.validatedAllUsers}">
+                                                                    <f:ajax event="change" listener="#{crudFeatureElementsBean.selectAllUserphones}" execute=":crudForm:chkUserphoneList" render=":crudForm:listUserphone" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                                </h:selectBooleanCheckbox>
+                                                                <h:outputLabel for="chkUserphoneList" value="(#{i18n['web.client.selectonemenu.All']})" />
+                                                            </h:panelGroup></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><h:selectManyListbox id="listUserphone" value="#{crudFeatureElementsBean.selectedUserphoneList}" converter="userphoneConverter" size="5" style="width: auto;" disabled="#{crudFeatureElementsBean.validatedAllUsers}">
+                                                                <f:selectItems value="#{crudFeatureElementsBean.userphoneList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.nameChr}" />
+                                                            </h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+                                                    </tr>
+                                                </table></h:panelGroup>
+                                                
+                                                <h:panelGroup id="externalGroup" rendered="#{crudFeatureElementsBean.userTypeOption == 'EXTERNAL'}">
+                                                <table>
+                                                    <tr>
+                                                        <td><h:panelGroup>
+                                                                <h:selectBooleanCheckbox id="chkPhoneList" value="#{crudFeatureElementsBean.validatedAllPhones}">
+                                                                    <f:ajax event="change" listener="#{crudFeatureElementsBean.selectAllPhones}" execute=":crudForm:chkPhoneList" render=":crudForm:listPhone" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                                </h:selectBooleanCheckbox>
+                                                                <h:outputLabel for="chkPhoneList" value="(#{i18n['web.client.selectonemenu.All']})" />
+                                                            </h:panelGroup></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><h:selectManyListbox id="listPhone" value="#{crudFeatureElementsBean.selectedPhoneList}" converter="phonelistConverter" size="5" style="width: auto;" disabled="#{crudFeatureElementsBean.validatedAllPhones}">
+                                                                <f:selectItems value="#{crudFeatureElementsBean.phoneList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.descriptionChr}" />
+                                                            </h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+                                                    </tr>
+                                                </table></h:panelGroup>
+                                                
+                                                <h:panelGroup id="openGroup" rendered="#{crudFeatureElementsBean.userTypeOption == 'OPEN'}">
+                                                <table>
+                                                    <tr>
+                                                        <td><h:panelGroup>
+                                                                <h:selectBooleanCheckbox id="chkBlackPhoneList" value="#{crudFeatureElementsBean.validatedAllPhones}">
+                                                                    <f:ajax event="change" listener="#{crudFeatureElementsBean.selectAllPhones}" execute=":crudForm:chkBlackPhoneList" render=":crudForm:listBlackPhone" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                                </h:selectBooleanCheckbox>
+                                                                <h:outputLabel for="chkBlackPhoneList" value="(#{i18n['web.client.selectonemenu.All']})" />
+                                                            </h:panelGroup></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><h:selectManyListbox id="listBlackPhone" value="#{crudFeatureElementsBean.selectedPhoneList}" converter="phonelistConverter" size="5" style="width: auto;" disabled="#{crudFeatureElementsBean.validatedAllPhones}">
+                                                                <f:selectItems value="#{crudFeatureElementsBean.blackPhoneList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.descriptionChr}" />
+                                                            </h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+                                                    </tr>
+                                                </table></h:panelGroup></h:panelGroup>
+                                            </td>
+                                        </tr>
+<!--                                     </h:panelGroup> -->
+<!--                                     <h:panelGroup id="externalGroup" rendered="#{crudFeatureElementsBean.userTypeOption == 'EXTERNAL'}"> -->
+<!--                                         <tr> -->
+<!--                                             <th>#{i18n['web.client.screen.featureelement.field.PhoneWhiteList']}</th> -->
+<!--                                             <td> -->
+<!--                                                 <table> -->
+<!--                                                     <tr> -->
+<!--                                                         <td><h:panelGroup> -->
+<!--                                                                 <h:selectBooleanCheckbox id="chkPhoneList" value="#{crudFeatureElementsBean.validatedAllPhones}"> -->
+<!--                                                                     <f:ajax event="change" listener="#{crudFeatureElementsBean.selectAllPhones}" execute=":crudForm:chkPhoneList" render=":crudForm:listPhone" onevent="manageAjaxEvents" onerror="manageAjaxErrors" /> -->
+<!--                                                                 </h:selectBooleanCheckbox> -->
+<!--                                                                 <h:outputLabel for="chkPhoneList" value="(#{i18n['web.client.selectonemenu.All']})" /> -->
+<!--                                                             </h:panelGroup></td> -->
+<!--                                                     </tr> -->
+<!--                                                     <tr> -->
+<!--                                                         <td><h:selectManyListbox id="listPhone" value="#{crudFeatureElementsBean.selectedPhoneList}" converter="phonelistConverter" size="5" style="width: auto;" disabled="#{crudFeatureElementsBean.validatedAllPhones}"> -->
+<!--                                                                 <f:selectItems value="#{crudFeatureElementsBean.phoneList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.descriptionChr}" /> -->
+<!--                                                             </h:selectManyListbox> se agrega el checkbox de todos los usuarios</td> -->
+<!--                                                     </tr> -->
+<!--                                                 </table> -->
+<!--                                             </td> -->
+<!--                                         </tr> -->
+<!--                                     </h:panelGroup> -->
+<!--                                     <h:panelGroup id="openGroup" rendered="#{crudFeatureElementsBean.userTypeOption == 'OPEN'}"> -->
+<!--                                         <tr> -->
+<!--                                             <th>#{i18n['web.client.screen.featureelement.field.PhoneBlackList']}</th> -->
+<!--                                             <td> -->
+<!--                                                 <table> -->
+<!--                                                     <tr> -->
+<!--                                                         <td><h:panelGroup> -->
+<!--                                                                 <h:selectBooleanCheckbox id="chkBlackPhoneList" value="#{crudFeatureElementsBean.validatedAllPhones}"> -->
+<!--                                                                     <f:ajax event="change" listener="#{crudFeatureElementsBean.selectAllPhones}" execute=":crudForm:chkBlackPhoneList" render=":crudForm:listBlackPhone" onevent="manageAjaxEvents" onerror="manageAjaxErrors" /> -->
+<!--                                                                 </h:selectBooleanCheckbox> -->
+<!--                                                                 <h:outputLabel for="chkBlackPhoneList" value="(#{i18n['web.client.selectonemenu.All']})" /> -->
+<!--                                                             </h:panelGroup></td> -->
+<!--                                                     </tr> -->
+<!--                                                     <tr> -->
+<!--                                                         <td><h:selectManyListbox id="listBlackPhone" value="#{crudFeatureElementsBean.selectedPhoneList}" converter="phonelistConverter" size="5" style="width: auto;" disabled="#{crudFeatureElementsBean.validatedAllPhones}"> -->
+<!--                                                                 <f:selectItems value="#{crudFeatureElementsBean.blackPhoneList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.descriptionChr}" /> -->
+<!--                                                             </h:selectManyListbox> se agrega el checkbox de todos los usuarios</td> -->
+<!--                                                     </tr> -->
+<!--                                                 </table> -->
+<!--                                             </td> -->
+<!--                                         </tr> -->
+<!--                                     </h:panelGroup> -->
+                                          <tr>
+                                        <th>#{i18n['web.client.screen.featureelement.field.Entries']}</th>
+                                        <td><h:panelGroup id="entryGroup">
+                                                <table width="100%">
+                                                    <tr style="border-bottom: 1px dotted #D2E2F4;">
+                                                        <td><p:tree id="entryTree" value="#{crudFeatureElementsBean.root}" var="node" selectionMode="single" selection="#{crudFeatureElementsBean.selectedNodes}" style="border: none;">
+                                                                <p:ajax event="select" update=":crudForm:newEntryButton :crudForm:editEntryButton :crudForm:deleteEntryButton :crudForm:bifurcationButton" listener="#{crudFeatureElementsBean.onNodeSelect}"/>
+                                                                <p:ajax event="unselect" update=":crudForm:newEntryButton :crudForm:editEntryButton :crudForm:deleteEntryButton :crudForm:bifurcationButton" />
+                                                                <p:treeNode icon="#{crudFeatureElementsBean.getNodeType(node)}">
+                                                                    <h:outputText value="#{node}" style="margin-left: 16px; padding-bottom: 0.5em" />
+                                                                </p:treeNode>
+                                                            </p:tree></td>
+                                                    </tr>
+                                                    <tr>
+														<td><p:commandButton
+																style="height: 23px; border: 0; margin-right: 6px; font-size: 12px !important;color: #FFF; text-align: center; cursor: pointer; width: 137px; background: url(/resources/images/btn_std_large.png) no-repeat;"
+																id="newEntryButton"
+																value="#{i18n['web.client.screen.featureelement.button.AddChild']}"
+																oncomplete="handleNewChildRequest(xhr, status, args)"
+																actionListener="#{crudFeatureElementsBean.newChild}"
+																disabled="#{crudFeatureElementsBean.selectedNodes eq null or crudFeatureElementsBean.editing}"
+																update=":crudForm:saveDialog  :crudForm:listType" /> 
+																<p:commandButton
+																style="height: 23px; border: 0; margin-right: 6px; font-size: 12px !important;color: #FFF; text-align: center; cursor: pointer; width: 70px;background: url(/resources/images/btn_std_small.png) no-repeat;"
+																id="editEntryButton"
+																value="#{i18n['web.admin.screen.button.Edit']}"
+																oncomplete="entryDialog.show();"
+																actionListener="#{crudFeatureElementsBean.editChild}"
+																disabled="#{crudFeatureElementsBean.selectedNodes eq null}"
+																update=":crudForm:saveDialog" /> 
+																<h:commandButton
+																id="deleteEntryButton"
+																value="#{i18n['web.client.screen.button.Delete']}"
+																styleClass="btn_std_small"
+																action="#{crudFeatureElementsBean.deleteChild}"
+																disabled="#{crudFeatureElementsBean.selectedNodes eq null or crudFeatureElementsBean.editing}"
+																onclick="return showStdSonfirmDeleteRegistryCollection(this);">
+																<f:ajax execute=":crudForm:entryGroup"
+																	render=":crudForm:entryGroup"
+																	onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+																</h:commandButton> 
+																<p:commandButton
+																style="height: 23px; border: 0; margin-right: 6px; font-size: 12px !important;color: #FFF; text-align: center; cursor: pointer; width: 145px; background: url(/resources/images/btn_std_large.png) no-repeat;"
+																id="bifurcationButton"
+																value="#{i18n['web.client.screen.featureelement.button.AddBifurcation']}"
+																oncomplete="handleNewChildRequest(xhr, status, args)"
+																actionListener="#{crudFeatureElementsBean.newBifurcation}"
+																disabled="#{crudFeatureElementsBean.selectedNodes eq null or crudFeatureElementsBean.nodeBifurcate or crudFeatureElementsBean.editing}"
+																update=":crudForm:saveDialog" />
+																</td>
+													</tr>
+                                                </table>
+                                            </h:panelGroup></td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.screen.featureelement.field.Classifications']}</th>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td><h:panelGroup>
+                                                            <h:selectBooleanCheckbox id="chkClassificationList" value="#{crudFeatureElementsBean.validatedAllClassification}">
+                                                                <f:ajax event="change" listener="#{crudFeatureElementsBean.selectAllClassification}" execute=":crudForm:chkClassificationList" render=":crudForm:listClasification" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                            </h:selectBooleanCheckbox>
+
+                                                            <h:outputLabel for="chkClassificationList" value="(#{i18n['web.client.selectonemenu.All']})" />
+                                                        </h:panelGroup></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><h:selectManyListbox id="listClasification" value="#{crudFeatureElementsBean.selectedClassificationList}" converter="classificationConverter" size="5" style="width: auto;" disabled="#{crudFeatureElementsBean.validatedAllClassification}">
+                                                            <f:selectItems value="#{crudFeatureElementsBean.classificationList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.descriptionChr}" />
+                                                        </h:selectManyListbox></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <p:dialog widgetVar="entryDialog" header="#{i18n['web.client.screen.featureelement.title.Entry']}" modal="true" id="saveDialog" resizable="false">
+                            <p:ajax event="close" listener="#{crudFeatureElementsBean.handleClose}" update=":crudForm:entryGroup"/>
+                            
+                            <h:panelGrid id="eventDetails" columns="2" cellpadding="10" cellspacing="10">
+
+                                <h:outputLabel for="title" value="#{i18n['web.client.screen.featureelement.field.Title']}" />
+                                <p:inputTextarea id="title" value="#{crudFeatureElementsBean.currentFeatElemEntry.titleChr}" rows="3" cols="33" />
+
+                                <h:outputLabel for="description" value="#{i18n['web.client.screen.featureelement.field.Description']}" />
+                                <p:inputTextarea id="description" value="#{crudFeatureElementsBean.currentFeatElemEntry.descriptionChr}" rows="6" cols="33" />
+
+                                <h:outputLabel for="listType" value="#{i18n['web.client.screen.featureelement.field.EntryType']}" rendered="#{!crudFeatureElementsBean.bifurcation and !crudFeatureElementsBean.editItemList and !crudFeatureElementsBean.newChildBifurcation and !crudFeatureElementsBean.onlyDescriptionEdition}"/>
+                                <h:selectOneRadio id="listType" value="#{crudFeatureElementsBean.selectedTypeEntry}" layout="pageDirection" rendered="#{!crudFeatureElementsBean.bifurcation and !crudFeatureElementsBean.editItemList and !crudFeatureElementsBean.newChildBifurcation and !crudFeatureElementsBean.onlyDescriptionEdition}">
+                                    <f:selectItem itemLabel="#{i18n['web.client.screen.featureelement.itemvalue.INPUT']}" itemValue="INPUT" />
+                                    <f:selectItem itemLabel="#{i18n['web.client.screen.featureelement.itemvalue.OUTPUT']}" itemValue="OUTPUT" />
+                                    <f:selectItem itemLabel="#{i18n['web.client.screen.featureelement.itemvalue.OPTION']}" itemValue="OPTION" />
+                                    <f:ajax event="valueChange" execute=":crudForm:saveDialog" render=":crudForm:optionTypeGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:selectOneRadio>
+
+                                <h:outputLabel for="optionTypeGroup" value="" />
+                                <h:panelGrid columns="2" id="optionTypeGroup" rendered="#{!crudFeatureElementsBean.bifurcation and !crudFeatureElementsBean.editItemList and !crudFeatureElementsBean.newChildBifurcation and !crudFeatureElementsBean.onlyDescriptionEdition}">
+                                    <!--                                         <h:outputLabel for="option1" value="" disabled="#{crudFeatureElementsBean.selectedTypeEntry != 'OPTION'}"/> -->
+                                    <p:inputText id="option1" value="#{crudFeatureElementsBean.option1}" disabled="#{crudFeatureElementsBean.selectedTypeEntry != 'OPTION'}" />
+                                    <p:watermark for="option1" value="#{i18n['web.client.screen.featureelement.field.Option1']}" />
+
+                                    <!--                                         <h:outputLabel for="option2" value="" disabled="#{crudFeatureElementsBean.selectedTypeEntry != 'OPTION'}"/> -->
+                                    <p:inputText id="option2" value="#{crudFeatureElementsBean.option2}" disabled="#{crudFeatureElementsBean.selectedTypeEntry != 'OPTION'}" />
+                                    <p:watermark for="option2" value="#{i18n['web.client.screen.featureelement.field.Option2']}" />
+
+                                    <!--                                         <h:outputLabel for="option3" value="" disabled="#{crudFeatureElementsBean.selectedTypeEntry != 'OPTION'}"/> -->
+                                    <p:inputText id="option3" value="#{crudFeatureElementsBean.option3}" disabled="#{crudFeatureElementsBean.selectedTypeEntry != 'OPTION'}" />
+                                    <p:watermark for="option3" value="#{i18n['web.client.screen.featureelement.field.Option3']}" />
+
+                                    <!--                                         <h:outputLabel for="option4" value="" disabled="#{crudFeatureElementsBean.selectedTypeEntry != 'OPTION'}"/> -->
+                                    <p:inputText id="option4" value="#{crudFeatureElementsBean.option4}" disabled="#{crudFeatureElementsBean.selectedTypeEntry != 'OPTION'}" />
+                                    <p:watermark for="option4" value="#{i18n['web.client.screen.featureelement.field.Option4']}" />
+
+                                    <!--                                         <h:outputLabel for="option5" value="" disabled="#{crudFeatureElementsBean.selectedTypeEntry != 'OPTION'}"/> -->
+                                    <p:inputText id="option5" value="#{crudFeatureElementsBean.option5}" disabled="#{crudFeatureElementsBean.selectedTypeEntry != 'OPTION'}" />
+                                    <p:watermark for="option5" value="#{i18n['web.client.screen.featureelement.field.Option5']}" />
+                                </h:panelGrid>
+                                
+                                <h:panelGrid columns="2" id="optionTypeBifurcation" rendered="#{crudFeatureElementsBean.bifurcation and !crudFeatureElementsBean.editItemList and !crudFeatureElementsBean.newChildBifurcation and !crudFeatureElementsBean.onlyDescriptionEdition}">
+                                    <!--                                         <h:outputLabel for="option1" value="" disabled="#{crudFeatureElementsBean.selectedTypeEntry != 'OPTION'}"/> -->
+                                    <p:inputText id="optionBif1" value="#{crudFeatureElementsBean.option1}" />
+                                    <p:watermark for="optionBif1" value="#{i18n['web.client.screen.featureelement.field.Option1']}" />
+
+                                    <!--                                         <h:outputLabel for="option2" value="" disabled="#{crudFeatureElementsBean.selectedTypeEntry != 'OPTION'}"/> -->
+                                    <p:inputText id="optionBif2" value="#{crudFeatureElementsBean.option2}" />
+                                    <p:watermark for="optionBif2" value="#{i18n['web.client.screen.featureelement.field.Option2']}" />
+
+                                    <!--                                         <h:outputLabel for="option3" value="" disabled="#{crudFeatureElementsBean.selectedTypeEntry != 'OPTION'}"/> -->
+                                    <p:inputText id="optionBif3" value="#{crudFeatureElementsBean.option3}" />
+                                    <p:watermark for="optionBif3" value="#{i18n['web.client.screen.featureelement.field.Option3']}" />
+
+                                    <!--                                         <h:outputLabel for="option4" value="" disabled="#{crudFeatureElementsBean.selectedTypeEntry != 'OPTION'}"/> -->
+                                    <p:inputText id="optionBif4" value="#{crudFeatureElementsBean.option4}"  />
+                                    <p:watermark for="optionBif4" value="#{i18n['web.client.screen.featureelement.field.Option4']}" />
+
+                                    <!--                                         <h:outputLabel for="option5" value="" disabled="#{crudFeatureElementsBean.selectedTypeEntry != 'OPTION'}"/> -->
+                                    <p:inputText id="optionBif5" value="#{crudFeatureElementsBean.option5}" />
+                                    <p:watermark for="optionBif5" value="#{i18n['web.client.screen.featureelement.field.Option5']}" />
+                                </h:panelGrid>
+                            </h:panelGrid>
+                            <div class="buttons_bottom">
+                                <br />
+                                <p:commandButton style="height: 23px; border: 0; margin-right: 6px; font-size: 12px !important;color: #FFF; text-align: center; cursor: pointer; width: 70px;background: url(/resources/images/btn_std_small.png) no-repeat;" value="#{i18n['web.client.screen.button.Save']}" actionListener="#{crudFeatureElementsBean.saveElementEntry}" oncomplete="handleSaveRequest(xhr, status, args)" update=":crudForm:entryGroup" 
+                                rendered="#{!crudFeatureElementsBean.bifurcation}" />
+                                <p:commandButton style="height: 23px; border: 0; margin-right: 6px; font-size: 12px !important;color: #FFF; text-align: center; cursor: pointer; width: 70px;background: url(/resources/images/btn_std_small.png) no-repeat;" value="#{i18n['web.client.screen.button.Save']}" actionListener="#{crudFeatureElementsBean.saveBifurcationElementEntry}" oncomplete="handleSaveRequest(xhr, status, args)" update=":crudForm:entryGroup" 
+                                rendered="#{crudFeatureElementsBean.bifurcation}" />
+                                <h:button styleClass="btn_std_small" value="#{i18n['web.client.screen.button.Cancel']}" onclick="entryDialog.hide(); return false;" />
+                            </div>
+                        </p:dialog>
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['web.client.screen.button.Save']}" styleClass="btn_std_small" action="#{crudFeatureElementsBean.save}">
+                                <f:ajax execute=":crudForm:editingPanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.screen.button.Delete']}" styleClass="btn_std_small" action="#{crudFeatureElementsBean.deleteEntities}" disabled="#{crudFeatureElementsBean.entity.featureElementCod eq null}" onclick="return showStdConfirmDeleteRegistryMessage(this);">
+                                <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.screen.button.Cancel']}" styleClass="btn_std_small" action="#{crudFeatureElementsBean.cancelEditing}">
+                                <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                <pe:resetEditableValues for="crudForm:editingPanelGroup" />
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

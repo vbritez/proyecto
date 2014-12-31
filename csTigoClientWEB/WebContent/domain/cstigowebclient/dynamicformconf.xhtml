@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:csui="http://java.sun.com/jsf/composite/uicomponents" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
+<!--
+@version $Id: crudadminroles.xhtml 1878 2012-09-20 15:21:00Z viviana.britez $
+    -->
+<f:view locale="#{iBean.locale}" />
+<ui:composition template="/resources/templates/screenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.client.screen.dynamicformconf.title.DynamicForms']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="dynamicformconf" value="#{i18n['web.client.screen.dynamicformconf.title.DynamicForms']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="crudForm">
+                    <div class="tablebox">
+                        <div class="head">#{i18n['web.client.screen.dynamicformconf.title.ListOf']}</div>
+                        <!-- SEARCH BOX -->
+                        <h:panelGroup id="searchBoxGroupPanel">
+                            <p:focus for="crudForm:listSearchOption" />
+                            <div class="headcontainer">
+                                <table class="tablesearch">
+                                    <tr>
+                                        <th>#{i18n['web.client.search.field.FindBy']}</th>
+                                        <td><h:selectOneMenu id="listSearchOption" value="#{dynamicFormConfBean.filterSelectedField}" onchange="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{dynamicFormConfBean.entity ne null}">
+                                                <f:selectItem itemLabel="(#{i18n['web.client.search.field.OptionSelect']})" itemValue="-1" />
+                                                <f:selectItems value="#{dynamicFormConfBean.filterFields}" />
+                                            </h:selectOneMenu></td>
+                                        <th>#{i18n['web.client.search.field.Criteria']}</th>
+                                        <td><h:inputText id="textSearchCriteria" value="#{dynamicFormConfBean.filterCriteria}" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{dynamicFormConfBean.entity ne null}" /></td>
+                                        <td><h:commandButton id="btnSearch" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Find']}" action="#{dynamicFormConfBean.applyFilter}" disabled="#{dynamicFormConfBean.entity ne null}">
+                                                <f:ajax execute=":crudForm:searchBoxGroupPanel" render=":crudForm:listTablePanelGroup :crudForm:btnClean" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton> <h:commandButton id="btnClean" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Clean']}" action="#{dynamicFormConfBean.cleanFilter}" disabled="#{dynamicFormConfBean.filterCriteria eq '' or dynamicFormConfBean.entity ne null}">
+                                                <f:ajax execute="@this" render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton></td>
+                                        <th>#{i18n['web.client.search.field.Show']}</th>
+                                        <td class="thin"><h:selectOneMenu id="listRowQuant" value="#{dynamicFormConfBean.rowQuantSelected}" disabled="#{dynamicFormConfBean.entity ne null}" valueChangeListener="#{dynamicFormConfBean.applyQuantity}">
+                                                <f:selectItems value="#{dynamicFormConfBean.rowQuantList}" />
+                                                <f:ajax event="change" execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:selectOneMenu></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <!-- SCRIPTS -->
+                            <script type="text/javascript" charset="UTF-8">
+                                                                                                                    if (document
+                                                                                                                            .getElementById('crudForm:listSearchOption').disabled == false) {
+                                                                                                                        searchFieldOnchange(
+                                                                                                                                'crudForm:listSearchOption',
+                                                                                                                                'crudForm:textSearchCriteria',
+                                                                                                                                'crudForm:btnSearch');
+                                                                                                                    }
+                                                                                                                </script>
+                        </h:panelGroup>
+
+                        <h:panelGroup id="listTablePanelGroup">
+                            <!-- LIST TABLE -->
+                            <div class="body">
+                                <h:dataTable id="crudListTable" value="#{dynamicFormConfBean.dataModel}" var="item" rendered="#{dynamicFormConfBean.dataModel.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                    <h:column id="column1">
+                                        <f:facet name="header">
+                                            <h:selectBooleanCheckbox id="chkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{dynamicFormConfBean.entity ne null}" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                        </f:facet>
+                                        <h:selectBooleanCheckbox id="chkBoxSelected" value="#{dynamicFormConfBean.selectedItems[item.featureElementCod]}" disabled="#{dynamicFormConfBean.entity ne null}" />
+                                    </h:column>
+                                    <h:column id="column2">
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.dynamicformconf.field.FeatureElementCod']}" action="#{dynamicFormConfBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.dynamicformconf.field.FeatureElementCod']}" disabled="#{dynamicFormConfBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not dynamicFormConfBean.sortHelper.ascending}" target="#{dynamicFormConfBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="featureElementCod" target="#{dynamicFormConfBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{dynamicFormConfBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{dynamicFormConfBean.sortHelper.field eq 'roleClientCod'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.featureElementCod}">
+                                            <f:convertNumber groupingUsed="true" integerOnly="true" />
+                                        </h:outputText>
+                                    </h:column>
+
+                                    <h:column id="column4">
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.dynamicformconf.field.Description']}" action="#{dynamicFormConfBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.dynamicformconf.field.Description']}" disabled="#{dynamicFormConfBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not dynamicFormConfBean.sortHelper.ascending}" target="#{dynamicFormConfBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="descriptionChr" target="#{dynamicFormConfBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{dynamicFormConfBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{dynamicFormConfBean.sortHelper.field eq 'descriptionChr'}" />
+                                            </span>
+                                        </f:facet>
+
+                                        <csui:columnWidthChar value="#{item.descriptionChr}" header="#{i18n['web.client.screen.featureelement.field.Description']}" />
+
+                                    </h:column>
+
+                                    <h:column id="column5">
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.dynamicformconf.field.StartPeriodDate']}" action="#{visitBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.dynamicformconf.field.StartPeriodDate']}" disabled="#{dynamicFormConfBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not dynamicFormConfBean.sortHelper.ascending}" target="#{dynamicFormConfBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="startPeriodDat" target="#{dynamicFormConfBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{dynamicFormConfBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{dynamicFormConfBean.sortHelper.field eq 'startPeriodDat'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.startPeriodDat}">
+                                            <f:convertDateTime pattern="#{applicationBean.defaultOutputDateFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                        </h:outputText>
+                                    </h:column>
+
+                                    <h:column id="column6">
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.dynamicformconf.field.FinishPeriodDate']}" action="#{visitBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.dynamicformconf.field.FinishPeriodDate']}" disabled="#{dynamicFormConfBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not dynamicFormConfBean.sortHelper.ascending}" target="#{dynamicFormConfBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="finishPeriodDat" target="#{dynamicFormConfBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{dynamicFormConfBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{dynamicFormConfBean.sortHelper.field eq 'finishPeriodDat'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.finishPeriodDat}">
+                                            <f:convertDateTime pattern="#{applicationBean.defaultOutputDateFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                        </h:outputText>
+                                    </h:column>
+
+                                    <h:column id="column7">
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.dynamicformconf.field.MaxEntryNumber']}" action="#{dynamicFormConfBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.dynamicformconf.field.MaxEntryNumber']}" disabled="#{dynamicFormConfBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not dynamicFormConfBean.sortHelper.ascending}" target="#{dynamicFormConfBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="maxEntryNum" target="#{dynamicFormConfBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{dynamicFormConfBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{dynamicFormConfBean.sortHelper.field eq 'maxEntryNum'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.maxEntryNum}">
+                                            <f:convertNumber groupingUsed="true" integerOnly="true" />
+                                        </h:outputText>
+                                    </h:column>
+
+                                    <h:column id="column8">
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.dynamicformconf.field.MaxFeatureNumber']}" action="#{dynamicFormConfBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.dynamicformconf.field.MaxFeatureNumber']}" disabled="#{dynamicFormConfBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not dynamicFormConfBean.sortHelper.ascending}" target="#{dynamicFormConfBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="maxFeatureValue" target="#{dynamicFormConfBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{dynamicFormConfBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{dynamicFormConfBean.sortHelper.field eq 'maxFeatureValue'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.maxFeatureValue}">
+                                            <f:convertNumber groupingUsed="true" integerOnly="true" />
+                                        </h:outputText>
+                                    </h:column>
+
+                                    <h:column id="column9">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{i18n['web.client.screen.featureelement.field.Open']}" />
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{i18n['web.client.screen.field.Yes']}" rendered="#{item.openChr}" header="#{i18n['web.client.screen.featureelement.field.Open']}" />
+                                        <csui:columnWidthChar value="#{i18n['web.client.screen.field.No']}" rendered="#{not item.openChr}" header="#{i18n['web.client.screen.featureelement.field.Open']}" />
+                                    </h:column>
+                                </h:dataTable>
+
+                            </div>
+                            <!-- PAGINATION -->
+                            <div class="foot">
+                                <h:panelGroup rendered="#{dynamicFormConfBean.dataModel.rowCount gt 0}">
+                                    <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{dynamicFormConfBean.previousPage}" disabled="#{not dynamicFormConfBean.paginationHelper.hasPreviousPage or dynamicFormConfBean.entity ne null}">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                        &#160;|&#160;<h:outputText value="#{dynamicFormConfBean.paginationHelper.pageFirstItem + 1}..#{dynamicFormConfBean.paginationHelper.pageLastItem + 1} / #{dynamicFormConfBean.paginationHelper.itemsCount}" />&#160;|&#160;
+                                        <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{dynamicFormConfBean.nextPage}" disabled="#{not dynamicFormConfBean.paginationHelper.hasNextPage or dynamicFormConfBean.entity ne null}">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{dynamicFormConfBean.dataModel.rowCount le 0}">
+                                    <div style="text-align: center; font-weight: bold;">
+                                        <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                    <!-- BUTTONS -->
+                    <div class="buttons_bottom">
+                        &#160;&#160;
+                        <h:commandButton id="btn_newFeature" value="#{i18n['web.client.screen.button.New']}" styleClass="btn_std_small" action="#{dynamicFormConfBean.newEntity}" disabled="#{dynamicFormConfBean.entity ne null}">
+                            <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btn_editFeature" value="#{i18n['web.client.screen.button.Edit']}" styleClass="btn_std_small" action="#{dynamicFormConfBean.editEntity}" disabled="#{dynamicFormConfBean.entity ne null}">
+                            <f:ajax execute=":crudForm:listTablePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btn_delFeature" value="#{i18n['web.client.screen.button.Delete']}" styleClass="btn_std_small" action="#{dynamicFormConfBean.deleteEntities}" disabled="#{dynamicFormConfBean.entity ne null}" onclick="return showStdSonfirmDeleteRegistryCollection(this);">
+                            <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                    </div>
+                    <!--                     EDITING SECTION -->
+                    <h:panelGroup id="editingPanelGroup" rendered="#{dynamicFormConfBean.entity ne null}">
+                        <p:focus for="crudForm:descriptionEdit" />
+                        <div class="tablebox">
+                            <div class="head">#{i18n['web.client.screen.dynamicformconf.title.DetailOf']}</div>
+                            <div class="body">
+                                <table width="100%">
+                                    <tr>
+                                        <th>#{i18n['web.client.screen.dynamicformconf.field.FeatureElementCod']}</th>
+                                        <td><h:inputText id="codFeatureElementEdit" value="#{dynamicFormConfBean.entity.featureElementCod}" maxlength="200" size="40" disabled="true" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.screen.dynamicformconf.field.Description']}</th>
+                                        <td><h:inputTextarea id="descriptionEdit" value="#{dynamicFormConfBean.entity.descriptionChr}" rows="6" cols="33" disabled="false" maxlength="100" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.screen.dynamicformconf.field.StartPeriodDate']}</th>
+                                        <td><p:calendar id="dateFrom" locale="#{iBean.locale}" value="#{dynamicFormConfBean.entity.startPeriodDat}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" disabled="#{dynamicFormConfBean.editing}"/></td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.screen.dynamicformconf.field.FinishPeriodDate']}</th>
+                                        <td><p:calendar id="dateTo" locale="#{iBean.locale}" value="#{dynamicFormConfBean.entity.finishPeriodDat}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" /></td>
+                                    </tr>
+                                    
+                                    <!-- BORRAR -->
+<!--                                     <tr> -->
+<!--                                         <th>#{i18n['web.client.screen.configuration.field.NewLogo']}</th> -->
+<!-- 											<td><p:fileUpload id="fileUploader" fileUploadListener="#{dynamicFormConfBean.handleFileUpload}"  /></td> -->
+<!--                                         <td></td> -->
+<!--                                     </tr> -->
+                                    
+                                        <tr>
+                                            <th>#{i18n['web.client.screen.dynamicformconf.field.UserphoneList']}</th>
+                                            <td>
+                                                <table>
+                                                    <tr>
+                                                        <td><h:panelGroup>
+                                                                <h:selectBooleanCheckbox id="chkUserphoneList" value="#{dynamicFormConfBean.validatedAllUsers}">
+                                                                    <f:ajax event="change" listener="#{dynamicFormConfBean.selectAllUserphones}" execute=":crudForm:chkUserphoneList" render=":crudForm:listUserphone" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                                </h:selectBooleanCheckbox>
+                                                                <h:outputLabel for="chkUserphoneList" value="(#{i18n['web.client.selectonemenu.All']})" />
+                                                            </h:panelGroup></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><h:selectManyListbox id="listUserphone" value="#{dynamicFormConfBean.selectedUserphoneList}" converter="userphoneConverter" size="5" style="width: auto;" disabled="#{dynamicFormConfBean.validatedAllUsers}">
+                                                                <f:selectItems value="#{dynamicFormConfBean.userphoneList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.nameChr}" />
+                                                            </h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                          <tr>
+                                        <th>#{i18n['web.client.screen.dynamicformconf.field.Entries']}</th>
+                                        <td><h:panelGroup id="entryGroup">
+                                                <table width="100%">
+                                                    <tr style="border-bottom: 1px dotted #D2E2F4;">
+                                                        <td><p:tree id="entryTree" value="#{dynamicFormConfBean.root}" var="node" selectionMode="single" selection="#{dynamicFormConfBean.selectedNodes}" style="border: none;">
+                                                                <p:ajax event="select" update=":crudForm:newEntryButton :crudForm:editEntryButton :crudForm:deleteEntryButton :crudForm:bifurcationButton" listener="#{dynamicFormConfBean.onNodeSelect}"/>
+                                                                <p:ajax event="unselect" update=":crudForm:newEntryButton :crudForm:editEntryButton :crudForm:deleteEntryButton :crudForm:bifurcationButton" />
+                                                                <p:treeNode icon="#{dynamicFormConfBean.getNodeType(node)}">
+                                                                    <h:outputText value="#{node}" style="margin-left: 16px; padding-bottom: 0.5em" />
+                                                                </p:treeNode>
+                                                            </p:tree></td>
+                                                    </tr>
+                                                    <tr>
+														<td><p:commandButton
+																style="height: 23px; border: 0; margin-right: 6px; font-size: 12px !important;color: #FFF; text-align: center; cursor: pointer; width: 137px; background: url(/resources/images/btn_std_large.png) no-repeat;"
+																id="newEntryButton"
+																value="#{i18n['web.client.screen.dynamicformconf.button.AddChild']}"
+																oncomplete="handleNewChildRequest(xhr, status, args)"
+																actionListener="#{dynamicFormConfBean.newChild}"
+																disabled="#{dynamicFormConfBean.selectedNodes eq null or dynamicFormConfBean.editing}"
+																update=":crudForm:saveDialog  :crudForm:listType" /> 
+																<p:commandButton
+																style="height: 23px; border: 0; margin-right: 6px; font-size: 12px !important;color: #FFF; text-align: center; cursor: pointer; width: 70px;background: url(/resources/images/btn_std_small.png) no-repeat;"
+																id="editEntryButton"
+																value="#{i18n['web.admin.screen.button.Edit']}"
+																oncomplete="entryDialog.show();"
+																actionListener="#{dynamicFormConfBean.editChild}"
+																disabled="#{dynamicFormConfBean.selectedNodes eq null}"
+																update=":crudForm:saveDialog" /> 
+																<h:commandButton
+																id="deleteEntryButton"
+																value="#{i18n['web.client.screen.button.Delete']}"
+																styleClass="btn_std_small"
+																action="#{dynamicFormConfBean.deleteChild}"
+																disabled="#{dynamicFormConfBean.selectedNodes eq null or dynamicFormConfBean.editing}"
+																onclick="return showStdSonfirmDeleteRegistryCollection(this);">
+																<f:ajax execute=":crudForm:entryGroup"
+																	render=":crudForm:entryGroup :crudForm:messages"
+																	onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+																</h:commandButton> 
+																<p:commandButton
+																style="height: 23px; border: 0; margin-right: 6px; font-size: 12px !important;color: #FFF; text-align: center; cursor: pointer; width: 145px; background: url(/resources/images/btn_std_large.png) no-repeat;"
+																id="bifurcationButton"
+																value="#{i18n['web.client.screen.dynamicformconf.button.AddBifurcation']}"
+																oncomplete="handleNewChildRequest(xhr, status, args)"
+																actionListener="#{dynamicFormConfBean.newBifurcation}"
+																disabled="#{dynamicFormConfBean.selectedNodes eq null or dynamicFormConfBean.nodeBifurcate or dynamicFormConfBean.editing}"
+																update=":crudForm:saveDialog" />
+																</td>
+													</tr>
+                                                </table>
+                                            </h:panelGroup></td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.screen.dynamicformconf.field.Classifications']}</th>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td><h:panelGroup>
+                                                            <h:selectBooleanCheckbox id="chkClassificationList" value="#{dynamicFormConfBean.validatedAllClassification}">
+                                                                <f:ajax event="change" listener="#{dynamicFormConfBean.selectAllClassification}" execute=":crudForm:chkClassificationList" render=":crudForm:listClasification" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                            </h:selectBooleanCheckbox>
+
+                                                            <h:outputLabel for="chkClassificationList" value="(#{i18n['web.client.selectonemenu.All']})" />
+                                                        </h:panelGroup></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><h:selectManyListbox id="listClasification" value="#{dynamicFormConfBean.selectedClassificationList}" converter="classificationConverter" size="5" style="width: auto;" disabled="#{dynamicFormConfBean.validatedAllClassification}">
+                                                            <f:selectItems value="#{dynamicFormConfBean.classificationList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.descriptionChr}" />
+                                                        </h:selectManyListbox></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+						<p:growl id="messages" showDetail="true" sticky="false"/>
+                        <p:dialog widgetVar="entryDialog" header="#{i18n['web.client.screen.dynamicformconf.title.Entry']}" modal="true" id="saveDialog" resizable="false">
+                            <p:ajax event="close" listener="#{dynamicFormConfBean.handleClose}" update=":crudForm:entryGroup"/>
+                            <h:panelGrid id="eventDetails" columns="2" cellpadding="10" cellspacing="10">
+
+                                <h:outputLabel for="title" value="#{i18n['web.client.screen.dynamicformconf.field.Title']}" />
+                                <p:inputTextarea id="title" value="#{dynamicFormConfBean.currentFeatElemEntry.titleChr}" rows="3" cols="33" />
+
+                                <h:outputLabel for="description" value="#{i18n['web.client.screen.dynamicformconf.field.Description']}" />
+                                <p:inputTextarea id="description" value="#{dynamicFormConfBean.currentFeatElemEntry.descriptionChr}" rows="6" cols="33" />
+
+                                <h:outputLabel for="listType" value="#{i18n['web.client.screen.dynamicformconf.field.EntryType']}" rendered="#{!dynamicFormConfBean.bifurcation and !dynamicFormConfBean.editItemList and !dynamicFormConfBean.newChildBifurcation and !dynamicFormConfBean.onlyDescriptionEdition}"/>
+                                <h:selectOneRadio id="listType" value="#{dynamicFormConfBean.selectedTypeEntry}" layout="pageDirection" rendered="#{!dynamicFormConfBean.bifurcation and !dynamicFormConfBean.editItemList and !dynamicFormConfBean.newChildBifurcation and !dynamicFormConfBean.onlyDescriptionEdition}">
+                                    <f:selectItem itemLabel="#{i18n['web.client.screen.featureelement.itemvalue.INPUT']}" itemValue="INPUT" />
+                                    <f:selectItem itemLabel="#{i18n['web.client.screen.featureelement.itemvalue.OUTPUT']}" itemValue="OUTPUT" />
+                                    <f:selectItem itemLabel="#{i18n['web.client.screen.featureelement.itemvalue.OPTION']}" itemValue="OPTION" />
+                                    <f:ajax event="valueChange" execute=":crudForm:saveDialog" render=":crudForm:optionTypeGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:selectOneRadio>
+
+                                <h:outputLabel for="optionTypeGroup" value="" />
+                                <h:panelGrid columns="2" id="optionTypeGroup" rendered="#{!dynamicFormConfBean.bifurcation and !dynamicFormConfBean.editItemList and !dynamicFormConfBean.newChildBifurcation and !dynamicFormConfBean.onlyDescriptionEdition}">
+                                    <!--                                         <h:outputLabel for="option1" value="" disabled="#{dynamicFormConfBean.selectedTypeEntry != 'OPTION'}"/> -->
+
+									<h:selectBooleanCheckbox id="multiSelectOption"
+										title="#{i18n['web.client.screen.featureelement.field.MultiSelectOption']}"
+										value="#{dynamicFormConfBean.multiSelectOption}" />
+									<h:outputLabel for="multiSelectOption"
+										value="#{i18n['web.client.screen.featureelement.field.MultiSelectOption']}" />
+
+                                    <p:inputText id="option1" value="#{dynamicFormConfBean.option1}" disabled="#{dynamicFormConfBean.selectedTypeEntry != 'OPTION'}" />
+                                    <p:watermark for="option1" value="#{i18n['web.client.screen.featureelement.field.Option1']}" />
+
+                                    <!--                                         <h:outputLabel for="option2" value="" disabled="#{dynamicFormConfBean.selectedTypeEntry != 'OPTION'}"/> -->
+                                    <p:inputText id="option2" value="#{dynamicFormConfBean.option2}" disabled="#{dynamicFormConfBean.selectedTypeEntry != 'OPTION'}" />
+                                    <p:watermark for="option2" value="#{i18n['web.client.screen.featureelement.field.Option2']}" />
+
+                                    <!--                                         <h:outputLabel for="option3" value="" disabled="#{dynamicFormConfBean.selectedTypeEntry != 'OPTION'}"/> -->
+                                    <p:inputText id="option3" value="#{dynamicFormConfBean.option3}" disabled="#{dynamicFormConfBean.selectedTypeEntry != 'OPTION'}" />
+                                    <p:watermark for="option3" value="#{i18n['web.client.screen.featureelement.field.Option3']}" />
+
+                                    <!--                                         <h:outputLabel for="option4" value="" disabled="#{dynamicFormConfBean.selectedTypeEntry != 'OPTION'}"/> -->
+                                    <p:inputText id="option4" value="#{dynamicFormConfBean.option4}" disabled="#{dynamicFormConfBean.selectedTypeEntry != 'OPTION'}" />
+                                    <p:watermark for="option4" value="#{i18n['web.client.screen.featureelement.field.Option4']}" />
+
+                                    <!--                                         <h:outputLabel for="option5" value="" disabled="#{dynamicFormConfBean.selectedTypeEntry != 'OPTION'}"/> -->
+                                    <p:inputText id="option5" value="#{dynamicFormConfBean.option5}" disabled="#{dynamicFormConfBean.selectedTypeEntry != 'OPTION'}" />
+                                    <p:watermark for="option5" value="#{i18n['web.client.screen.featureelement.field.Option5']}" />
+                                </h:panelGrid>
+                                
+                                <h:panelGrid columns="2" id="optionTypeBifurcation" rendered="#{dynamicFormConfBean.bifurcation and !dynamicFormConfBean.editItemList and !dynamicFormConfBean.newChildBifurcation and !dynamicFormConfBean.onlyDescriptionEdition}">
+                                    <!--                                         <h:outputLabel for="option1" value="" disabled="#{dynamicFormConfBean.selectedTypeEntry != 'OPTION'}"/> -->
+                                    <p:inputText id="optionBif1" value="#{dynamicFormConfBean.option1}" />
+                                    <p:watermark for="optionBif1" value="#{i18n['web.client.screen.featureelement.field.Option1']}" />
+
+                                    <!--                                         <h:outputLabel for="option2" value="" disabled="#{dynamicFormConfBean.selectedTypeEntry != 'OPTION'}"/> -->
+                                    <p:inputText id="optionBif2" value="#{dynamicFormConfBean.option2}" />
+                                    <p:watermark for="optionBif2" value="#{i18n['web.client.screen.featureelement.field.Option2']}" />
+
+                                    <!--                                         <h:outputLabel for="option3" value="" disabled="#{dynamicFormConfBean.selectedTypeEntry != 'OPTION'}"/> -->
+                                    <p:inputText id="optionBif3" value="#{dynamicFormConfBean.option3}" />
+                                    <p:watermark for="optionBif3" value="#{i18n['web.client.screen.featureelement.field.Option3']}" />
+
+                                    <!--                                         <h:outputLabel for="option4" value="" disabled="#{dynamicFormConfBean.selectedTypeEntry != 'OPTION'}"/> -->
+                                    <p:inputText id="optionBif4" value="#{dynamicFormConfBean.option4}"  />
+                                    <p:watermark for="optionBif4" value="#{i18n['web.client.screen.featureelement.field.Option4']}" />
+
+                                    <!--                                         <h:outputLabel for="option5" value="" disabled="#{dynamicFormConfBean.selectedTypeEntry != 'OPTION'}"/> -->
+                                    <p:inputText id="optionBif5" value="#{dynamicFormConfBean.option5}" />
+                                    <p:watermark for="optionBif5" value="#{i18n['web.client.screen.featureelement.field.Option5']}" />
+                                </h:panelGrid>
+                            </h:panelGrid>
+                            <div class="buttons_bottom">
+                                <br />
+                                <p:commandButton id="btn_saveElementEntry" style="height: 23px; border: 0; margin-right: 6px; font-size: 12px !important;color: #FFF; text-align: center; cursor: pointer; width: 70px;background: url(/resources/images/btn_std_small.png) no-repeat;" value="#{i18n['web.client.screen.button.Save']}" actionListener="#{dynamicFormConfBean.saveElementEntry}" oncomplete="handleSaveRequest(xhr, status, args)" update=":crudForm:entryGroup" rendered="#{!dynamicFormConfBean.bifurcation}" />
+                                <p:commandButton id="btn_saveBif" style="height: 23px; border: 0; margin-right: 6px; font-size: 12px !important;color: #FFF; text-align: center; cursor: pointer; width: 70px;background: url(/resources/images/btn_std_small.png) no-repeat;" value="#{i18n['web.client.screen.button.Save']}" actionListener="#{dynamicFormConfBean.saveBifurcationElementEntry}" oncomplete="handleSaveRequest(xhr, status, args)" update=":crudForm:entryGroup" 
+                                rendered="#{dynamicFormConfBean.bifurcation}" />
+                                <h:button styleClass="btn_std_small" value="#{i18n['web.client.screen.button.Cancel']}" onclick="entryDialog.hide(); return false;" />
+                            </div>
+                        </p:dialog>
+                        <div class="buttons_bottom">
+                            <h:commandButton id="btn_save" value="#{i18n['web.client.screen.button.Save']}" styleClass="btn_std_small" action="#{dynamicFormConfBean.save}">
+                                <f:ajax execute=":crudForm:editingPanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.screen.button.Delete']}" styleClass="btn_std_small" action="#{dynamicFormConfBean.deleteEntities}" disabled="#{dynamicFormConfBean.entity.featureElementCod eq null}" onclick="return showStdConfirmDeleteRegistryMessage(this);">
+                                <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton id="btn_cencelEdit" value="#{i18n['web.client.screen.button.Cancel']}" styleClass="btn_std_small" action="#{dynamicFormConfBean.cancelEditing}">
+                                <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                <pe:resetEditableValues for="crudForm:editingPanelGroup" />
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

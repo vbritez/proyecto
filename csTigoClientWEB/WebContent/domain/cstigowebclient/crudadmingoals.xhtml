@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:csui="http://java.sun.com/jsf/composite/uicomponents" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/screenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.client.crudadmingoal.screenname']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="crudadmingoals" value="#{i18n['web.client.crudadmingoal.screenname']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="crudForm">
+
+                    <div class="tablebox">
+                        <div class="head">
+                            #{i18n['web.client.screen.admin.phoneUsers.title.ListOf']}
+                            <h:outputText value="#{i18n['web.client.screen.admin.phoneUsers.title.OfClient']} #{crudAdminGoalsBean.client.nameChr}" rendered="#{crudAdminGoalsBean.client ne null}" />
+                        </div>
+                        <!-- SEARCH BOX -->
+                        <h:panelGroup id="searchBoxGroupPanel">
+                            <p:focus for="crudForm:listSearchOption" />
+                            <div class="headcontainer">
+                                <table class="tablesearch">
+                                    <tr>
+                                        <th>#{i18n['web.client.search.field.FindBy']}</th>
+                                        <td>
+                                            <h:selectOneMenu id="listSearchOption" value="#{crudAdminGoalsBean.filterSelectedField}" onchange="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{crudAdminGoalsBean.entity ne null}">
+                                                <f:selectItem itemLabel="(#{i18n['web.client.search.field.OptionSelect']})" itemValue="-1" />
+                                                <f:selectItems value="#{crudAdminGoalsBean.filterFields}" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                        <th>#{i18n['web.client.search.field.Criteria']}</th>
+                                        <td>
+                                            <h:inputText id="textSearchCriteria" value="#{crudAdminGoalsBean.filterCriteria}" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{crudAdminGoalsBean.entity ne null}" />
+                                        </td>
+                                        <td>
+                                            <h:commandButton id="btnSearch" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Find']}" action="#{crudAdminGoalsBean.applyFilter}" disabled="#{crudAdminGoalsBean.entity ne null}">
+                                                <f:ajax execute=":crudForm:searchBoxGroupPanel" render=":crudForm:listTablePanelGroup :crudForm:btnClean" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton>
+                                            <h:commandButton id="btnClean" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Clean']}" action="#{crudAdminGoalsBean.cleanFilter}" disabled="#{crudAdminGoalsBean.filterCriteria eq '' or crudAdminGoalsBean.entity ne null }">
+                                                <f:ajax execute="@this" render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton>
+                                        </td>
+                                        <th>#{i18n['web.client.search.field.Show']}</th>
+                                        <td class="thin">
+                                            <h:selectOneMenu id="listRowQuant" value="#{crudAdminGoalsBean.rowQuantSelected}" disabled="#{crudAdminGoalsBean.entity ne null }" valueChangeListener="#{crudAdminGoalsBean.applyQuantity}">
+                                                <!--onchange="return showStdConfirmShowAllRegistries(this);"-->
+                                                <f:selectItems value="#{crudAdminGoalsBean.rowQuantList}" />
+                                                <f:ajax event="change" execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <!-- SCRIPTS -->
+                            <script type="text/javascript" charset="UTF-8">
+																													if (document
+																															.getElementById('crudForm:listSearchOption').disabled == false) {
+																														searchFieldOnchange(
+																																'crudForm:listSearchOption',
+																																'crudForm:textSearchCriteria',
+																																'crudForm:btnSearch');
+																													}
+																													//
+
+																													function showStdConfirmDeassignTrackingPeriodMessage(
+																															callerObject) {
+																														return showConfirmMessage(
+																																trackingPeriodDeassign,
+																																callerObject);
+																													}
+
+																													function showStdConfirmDeleteClientGoalPeriodMessage(
+																															callerObject) {
+																														return showConfirmMessage(
+																																recordsDelete,
+																																callerObject);
+																													}
+
+																													function yesButton(
+																															callerObject) {
+																														return true;
+																													}
+
+																													function noButton(
+																															callerObject) {
+																														return false;
+																													}
+																												</script>
+                        </h:panelGroup>
+                        <h:panelGroup id="listTablePanelGroup">
+                            <!-- LIST TABLE **********************************************************************************************-->
+                            <div class="body">
+                                <h:dataTable id="crudListTable" value="#{crudAdminGoalsBean.dataModel}" var="item" rendered="#{crudAdminGoalsBean.dataModel.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <h:selectBooleanCheckbox id="chkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{crudAdminGoalsBean.entity ne null }" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                        </f:facet>
+                                        <h:selectBooleanCheckbox id="chkBoxSelected" value="#{crudAdminGoalsBean.selectedItems[item.userphoneCod]}" disabled="#{crudAdminGoalsBean.entity ne null }" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.admin.phoneUsers.field.UserCode']}" action="#{crudAdminGoalsBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.admin.phoneUsers.field.UserCode']}" disabled="#{crudAdminGoalsBean.entity ne null }">
+                                                    <f:setPropertyActionListener value="#{not crudAdminGoalsBean.sortHelper.ascending}" target="#{crudAdminGoalsBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="userphoneCod" target="#{crudAdminGoalsBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudAdminGoalsBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudAdminGoalsBean.sortHelper.field eq 'userphoneCod'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.userphoneCod}">
+                                            <f:convertNumber groupingUsed="true" integerOnly="true" />
+                                        </h:outputText>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.admin.phoneUsers.field.Names']}" action="#{crudAdminGoalsBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.admin.phoneUsers.field.Names']}" disabled="#{crudAdminGoalsBean.entity ne null }">
+                                                    <f:setPropertyActionListener value="#{not crudAdminGoalsBean.sortHelper.ascending}" target="#{crudAdminGoalsBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="nameChr" target="#{crudAdminGoalsBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudAdminGoalsBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudAdminGoalsBean.sortHelper.field eq 'nameChr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{item.nameChr}" header="#{i18n['web.client.screen.admin.phoneUsers.field.Names']}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.admin.phoneUsers.field.MobileNumber']}" action="#{crudAdminGoalsBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.admin.phoneUsers.field.MobileNumber']}" disabled="#{crudAdminGoalsBean.entity ne null }">
+                                                    <f:setPropertyActionListener value="#{not crudAdminGoalsBean.sortHelper.ascending}" target="#{crudAdminGoalsBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="cellphoneNum" target="#{crudAdminGoalsBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudAdminGoalsBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudAdminGoalsBean.sortHelper.field eq 'cellphoneNum'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.cellphoneNum}" converter="cellphoneConverter" />
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+                            <!-- PAGINATION -->
+                            <div class="foot">
+                                <h:panelGroup rendered="#{crudAdminGoalsBean.dataModel.rowCount gt 0}">
+                                    <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{crudAdminGoalsBean.previousPage}" disabled="#{not crudAdminGoalsBean.paginationHelper.hasPreviousPage or crudAdminGoalsBean.entity ne null }">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                    &#160;|&#160;
+                                    <h:outputText value="#{crudAdminGoalsBean.paginationHelper.pageFirstItem + 1}..#{crudAdminGoalsBean.paginationHelper.pageLastItem + 1} / #{crudAdminGoalsBean.paginationHelper.itemsCount}" />&#160;|&#160;
+                                    <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{crudAdminGoalsBean.nextPage}" disabled="#{not crudAdminGoalsBean.paginationHelper.hasNextPage or crudAdminGoalsBean.entity ne null }">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{crudAdminGoalsBean.dataModel.rowCount le 0}">
+                                    <div style="text-align: center; font-weight: bold;">
+                                        <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                    <!-- BUTTONS -->
+                    <h:panelGroup id="buttonPanelGroup">
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['web.client.crudadmingoal.button.Goals']}" styleClass="btn_std_large" action="#{crudAdminGoalsBean.adminGoals}" disabled="#{crudAdminGoalsBean.entity ne null}">
+                                <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.trackingconf.button.MassiveAssign']}" styleClass="btn_std_large" action="#{crudAdminGoalsBean.assignGoalsMassively}" disabled="#{crudAdminGoalsBean.entity ne null}">
+                                <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.crudadmingoal.button.Assign']}" styleClass="btn_std_large" action="#{crudAdminGoalsBean.showDetail}" disabled="#{crudAdminGoalsBean.entity ne null}">
+                                <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+                    <!-- DETAIL SECTION -->
+                    <div class="tablebox">
+                        <h:panelGroup id="confTablePanelGroup">
+                            <h:panelGroup rendered="#{crudAdminGoalsBean.entity ne null}">
+                                <div class="head">#{i18n['web.client.crudadmingoal.screen.title.TotaLListOf']}</div>
+                                <div class="body">
+                                    <h:dataTable id="detailListTable" value="#{crudAdminGoalsBean.dataModelDetail}" var="itemDetail" rendered="#{crudAdminGoalsBean.dataModelDetail.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <h:selectBooleanCheckbox id="chkBoxSelectedDetailAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{crudAdminGoalsBean.entityDetail ne null}" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                            </f:facet>
+                                            <h:selectBooleanCheckbox id="chkBoxSelectedDetail" value="#{crudAdminGoalsBean.selectedItemsDetail[itemDetail.clientGoalCod]}" disabled="#{crudAdminGoalsBean.entityDetail ne null}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:outputText value="#{i18n['web.client.crudadmingoal.service.field.Description']}" />
+                                                </span>
+                                            </f:facet>
+                                            <csui:columnWidthChar value="#{itemDetail.description}" header="#{i18n['web.client.crudadmingoal.service.field.Description']}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:outputText value="#{i18n['web.client.crudadmingoal.screen.field.Service']}" />
+                                                </span>
+                                            </f:facet>
+                                            <csui:columnWidthChar value="#{itemDetail.service.descriptionChr}" header="#{i18n['web.client.crudadmingoal.screen.field.Service']}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:outputText value="#{i18n['web.client.crudadmingoal.screen.field.Goal']}" />
+                                                </span>
+                                            </f:facet>
+                                            <h:outputText value="#{itemDetail.goal}">
+                                                <f:convertNumber pattern="#,###,##0" locale="#{iBean.locale}" />
+                                            </h:outputText>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:outputText value="#{i18n['web.client.crudadmingoal.service.field.ValidityDateFrom']}" />
+                                                </span>
+                                            </f:facet>
+                                            <h:outputText value="#{itemDetail.validityDateFrom}">
+                                                <f:convertDateTime pattern="#{applicationBean.defaultOutputDateFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                            </h:outputText>
+                                        </h:column>
+                                    </h:dataTable>
+                                </div>
+                                <!-- PAGINATION -->
+                                <div class="foot">
+                                    <h:panelGroup rendered="#{crudAdminGoalsBean.dataModelDetail.rowCount gt 0}">
+                                        <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{crudAdminGoalsBean.previousPageDetail}" disabled="#{not crudAdminGoalsBean.paginationHelperDetail.hasPreviousPage or crudAdminGoalsBean.entityDetail ne null }">
+                                            <f:ajax execute="@this" render=":crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandLink>
+                                    &#160;|&#160;
+                                    <h:outputText value="#{crudAdminGoalsBean.paginationHelperDetail.pageFirstItem + 1}..#{crudAdminGoalsBean.paginationHelperDetail.pageLastItem + 1} / #{crudAdminGoalsBean.paginationHelperDetail.itemsCount}" />&#160;|&#160;
+                                    <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{crudAdminGoalsBean.nextPageDetail}" disabled="#{not crudAdminGoalsBean.paginationHelperDetail.hasNextPage or crudAdminGoalsBean.entityDetail ne null }">
+                                            <f:ajax execute="@this" render=":crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandLink>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{crudAdminGoalsBean.dataModelDetail.rowCount le 0}">
+                                        <div style="text-align: center; font-weight: bold;">
+                                            <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                        </div>
+                                    </h:panelGroup>
+                                </div>
+                                <!-- BUTTONS -->
+                                <h:panelGroup id="buttonDetailPanelGroup">
+                                    <div class="buttons_bottom">
+                                        <!--                                         <h:commandButton value="#{i18n['web.client.trackingconf.button.MassiveAssign']}" styleClass="btn_std_small" action="#{crudAdminGoalsBean.saveAssignPeriods}" disabled="#{crudAdminGoalsBean.entityDetail ne null}" rendered="#{crudAdminGoalsBean.assignConfigurationsMassively}"> -->
+                                        <!--                                             <f:ajax execute=":crudForm:confTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup :crudForm:searchBoxGroupPanel" onevent="manageAjaxEvents" onerror="manageAjaxErrors" /> -->
+                                        <!--                                         </h:commandButton> -->
+                                        <!--                                         <h:commandButton value="#{i18n['web.client.trackingconf.button.DeassignPeriod']}" styleClass="btn_std_large" action="#{crudAdminGoalsBean.saveDeassignPeriodsMassively}" disabled="#{crudAdminGoalsBean.entityDetail ne null}" rendered="#{crudAdminGoalsBean.deassignConfigurationsMassively}" onclick="return showStdConfirmDeassignTrackingPeriodMessage(this);"> -->
+                                        <!--                                             <f:ajax execute=":crudForm:confTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup :crudForm:searchBoxGroupPanel" onevent="manageAjaxEvents" onerror="manageAjaxErrors" /> -->
+                                        <!--                                         </h:commandButton> -->
+                                        <h:commandButton value="#{i18n['web.admin.screen.button.New']}" styleClass="btn_std_small" action="#{crudAdminGoalsBean.newEntityDetail}" disabled="#{crudAdminGoalsBean.entityDetail ne null}" rendered="#{not crudAdminGoalsBean.showDetail and not crudAdminGoalsBean.assignConfigurationsMassively}">
+                                            <f:ajax execute=":crudForm:confTablePanelGroup" render=":crudForm:editingPanelGroup :crudForm:buttonDetailPanelGroup :crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandButton>
+                                        <h:commandButton value="#{i18n['web.admin.screen.button.Edit']}" styleClass="btn_std_small" action="#{crudAdminGoalsBean.editEntityDetail}" disabled="#{crudAdminGoalsBean.entityDetail ne null and crudAdminGoalsBean.dataModelDetail.rowCount gt 0}" rendered="#{not crudAdminGoalsBean.showDetail and not crudAdminGoalsBean.assignConfigurationsMassively}">
+                                            <f:ajax execute=":crudForm:confTablePanelGroup" render=":crudForm:editingPanelGroup :crudForm:buttonDetailPanelGroup :crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandButton>
+                                        <h:commandButton value="#{i18n['web.admin.screen.button.Delete']}" styleClass="btn_std_small" disabled="#{crudAdminGoalsBean.entityDetail ne null and crudAdminGoalsBean.dataModelDetail.rowCount gt 0}" rendered="#{not crudAdminGoalsBean.showDetail and not crudAdminGoalsBean.assignConfigurationsMassively}" onclick="return showStdConfirmDeleteClientGoalPeriodMessage(this);" action="#{crudAdminGoalsBean.deleteEditingDetail}">
+                                            <f:ajax execute=":crudForm:confTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup :crudForm:searchBoxGroupPanel" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandButton>
+                                        
+                                        <h:commandButton value="#{i18n['web.client.crudadmingoal.button.SaveAssignGoal']}" styleClass="btn_std_small" action="#{crudAdminGoalsBean.saveAssignPeriods}" rendered="#{crudAdminGoalsBean.showDetail or crudAdminGoalsBean.assignConfigurationsMassively}">
+                                            <f:ajax execute=":crudForm:confTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup :crudForm:searchBoxGroupPanel :crudForm:buttonDetailPanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" /> 
+                                        </h:commandButton>
+                                        <h:commandButton value="#{i18n['web.admin.screen.button.Cancel']}" styleClass="btn_std_small" action="#{crudAdminGoalsBean.cancelEditing}" disabled="#{crudAdminGoalsBean.entityDetail ne null}">
+                                            <f:ajax execute=":crudForm:confTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup :crudForm:searchBoxGroupPanel" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandButton>
+                                    </div>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </h:panelGroup>
+                    </div>
+                    <!-- EDIT SECTION -->
+                    <h:panelGroup id="editingPanelGroup">
+                        <h:panelGroup rendered="#{crudAdminGoalsBean.entityDetail ne null}">
+                            <p:focus for="crudForm:serviceOption" />
+                            <div class="tablebox">
+                                <div class="body">
+                                    <div class="head">#{i18n['web.client.crudadmingoal.screen.title.GoalDetail']}</div>
+                                    <table width="100%">
+                                        <tr>
+                                            <th>#{i18n['web.client.crudadmingoal.screen.field.Service']}</th>
+                                            <td colspan="5">
+                                                <h:selectOneMenu id="serviceOption" value="#{crudAdminGoalsBean.selectedService}" converter="serviceConverter" >
+                                                    <f:selectItems value="#{crudAdminGoalsBean.serviceList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.descriptionChr}" />
+                                                </h:selectOneMenu>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>#{i18n['web.client.crudadmingoal.service.field.Description']}</th>
+                                            <td>
+                                                <h:inputTextarea id="description" value="#{crudAdminGoalsBean.entityDetail.description}" maxlength="100" cols="40" rows="3"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>#{i18n['web.client.crudadmingoal.screen.field.DayFrom']}</th>
+                                            <td colspan="5">
+                                                <h:selectOneMenu id="dayFrom" value="#{crudAdminGoalsBean.entityDetail.dayFrom}">
+                                                    <f:selectItems value="#{crudAdminGoalsBean.dayList}" />
+                                                    <f:ajax event="valueChange" listener="#{crudAdminGoalsBean.getDayTo(crudAdminGoalsBean.entityDetail.dayFrom)}" execute="@this" render=":crudForm:dayTo" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:selectOneMenu>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>#{i18n['web.client.crudadmingoal.screen.field.DayTo']}</th>
+                                            <td colspan="5">
+                                                <h:selectOneMenu id="dayTo" value="#{crudAdminGoalsBean.entityDetail.dayTo}" disabled="true">
+                                                    <f:selectItems value="#{crudAdminGoalsBean.dayList}" />
+                                                </h:selectOneMenu>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>#{i18n['web.client.crudadmingoal.screen.field.Goal']}</th>
+                                            <td colspan="5">
+                                                <h:inputText id="goal" value="#{crudAdminGoalsBean.entityDetail.goal}" maxlength="10" size="10" tabindex="10" onkeyup="return format(this);" onkeypress="return blockNonNumbers(this,event,false,false);" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="buttons_bottom">
+                                <h:commandButton value="#{i18n['web.admin.screen.button.Save']}" styleClass="btn_std_small" action="#{crudAdminGoalsBean.saveEditingDetail}">
+                                    <f:ajax execute=":crudForm:editingPanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                                <h:commandButton value="#{i18n['web.admin.screen.button.Delete']}" styleClass="btn_std_small" action="#{crudAdminGoalsBean.deleteEditingDetail}" disabled="#{crudAdminGoalsBean.entityDetail.clientGoalCod eq null}" onclick="return showStdConfirmDeleteClientGoalPeriodMessage(this);">
+                                    <f:ajax execute=":crudForm:confTablePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                                <h:commandButton value="#{i18n['web.admin.screen.button.Cancel']}" styleClass="btn_std_small" action="#{crudAdminGoalsBean.cancelEditingDetail}">
+                                    <f:ajax execute=":crudForm:editingPanelGroup" render=":crudForm:confTablePanelGroup :crudForm:editingPanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                            </div>
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

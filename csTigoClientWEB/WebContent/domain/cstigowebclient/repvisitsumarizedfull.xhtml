@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/screenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.client.report.VisitSumarizedReport']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="repvisitsumarizedfull" value="#{i18n['web.client.report.VisitSumarizedReport']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="repvisitsumarizedFullForm">
+                    <p:focus for="repvisitsumarizedFullForm:textDateFrom" />
+                    <div class="tablebox">
+                        <div class="head">#{i18n['web.client.reportvisitsumarized.screen.title.reportParameters']}</div>
+                        <!-- PARAMETERS BOX -->
+                        <div class="body">
+                            <table class="tablesearch">
+                                <tr>
+                                    <th>#{i18n['web.client.search.field.FromDate']}</th>
+                                    <td>
+                                        <p:calendar id="textDateFrom" locale="#{iBean.locale}" value="#{reportVisitSumarizedFullBean.dateFrom}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>#{i18n['web.client.search.field.ToDate']}</th>
+                                    <td>
+                                        <p:calendar id="textDateTo" locale="#{iBean.locale}" value="#{reportVisitSumarizedFullBean.dateTo}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                    </td>
+                                </tr>
+                            <tr>
+									<th>#{i18n['web.client.screen.admin.webUsers.field.Classification']}</th>
+
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkClassificationList"
+															value="#{reportVisitSumarizedFullBean.validatedAllClassification}"
+															disabled="#{reportVisitSumarizedFullBean.selectedUserphoneList.size() gt 0 or reportVisitSumarizedFullBean.validatedAllUsers}">
+															<f:ajax event="change"
+																listener="#{reportVisitSumarizedFullBean.selectAll}"
+																execute=":repvisitsumarizedFullForm:chkClassificationList"
+																render=":repvisitsumarizedFullForm:listClasification :repvisitsumarizedFullForm:chkUserphoneList :repvisitsumarizedFullForm:listUserphone"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkClassificationist"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listClasification"
+														value="#{reportVisitSumarizedFullBean.selectedClassificationList}"
+														converter="classificationConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportVisitSumarizedFullBean.validatedAllClassification or reportVisitSumarizedFullBean.validatedAllUsers 
+														or reportVisitSumarizedFullBean.selectedUserphoneList.size() gt 0}">
+														<f:selectItems
+															value="#{reportVisitSumarizedFullBean.classificationList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.descriptionChr}" />
+														<f:ajax
+															execute=":repvisitsumarizedFullForm:listClasification"
+															render=":repvisitsumarizedFullForm:chkUserphoneList :repvisitsumarizedFullForm:listUserphone"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+								<tr>
+									<th>#{i18n['web.client.search.field.User']}</th>
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkUserphoneList"
+															value="#{reportVisitSumarizedFullBean.validatedAllUsers}"
+															disabled="#{reportVisitSumarizedFullBean.selectedClassificationList.size() gt 0 or reportVisitSumarizedFullBean.validatedAllClassification}">
+															<f:ajax event="change"
+																listener="#{reportVisitSumarizedFullBean.selectAll}"
+																execute=":repvisitsumarizedFullForm:chkUserphoneList"
+																render=":repvisitsumarizedFullForm:listUserphone :repvisitsumarizedFullForm:listClasification :repvisitsumarizedFullForm:chkClassificationList"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkUserphoneList"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listUserphone"
+														value="#{reportVisitSumarizedFullBean.selectedUserphoneList}"
+														converter="userphoneConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportVisitSumarizedFullBean.validatedAllUsers or reportVisitSumarizedFullBean.validatedAllClassification 
+														or reportVisitSumarizedFullBean.selectedClassificationList.size() gt 0}">
+
+														<f:selectItems
+															value="#{reportVisitSumarizedFullBean.userphoneList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.nameChr}" />
+
+														<f:ajax
+															
+															execute=":repvisitsumarizedFullForm:listUserphone"
+															render=":repvisitsumarizedFullForm:chkClassificationList :repvisitsumarizedFullForm:listClasification"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+
+											</tr>
+										</table>
+									</td>
+								</tr>
+                                <tr>
+                                    <th>#{i18n['web.client.table.tip.OrderBy']}</th>
+                                    <td>
+                                        <h:selectOneMenu id="listOrderby" value="#{reportVisitSumarizedFullBean.selectedOrderby}">
+                                            <f:selectItems value="#{reportVisitSumarizedFullBean.orderByList}" />
+                                        </h:selectOneMenu>
+                                    </td>
+                                </tr>
+
+
+                            </table>
+                        </div>
+                    </div>
+                    <div class="buttons_bottom">
+                        <h:commandButton id="btnGeneratePDF" value="#{i18n['web.client.report.title.PDFReport']}" action="#{reportVisitSumarizedFullBean.validateParameters}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="pdf" target="#{reportVisitSumarizedFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGenerateXLS" value="#{i18n['web.client.report.title.XLSReport']}" action="#{reportVisitSumarizedFullBean.validateParameters}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="xls" target="#{reportVisitSumarizedFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGenerate" action="#{reportVisitSumarizedFullBean.generateReport}" style="display: none;" rendered="#{reportVisitSumarizedFullBean.parametersValidated}" />
+                        <h:commandButton id="btnGenerateChartReport" action="#{reportVisitSumarizedFullBean.generateReportChart}" style="display: none;" rendered="#{reportVisitSumarizedFullBean.parametersValidatedChart}" />
+                    </div>
+                    <!-- SCRIPTS -->
+                    <h:panelGroup rendered="#{reportVisitSumarizedFullBean.parametersValidated}">
+                        <script type="text/javascript" charset="UTF-8">
+																									//         
+																									function autoGenerateReport() {
+																										document
+																												.getElementById('repvisitsumarizedFullForm').target = '_blank';
+																										document
+																												.getElementById(
+																														'repvisitsumarizedFullForm:btnGenerate')
+																												.click();
+																										document
+																												.getElementById('repvisitsumarizedFullForm').target = '';
+																									}
+
+																									$(
+																											document)
+																											.ready(
+																													function() {
+																														setTimeout(
+																																"autoGenerateReport()",
+																																500);
+																													});
+																									//
+																								</script>
+                    </h:panelGroup>
+                    <h:panelGroup rendered="#{reportVisitSumarizedFullBean.parametersValidatedChart}">
+                        <script type="text/javascript" charset="UTF-8">
+                            //<![CDATA[
+                            function autoGenerateReportChart() {
+                                document.getElementById('repvisitsumarizedFullForm').target = '_blank';
+                                document.getElementById('repvisitsumarizedFullForm:btnGenerateChartReport').click();
+                                document.getElementById('repvisitsumarizedFullForm').target = '';
+                            }
+                            $(document).ready(function() {
+                                setTimeout("autoGenerateReportChart()", 500);
+                            });
+                            
+                            //]]>
+                        </script>
+                    </h:panelGroup>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

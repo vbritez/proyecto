@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+    
+    <TextView
+        android:id="@+id/frontPhotoView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/tigomoney_front_photo"
+        android:textAppearance="@style/textSize" />
+    
+	   <LinearLayout
+	       android:id="@+id/tigomoneyFrontPhotolayout"
+	       android:layout_width="wrap_content"
+	       android:layout_height="wrap_content"
+	       android:layout_alignParentLeft="true"
+	       android:layout_alignParentRight="true"
+	       android:layout_below="@+id/frontPhotoView"
+	       android:orientation="vertical" >
+
+	    </LinearLayout>
+
+<!--     <Button -->
+<!--         android:id="@+id/frontPhotoButton" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="60dp" -->
+<!--         android:layout_alignParentLeft="true" -->
+<!--         android:layout_below="@+id/frontPhotoView" -->
+<!--         android:layout_marginLeft="7dp" -->
+<!--         android:layout_marginRight="7dp" -->
+<!--         android:background="@drawable/button_selector" -->
+<!--         android:text="@string/tigomoney_take_photo" /> -->
+
+    <TextView
+        android:id="@+id/backPhotoView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tigomoneyFrontPhotolayout"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/tigomoney_back_photo"
+        android:textAppearance="@style/textSize" />
+    
+    <LinearLayout
+	       android:id="@+id/tigomoneyBackPhotolayout"
+	       android:layout_width="wrap_content"
+	       android:layout_height="wrap_content"
+	       android:layout_alignParentLeft="true"
+	       android:layout_alignParentRight="true"
+	       android:layout_below="@+id/backPhotoView"
+	       android:orientation="vertical" >
+
+	 </LinearLayout>
+    
+<!--     <Button -->
+<!--         android:id="@+id/backPhotoButton" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="60dp" -->
+<!--         android:layout_alignParentLeft="true" -->
+<!--         android:layout_below="@+id/backPhotoView" -->
+<!--         android:layout_marginLeft="7dp" -->
+<!--         android:layout_marginRight="7dp" -->
+<!--         android:background="@drawable/button_selector" -->
+<!--         android:text="@string/tigomoney_take_photo" /> -->
+    
+    <LinearLayout
+        android:id="@+id/tigomoneyButtonslayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignLeft="@+id/tigomoneyFrontPhotolayout"
+        android:layout_below="@+id/tigomoneyBackPhotolayout"
+        android:layout_marginTop="42dp" >
+        
+        
+    <Button
+        android:id="@+id/tigoMoneyBackwardsButton"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="60dp"
+        android:background="@drawable/button_selector"
+        android:text="@string/tigomoney_go_back" />
+
+    <Button
+        android:id="@+id/tigoMoneyRegisterButton"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="60dp"
+        android:background="@drawable/button_selector"
+        
+        android:text="@string/order_register" />
+    
+    </LinearLayout>    
+
+</RelativeLayout>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+    <title>Internet Móvil Tigo <ui:insert name="title"></ui:insert></title>
+    <link type="image/x-icon" rel="shortcut icon" href="#{facesContext.externalContext.requestContextPath}/resources/sp/img/favicon.ico" />
+    <h:outputStylesheet library="sp/css" name="mobile.css" />
+    <h:outputStylesheet library="sp/css" name="reset.css" />
+    <h:outputStylesheet library="sp/css" name="styles.css" />
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+    <link rel="apple-touch-icon" href="/resources/sp/img/logo_touch.png" />
+</h:head>
+<h:body selected="true">
+    <f:view contentType="text/html" encoding="UTF-8" locale="es_PY">
+        <h:form id="portalForm">
+            <ul id="home">
+
+                <!-- PAGE HEADER -->
+                <ui:include src="/resources/sp/components/spPageHeader.xhtml" />
+                <!-- END PAGE HEADER -->
+                
+                <!-- PRINCIPAL CONTENT -->
+                <ui:insert name="content">Content</ui:insert>
+                <!-- END PRINCIPAL CONTENT -->
+                
+                <!-- PAGE FOOTER -->
+                <ui:include src="/resources/sp/components/spPageFooter.xhtml" />
+                <!-- END PAGE FOOTER -->
+
+            </ul>
+        </h:form>
+    </f:view>
+</h:body>
+</html>

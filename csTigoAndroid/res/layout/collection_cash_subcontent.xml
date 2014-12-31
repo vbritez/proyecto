@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+        
+    <EditText
+        android:id="@+id/collectionCashAmountEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/collectionCashObsEdit"
+        android:layout_alignParentRight="true"
+        android:ems="10"
+        android:inputType="numberDecimal" />
+
+
+    <EditText
+        android:id="@+id/collectionCashObsEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/collectionCashAmountEdit"
+        android:layout_toRightOf="@+id/collectionCashObsLabel"
+        android:ems="10"
+        android:inputType="text" />
+
+
+    <TextView
+        android:id="@+id/collectionCashAmountLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/collectionCashAmountEdit"
+        android:layout_alignBottom="@+id/collectionCashAmountEdit"
+        android:layout_marginRight="15dp"
+        android:text="@string/collection_amount"
+        android:textAppearance="@style/textSize" />
+
+  
+
+    <TextView
+        android:id="@+id/collectionCashObsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/collectionCashObsEdit"
+        android:layout_alignBottom="@+id/collectionCashObsEdit"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="7dp"
+        android:text="@string/collection_observation"
+        android:textAppearance="@style/textSize" />
+
+
+</RelativeLayout>

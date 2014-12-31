@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:csui="http://java.sun.com/jsf/composite/uicomponents" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/fileUploadDefaultClient.xhtml">
+	<!-- TITLE -->
+	<ui:define name="title">#{i18n['web.client.meta.Horary']}</ui:define>
+	<!-- STATUS LOCATION -->
+	<ui:define name="status">
+		<h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="crudmetadatahorary" value="#{i18n['web.client.meta.Horary']}" />
+	</ui:define>
+	<!-- PRINCIPAL CONTAINER -->
+	<ui:define name="container">
+		<!-- GOOGLE MAPS API -->
+<!-- 		<script src="https://maps.google.com/maps/api/js?client=#{applicationBean.appKey}&amp;sensor=false" type="text/javascript" /> -->
+		<div id="page_col">
+			<div id="cent_full">
+				<h:form id="fastReportForm" target="_blank">
+					<div class="buttons_top">
+						<h:commandButton styleClass="btn_xls" title="#{i18n['web.client.report.tip.XLSReport']}" action="#{crudMetaDataHoraryBean.viewXLS}" />
+						<h:commandButton styleClass="btn_pdf" title="#{i18n['web.client.report.tip.PDFReport']}" action="#{crudMetaDataHoraryBean.viewPDF}" />
+					</div>
+				</h:form>
+				<h:form id="crudForm">
+					<div class="tablebox">
+						<div class="head">#{i18n['web.client.metadatahorary.screen.title.ListOf']}</div>
+						<!-- SEARCH BOX -->
+						<h:panelGroup id="searchBoxGroupPanel">
+							<p:focus for="crudForm:listSearchOption" />
+							<div class="headcontainer">
+								<table class="tablesearch">
+									<tr>
+										<th>#{i18n['web.client.search.field.FindBy']}</th>
+										<td><h:selectOneMenu id="listSearchOption" value="#{crudMetaDataHoraryBean.filterSelectedField}" onchange="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{crudMetaDataHoraryBean.data ne null}">
+												<f:selectItem itemLabel="(#{i18n['web.client.search.field.OptionSelect']})" itemValue="-1" />
+												<f:selectItems value="#{crudMetaDataHoraryBean.filterFields}" />
+											</h:selectOneMenu></td>
+										<th>#{i18n['web.client.search.field.Criteria']}</th>
+										<td><h:inputText id="textSearchCriteria" value="#{crudMetaDataHoraryBean.filterCriteria}" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{crudMetaDataHoraryBean.data ne null}" /></td>
+										<td><h:commandButton id="btnSearch" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Find']}" action="#{crudMetaDataHoraryBean.applyFilter}" disabled="#{crudMetaDataHoraryBean.data ne null}">
+												<f:ajax execute=":crudForm:searchBoxGroupPanel" render=":crudForm:listTablePanelGroup :crudForm:btnClean" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+											</h:commandButton> <h:commandButton id="btnClean" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Clear']}" action="#{crudMetaDataHoraryBean.cleanFilter}" disabled="#{crudMetaDataHoraryBean.filterCriteria eq '' or crudMetaDataHoraryBean.data ne null}">
+												<f:ajax execute="@this" render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+											</h:commandButton></td>
+										<th>#{i18n['web.client.search.field.Show']}</th>
+										<td class="thin"><h:selectOneMenu id="listRowQuant" value="#{crudMetaDataHoraryBean.rowQuantSelected}" disabled="#{crudMetaDataHoraryBean.data ne null}" valueChangeListener="#{crudMetaDataHoraryBean.applyQuantity}">
+												<f:selectItems value="#{crudMetaDataHoraryBean.rowQuantList}" />
+												<f:ajax event="change" execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+											</h:selectOneMenu></td>
+									</tr>
+								</table>
+							</div>
+							<!-- SCRIPTS -->
+							<script type="text/javascript" charset="UTF-8">
+								//         
+								if (document
+										.getElementById('crudForm:listSearchOption').disabled == false) {
+									searchFieldOnchange(
+											'crudForm:listSearchOption',
+											'crudForm:textSearchCriteria',
+											'crudForm:btnSearch');
+								}
+								//
+							</script>
+						</h:panelGroup>
+						<h:panelGroup id="listTablePanelGroup">
+							<!-- LIST TABLE -->
+							<div class="body">
+								<h:dataTable id="crudListTable" value="#{crudMetaDataHoraryBean.dataModelSpecific}" var="item" rendered="#{crudMetaDataHoraryBean.dataModelSpecific.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+									<h:column>
+										<f:facet name="header">
+											<h:selectBooleanCheckbox id="chkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{crudMetaDataHoraryBean.data ne null}" onclick="checkUncheckAllInForm(this, this.checked);" />
+										</f:facet>
+										<h:selectBooleanCheckbox id="chkBoxSelected" value="#{crudMetaDataHoraryBean.selectedItems[item.dataPK]}" disabled="#{crudMetaDataHoraryBean.data ne null}" />
+									</h:column>
+
+									<h:column>
+										<f:facet name="header">
+											<span> <h:commandLink value="#{i18n['web.client.metadatahorary.screen.field.HoraryCode']}" action="#{crudMetaDataHoraryBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.metadatahorary.screen.field.HoraryCode']}" disabled="#{crudMetaDataHoraryBean.data ne null}">
+													<f:setPropertyActionListener value="#{not crudMetaDataHoraryBean.sortHelper.ascending}" target="#{crudMetaDataHoraryBean.sortHelper.ascending}" />
+													<f:setPropertyActionListener value="dataPK.codigo" target="#{crudMetaDataHoraryBean.sortHelper.field}" />
+													<f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandLink> <h:outputText value="#{crudMetaDataHoraryBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudMetaDataHoraryBean.sortHelper.field eq 'dataPK.codigo'}" />
+											</span>
+										</f:facet>
+										<h:outputText value="#{item.dataPK.codigo}">
+											<f:convertNumber groupingUsed="true" integerOnly="true" />
+										</h:outputText>
+									</h:column>
+
+									<h:column>
+										<f:facet name="header">
+											<span> <h:commandLink value="#{i18n['metadata.horary.field.description']}" action="#{crudMetaDataHoraryBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['metadata.horary.field.description']}" disabled="#{crudMetaDataHoraryBean.data ne null}">
+													<f:setPropertyActionListener value="#{not crudMetaDataHoraryBean.sortHelper.ascending}" target="#{crudMetaDataHoraryBean.sortHelper.ascending}" />
+													<f:setPropertyActionListener value="descripcion" target="#{crudMetaDataHoraryBean.sortHelper.field}" />
+													<f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandLink> <h:outputText value="#{crudMetaDataHoraryBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudMetaDataHoraryBean.sortHelper.field eq 'descripcion'}" />
+											</span>
+										</f:facet>
+										<csui:columnWidthChar value="#{item.descripcion}" header="#{i18n['metadata.horary.field.description']}" />
+									</h:column>
+									<h:column>
+										<f:facet name="header">
+											<span> <h:commandLink value="#{i18n['metadata.horary.field.date.from']}" action="#{crudMetaDataHoraryBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['metadata.horary.field.date.from']}" disabled="#{crudMetaDataHoraryBean.data ne null}">
+													<f:setPropertyActionListener value="#{not crudMetaDataHoraryBean.sortHelper.ascending}" target="#{crudMetaDataHoraryBean.sortHelper.ascending}" />
+													<f:setPropertyActionListener value="vigenciaDesde" target="#{crudMetaDataHoraryBean.sortHelper.field}" />
+													<f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandLink> <h:outputText value="#{crudMetaDataHoraryBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudMetaDataHoraryBean.sortHelper.field eq 'vigenciaDesde'}" />
+											</span>
+										</f:facet>
+										<csui:columnWidthChar value="#{item.vigenciaDesde}" header="#{i18n['metadata.horary.field.date.from']}" />
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">
+											<span> <h:commandLink value="#{i18n['metadata.horary.field.date.to']}" action="#{crudMetaDataHoraryBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['metadata.horary.field.date.to']}" disabled="#{crudMetaDataHoraryBean.data ne null}">
+													<f:setPropertyActionListener value="#{not crudMetaDataHoraryBean.sortHelper.ascending}" target="#{crudMetaDataHoraryBean.sortHelper.ascending}" />
+													<f:setPropertyActionListener value="vigenciaHasta" target="#{crudMetaDataHoraryBean.sortHelper.field}" />
+													<f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandLink> <h:outputText value="#{crudMetaDataHoraryBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudMetaDataHoraryBean.sortHelper.field eq 'vigenciaHasta'}" />
+											</span>
+										</f:facet>
+										<csui:columnWidthChar value="#{item.vigenciaHasta}" header="#{i18n['metadata.horary.field.date.to']}" />
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">
+											<span> <h:commandLink value="#{i18n['metadata.horary.field.tolerance']}" action="#{crudMetaDataHoraryBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['metadata.horary.field.tolerance']}" disabled="#{crudMetaDataHoraryBean.data ne null}">
+													<f:setPropertyActionListener value="#{not crudMetaDataHoraryBean.sortHelper.ascending}" target="#{crudMetaDataHoraryBean.sortHelper.ascending}" />
+													<f:setPropertyActionListener value="toleranciaGeneral" target="#{crudMetaDataHoraryBean.sortHelper.field}" />
+													<f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandLink> <h:outputText value="#{crudMetaDataHoraryBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudMetaDataHoraryBean.sortHelper.field eq 'toleranciaGeneral'}" />
+											</span>
+										</f:facet>
+										<csui:columnWidthChar value="#{item.toleranciaGeneral}" header="#{i18n['metadata.horary.field.tolerance']}" />
+									</h:column>
+									
+									<h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['metadata.horary.field.enabled']}" action="#{crudMetaDataMachineBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['metadata.horary.field.enabled']}" disabled="#{crudMetaDataMachineBean.data ne null}">
+                                                    <f:setPropertyActionListener value="#{not crudMetaDataMachineBean.sortHelper.ascending}" target="#{crudMetaDataMachineBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="habilitado" target="#{crudMetaDataMachineBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudMetaDataMachineBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudMetaDataMachineBean.sortHelper.field eq 'habilitado'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{i18n['web.client.backingBean.metadata.no']}" rendered="#{item.habilitado eq '0'}"/>
+                                        <h:outputText value="#{i18n['web.client.backingBean.metadata.yes']}" rendered="#{item.habilitado eq '1'}"/>
+                                    </h:column>
+								</h:dataTable>
+							</div>
+							<!-- PAGINATION -->
+							<div class="foot">
+								<h:panelGroup rendered="#{crudMetaDataHoraryBean.dataModel.rowCount gt 0}">
+									<h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{crudMetaDataHoraryBean.previousPage}" disabled="#{not crudMetaDataHoraryBean.paginationHelper.hasPreviousPage or crudMetaDataHoraryBean.data ne null}">
+										<f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+									</h:commandLink>
+                                        &#160;|&#160;<h:outputText value="#{crudMetaDataHoraryBean.paginationHelper.pageFirstItem + 1}..#{crudMetaDataHoraryBean.paginationHelper.pageLastItem + 1} / #{crudMetaDataHoraryBean.paginationHelper.itemsCount}" />&#160;|&#160;
+                                        <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{crudMetaDataHoraryBean.nextPage}" disabled="#{not crudMetaDataHoraryBean.paginationHelper.hasNextPage or crudMetaDataHoraryBean.data ne null}">
+										<f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+									</h:commandLink>
+								</h:panelGroup>
+								<h:panelGroup rendered="#{crudMetaDataHoraryBean.dataModel.rowCount le 0}">
+									<div style="text-align: center; font-weight: bold;">
+										<h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+									</div>
+								</h:panelGroup>
+							</div>
+						</h:panelGroup>
+					</div>
+					<!-- BUTTONS -->
+					<div class="buttons_bottom">
+					<h:commandButton value="#{i18n['web.client.metadata.screen.button.Employee']}" styleClass="btn_std_large" action="#{crudMetaDataHoraryBean.showEmployee}" disabled="#{crudMetaDataHoraryBean.data ne null or crudMetaDataHoraryBean.uploadSectionVisible}" >
+							<f:ajax execute=":crudForm:listTablePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+						</h:commandButton>
+						<h:commandButton value="#{i18n['web.client.metadata.screen.button.MassDelete']}" styleClass="btn_std_large" action="#{crudMetaDataHoraryBean.deleteEntitiesMass}" disabled="#{crudMetaDataHoraryBean.data ne null or crudMetaDataHoraryBean.uploadSectionVisible}" onclick="return showStdSonfirmDeleteRegistryMeta(this);">
+							<f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+						</h:commandButton>
+						<h:commandButton value="#{i18n['web.client.metadata.screen.button.New']}" styleClass="btn_std_small" action="#{crudMetaDataHoraryBean.newEntity}" disabled="#{crudMetaDataHoraryBean.data ne null or crudMetaDataHoraryBean.uploadSectionVisible}">
+							<f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+						</h:commandButton>
+						<h:commandButton value="#{i18n['web.client.metadata.screen.button.Edit']}" styleClass="btn_std_small" action="#{crudMetaDataHoraryBean.editEntityPlusMember}" disabled="#{crudMetaDataHoraryBean.data ne null or crudMetaDataHoraryBean.uploadSectionVisible}">
+							<f:ajax execute=":crudForm:listTablePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+						</h:commandButton>
+						<h:commandButton value="#{i18n['web.client.metadata.screen.button.Delete']}" styleClass="btn_std_small" action="#{crudMetaDataHoraryBean.deleteEntitiesPlusMember}" disabled="#{crudMetaDataHoraryBean.data ne null or crudMetaDataHoraryBean.uploadSectionVisible}" onclick="return showStdSonfirmDeleteRegistryCollection(this);">
+							<f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+						</h:commandButton>
+					</div>
+					<!-- EDITING SECTION -->
+					<h:panelGroup id="editingPanelGroup" rendered="#{crudMetaDataHoraryBean.data ne null and not crudMetaDataHoraryBean.associateSectionVisible and not crudMetaDataHoraryBean.shownEmployee and not reasignar}">
+						<p:focus for="crudForm:codEdit" />
+						<div class="tablebox">
+							<div class="head">#{i18n['web.client.metadatahorary.screen.title.HoraryDetails']}</div>
+							<div class="body">
+								<table width="100%">
+									<tr>
+										<th>#{i18n['web.client.metadatahorary.screen.field.HoraryCode']}</th>
+										<td><h:inputText id="codEdit" value="#{crudMetaDataHoraryBean.data.dataPK.codigo}" maxlength="200" size="40" disabled="#{crudMetaDataHoraryBean.data.dataPK.codigo ne null and crudMetaDataHoraryBean.data.dataPK.codigo ne ''}" /></td>
+									</tr>
+									
+									<tr>
+										<th>#{i18n['metadata.horary.field.description']}</th>
+									<td><h:inputText id="descriptionEdit" value="#{crudMetaDataHoraryBean.data.descripcion}" maxlength="100" size="40" tabindex="10" /></td> 
+									</tr>
+									
+							
+                                            <tr>
+                                                <th>#{i18n['web.client.metadata.horary.screen.field.Period']}</th>
+                                                <td><h:outputText value="#{i18n['metadata.horary.field.date.from']} " /> 
+                                                    <p:calendar value="#{crudMetaDataHoraryBean.data.dateFrom}" pattern="dd/MM/yyyy HH:mm"  locale="#{iBean.locale}" /></td>
+                                                <td><h:outputText value="#{i18n['metadata.horary.field.date.to']} " /> 
+                                                    <p:calendar value="#{crudMetaDataHoraryBean.data.dateTo}" pattern="dd/MM/yyyy HH:mm"  locale="#{iBean.locale}" /></td>
+                                                <td>
+													<h:outputLabel  value="#{i18n['web.client.metadata.horary.setTolerance']}: " />
+													<h:selectBooleanCheckbox id="chkToleranceGen" value="#{crudMetaDataHoraryBean.data.setTolerance}" /></td>    
+                                                    
+                                                <td><h:outputText value="#{i18n['metadata.horary.field.tolerance']} " /> 
+                                                    <p:spinner id="spinnerIntervalGen" value="#{crudMetaDataHoraryBean.data.tolerance}" stepFactor="#{crudMetaDataHoraryBean.stepFactor}" min="#{crudMetaDataHoraryBean.stepFactor}" /></td>
+                                               <td></td><td></td><td></td><td></td><td></td><td></td>
+                                            </tr>
+                                     
+                                        
+                                        <tr>
+                                        <th>#{i18n['web.client.metadata.horary.screen.field.Enabled']}</th>
+                                        <td>
+                                            <h:selectBooleanCheckbox id="chkBoxEnabledEdit" value="#{crudMetaDataHoraryBean.data.enabled}" />
+                                        </td>
+                                    </tr>
+									
+									<tr>
+                                            <th>#{i18n['web.client.guardroundconf.screen.field.DaysOfWeek']}</th>
+                                            <td colspan="5"><h:selectOneMenu id="daysOption" value="#{crudMetaDataHoraryBean.daysOption}" tabindex="40">
+                                                    <f:selectItem itemLabel="(#{i18n['web.client.trackingconf.service.label.SelectOneOption']})" itemValue="-1" />
+                                                    <f:selectItem itemLabel="#{i18n['web.client.trackingconf.screen.option.EveryDay']}" itemValue="1" />
+                                                    <f:selectItem itemLabel="#{i18n['web.client.trackingconf.screen.option.SpecifyDays']}" itemValue="2" />
+                                                    <f:ajax event="valueChange" execute=":crudForm:editingPanelGroup" render=":crudForm:editingPanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:selectOneMenu></td>
+                                            <td></td><td></td><td></td><td></td>
+                                        </tr>
+									
+									<h:panelGroup id="everydayPanelGroup" rendered="#{crudMetaDataHoraryBean.daysOption == 1}">
+                                            <tr>
+                                                <th></th>
+                                                <td><h:outputText value="#{i18n['web.client.trackingconf.screen.field.StartTime']} " /> 
+                                                    <p:calendar value="#{crudMetaDataHoraryBean.everyDayConf.startTime}" pattern="HH:mm" timeOnly="true" locale="#{iBean.locale}" /></td>
+                                                <td><h:outputText value="#{i18n['web.client.metadahorary.label.EndTime']} " /> 
+                                                    <p:calendar value="#{crudMetaDataHoraryBean.everyDayConf.duration}" pattern="HH:mm" timeOnly="true" locale="#{iBean.locale}" /></td>
+                                                <td><h:outputText value="#{i18n['metadata.horary.field.tolerance']} " /> 
+                                                    <p:spinner id="spinnerInterval" value="#{crudMetaDataHoraryBean.everyDayConf.tolerance}" stepFactor="#{crudMetaDataHoraryBean.stepFactor}" min="0"  /></td>
+                                                <td></td><td></td><td></td><td></td><td></td><td></td>
+                                            </tr>
+                                        </h:panelGroup>
+									
+									
+									<h:panelGroup id="specificDaysPanelGroup" rendered="#{crudMetaDataHoraryBean.daysOption == 2}">
+                                            <tr>
+                                                <th></th>
+                                                <td><h:outputText value="#{i18n['web.client.trackingconf.screen.field.DaysOfWeek']}" /></td>
+                                                <td><h:outputText value="#{i18n['web.client.trackingconf.screen.field.StartTime']}" /></td>
+                                                <td><h:outputText value="#{i18n['web.client.metadahorary.label.EndTime']}" /></td>
+                                                <td><h:outputText value="#{i18n['metadata.horary.field.tolerance']}" /></td>
+                                                <td></td><td></td><td></td><td></td><td></td>
+                                            </tr>
+                                            <ui:repeat value="#{crudMetaDataHoraryBean.confList}" var="conf">
+                                                <tr>
+                                                    <th></th>
+                                                    <td><h:selectBooleanCheckbox value="#{conf.checked}" /> <h:outputText value=" " /> <h:outputText value="#{conf.dayOfWeekString} " /></td>
+                                                    <td><p:calendar value="#{conf.startTime}" pattern="HH:mm" timeOnly="true" locale="#{iBean.locale}" /></td>
+                                                    <td><p:calendar value="#{conf.duration}" pattern="HH:mm" timeOnly="true" locale="#{iBean.locale}" /></td>
+                                                    <td><p:spinner id="spinnerIntervalMonday" value="#{conf.tolerance}" stepFactor="#{crudMetaDataHoraryBean.stepFactor}" min="0" /></td>
+                                                    <td></td><td></td><td></td><td></td><td></td>
+                                                </tr>
+
+                                            </ui:repeat>
+                                        </h:panelGroup>
+                                        
+                                        
+                                         <h:panelGroup id="supervisorNumberPanelGroup">
+                                            <tr>
+                                                <th>#{i18n['web.client.metadata.horary.service.field.SupervisorMobileNum']}</th>
+                                                <td colspan="5">
+                                                    <csui:cellphoneInputText id="cellText" value="#{crudMetaDataHoraryBean.newSupNumber}" />
+                                                    <h:commandButton styleClass="btn_std_small" value="#{i18n['web.client.guardroundconf.button.AddToList']}" action="#{crudMetaDataHoraryBean.addToList}">
+                                                        <f:ajax execute=":crudForm:editingPanelGroup" render=":crudForm:editingPanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandButton>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <td colspan="5">
+                                                    <h:selectOneListbox value="#{crudMetaDataHoraryBean.selectedSupNumber}">
+                                                        <f:selectItems value="#{crudMetaDataHoraryBean.supNumberList}" />
+                                                    </h:selectOneListbox>
+                                                    <h:commandButton styleClass="btn_std_small" value="#{i18n['web.client.guardroundconf.button.RemoveFromList']}" action="#{crudMetaDataHoraryBean.removeFromList}">
+                                                        <f:ajax execute=":crudForm:editingPanelGroup" render=":crudForm:editingPanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandButton>
+                                                </td>
+                                            </tr>
+                                        </h:panelGroup>
+
+									
+								</table>
+							</div>
+						</div>
+						
+
+						<div class="buttons_bottom">
+							<h:commandButton value="#{i18n['web.client.metadata.screen.button.Save']}" styleClass="btn_std_small" action="#{crudMetaDataHoraryBean.savePlusMember}">
+								<f:ajax execute=":crudForm:editingPanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+							</h:commandButton>
+							<h:commandButton value="#{i18n['web.client.metadata.screen.button.Delete']}" styleClass="btn_std_small" action="#{crudMetaDataHoraryBean.deleteEditingPlusMember}" disabled="#{crudMetaDataHoraryBean.data.dataPK.codigo eq null}" onclick="return showStdConfirmDeleteRegistryMessage(this);">
+								<f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+							</h:commandButton>
+							<h:commandButton value="#{i18n['web.client.metadata.screen.button.Cancel']}" styleClass="btn_std_small" action="#{crudMetaDataHoraryBean.cancelEditing}">
+								<f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+							</h:commandButton>
+						</div>
+					</h:panelGroup>
+					
+					
+					 <h:panelGroup id="employeeSection" rendered="#{crudMetaDataHoraryBean.shownEmployee}">
+					<div class="buttons_top">
+						<h:commandButton styleClass="btn_xls" title="#{i18n['web.client.report.tip.XLSReport']}" action="#{crudMetaDataHoraryBean.viewXLS2}"  onclick="return reportPrint('crudForm');"/>
+						<h:commandButton styleClass="btn_pdf" title="#{i18n['web.client.report.tip.PDFReport']}" action="#{crudMetaDataHoraryBean.viewPDF2}" onclick="return reportPrint('crudForm');"/>
+					</div>
+					<!-- EMPLOYEE SECTION -->
+					<div class="tablebox">
+                        <div class="head">#{i18n['web.client.metadataemployee.screen.title.ListOf']}</div>
+                        <!-- SEARCH BOX -->
+                        <h:panelGroup id="searchBoxGroupPanel2">
+                            <p:focus for="crudForm:listSearchOption2" />
+                            <div class="headcontainer">
+                                <table class="tablesearch">
+                                    <tr>
+                                        <th>#{i18n['web.client.search.field.FindBy']}</th>
+                                        <td>
+                                            <h:selectOneMenu id="listSearchOption2" value="#{crudMetaDataHoraryBean.filterSelectedFieldEmployee}" onchange="searchFieldOnchange('crudForm:listSearchOption2', 'crudForm:textSearchCriteria2', 'crudForm:btnSearch2');" onkeyup="searchFieldOnchange('crudForm:listSearchOption2', 'crudForm:textSearchCriteria2', 'crudForm:btnSearch2');" disabled="#{crudMetaDataHoraryBean.reasignar}"
+                                            >
+                                                <f:selectItem itemLabel="(#{i18n['web.client.search.field.OptionSelect']})" itemValue="-1" />
+                                                <f:selectItems value="#{crudMetaDataHoraryBean.filterFieldsEmployee}" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                        <th>#{i18n['web.client.search.field.Criteria']}</th>
+                                        <td>
+                                            <h:inputText id="textSearchCriteria2" value="#{crudMetaDataHoraryBean.filterCriteriaEmployee}" onkeyup="searchFieldOnchange('crudForm:listSearchOption2', 'crudForm:textSearchCriteria2', 'crudForm:btnSearch2');" disabled="#{crudMetaDataHoraryBean.reasignar}"/>
+                                        </td>
+                                        <td>
+                                            <h:commandButton id="btnSearch2" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Find']}" action="#{crudMetaDataHoraryBean.applyFilterEmployee}" disabled="#{crudMetaDataHoraryBean.reasignar}" >
+                                                <f:ajax execute=":crudForm:searchBoxGroupPanel2" render=":crudForm:listTablePanelGroup2 :crudForm:btnClean2" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton>
+                                            <h:commandButton id="btnClean2" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Clear']}" action="#{crudMetaDataHoraryBean.cleanFilterEmployee}" disabled="#{crudMetaDataHoraryBean.filterCriteriaEmployee eq '' or crudMetaDataHoraryBean.reasignar}">
+                                                <f:ajax execute="@this" render=":crudForm:searchBoxGroupPanel2 :crudForm:listTablePanelGroup2" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton>
+                                        </td>
+                                        <th>#{i18n['web.client.search.field.Show']}</th>
+                                        <td class="thin">
+                                            <h:selectOneMenu id="listRowQuant2" value="#{crudMetaDataHoraryBean.rowQuantSelectedEmployee}" disabled="#{crudMetaDataHoraryBean.reasignar}"  valueChangeListener="#{crudMetaDataHoraryBean.applyQuantityEmployee}">
+                                                <!--onchange="return showStdConfirmShowAllRegistries(this);"-->
+                                                <f:selectItems value="#{crudMetaDataHoraryBean.rowQuantList}" />
+                                                <f:ajax event="change" execute="@this" render=":crudForm:listTablePanelGroup2" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <!-- SCRIPTS -->
+                            <script type="text/javascript" charset="UTF-8">
+																													//         
+																													if (document
+																															.getElementById('crudForm:listSearchOption2').disabled == false) {
+																														searchFieldOnchange(
+																																'crudForm:listSearchOption2',
+																																'crudForm:textSearchCriteria2',
+																																'crudForm:btnSearch2');
+																													}
+																													//
+																												</script>
+                        </h:panelGroup>
+                        <h:panelGroup id="listTablePanelGroup2">
+                            <!-- LIST TABLE -->
+                            <div class="body">
+                                <h:dataTable id="crudListTable2" value="#{crudMetaDataHoraryBean.dataModelEmployee}" var="item" rendered="#{crudMetaDataHoraryBean.dataModelEmployee.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <h:selectBooleanCheckbox id="chkBoxSelectedAll2" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{crudMetaDataHoraryBean.reasignar}"  onclick="checkUncheckAllInForm(this, this.checked);" />
+                                        </f:facet>
+                                        <h:selectBooleanCheckbox id="chkBoxSelected2" value="#{crudMetaDataHoraryBean.selectedItemsEmployee[item.dataPK]}" disabled="#{crudMetaDataHoraryBean.reasignar}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.metadataemployee.screen.field.EmployeeCode']}" action="#{crudMetaDataHoraryBean.applySortEmployee}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.metadataemployee.screen.field.EmployeeCode']}" disabled="#{crudMetaDataHoraryBean.reasignar}">
+                                                    <f:setPropertyActionListener value="#{not crudMetaDataHoraryBean.sortHelperEmployee.ascending}" target="#{crudMetaDataHoraryBean.sortHelperEmployee.ascending}" />
+                                                    <f:setPropertyActionListener value="dataPK.codigo" target="#{crudMetaDataHoraryBean.sortHelperEmployee.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup2" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudMetaDataHoraryBean.sortHelperEmployee.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudMetaDataHoraryBean.sortHelperEmployee.field eq 'dataPK.codigo'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.dataPK.codigo}">
+                                            <f:convertNumber groupingUsed="true" integerOnly="true" />
+                                        </h:outputText>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.metadataemployee.screen.field.Names']}" action="#{crudMetaDataHoraryBean.applySortEmployee}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.metadataemployee.screen.field.Names']}" disabled="#{crudMetaDataHoraryBean.reasignar}">
+                                                    <f:setPropertyActionListener value="#{not crudMetaDataHoraryBean.sortHelperEmployee.ascending}" target="#{crudMetaDataHoraryBean.sortHelperEmployee.ascending}" />
+                                                    <f:setPropertyActionListener value="nombre" target="#{crudMetaDataHoraryBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup2" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudMetaDataHoraryBean.sortHelperEmployee.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudMetaDataHoraryBean.sortHelperEmployee.field eq 'nombre'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.nombre}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.metadataemployee.screen.field.CI']}" action="#{crudMetaDataHoraryBean.applySortEmployee}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.metadataclient.screen.field.Client']}" disabled="#{crudMetaDataHoraryBean.reasignar}">
+                                                    <f:setPropertyActionListener value="#{not crudMetaDataHoraryBean.sortHelperEmployee.ascending}" target="#{crudMetaDataHoraryBean.sortHelperEmployee.ascending}" />
+                                                    <f:setPropertyActionListener value="ci" target="#{crudMetaDataHoraryBean.sortHelperEmployee.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup2" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudMetaDataHoraryBean.sortHelperEmployee.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudMetaDataHoraryBean.sortHelperEmployee.field eq 'ci'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.ci}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.metadataemployee.screen.field.Area']}" action="#{crudMetaDataHoraryBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.metadataclient.screen.field.Client']}" disabled="#{crudMetaDataHoraryBean.reasignar}">
+                                                    <f:setPropertyActionListener value="#{not crudMetaDataHoraryBean.sortHelperEmployee.ascending}" target="#{crudMetaDataHoraryBean.sortHelperEmployee.ascending}" />
+                                                    <f:setPropertyActionListener value="area" target="#{crudMetaDataHoraryBean.sortHelperEmployee.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup2" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudMetaDataHoraryBean.sortHelperEmployee.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudMetaDataHoraryBean.sortHelperEmployee.field eq 'area'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.area}" />
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+                            <!-- PAGINATION -->
+                            <div class="foot">
+                                <h:panelGroup rendered="#{crudMetaDataHoraryBean.dataModelEmployee.rowCount gt 0}">
+                                    <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{crudMetaDataHoraryBean.previousPageEmployee}" disabled="#{not crudMetaDataHoraryBean.paginationHelperEmployee.hasPreviousPage or crudMetaDataHoraryBean.reasignar}">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup2" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                        &#160;|&#160;<h:outputText value="#{crudMetaDataHoraryBean.paginationHelperEmployee.pageFirstItem + 1}..#{crudMetaDataHoraryBean.paginationHelperEmployee.pageLastItem + 1} / #{crudMetaDataHoraryBean.paginationHelperEmployee.itemsCount}" />&#160;|&#160;
+                                        <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{crudMetaDataHoraryBean.nextPageEmployee}" disabled="#{not crudMetaDataHoraryBean.paginationHelperEmployee.hasNextPage or crudMetaDataHoraryBean.reasignar}">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup2" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{crudMetaDataHoraryBean.dataModelEmployee.rowCount le 0}">
+                                    <div style="text-align: center; font-weight: bold;">
+                                        <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                    
+                    <!-- BUTTONS -->
+					<div class="buttons_bottom">
+					<h:commandButton value="#{i18n['web.client.metadata.screen.button.Desvincular']}" styleClass="btn_std_large" action="#{crudMetaDataHoraryBean.desvincular}" disabled="#{crudMetaDataHoraryBean.reasignar}" rendered="#{crudMetaDataHoraryBean.dataModelEmployee.rowCount gt 0}" >
+							<f:ajax execute=":crudForm:listTablePanelGroup2" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+						</h:commandButton>
+						
+						<h:commandButton value="#{i18n['web.client.metadata.screen.button.Reasignar']}" styleClass="btn_std_large" action="#{crudMetaDataHoraryBean.showReasignar}" disabled="#{crudMetaDataHoraryBean.reasignar}" rendered="#{crudMetaDataHoraryBean.dataModelEmployee.rowCount gt 0}">
+							<f:ajax execute=":crudForm:listTablePanelGroup2" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+						</h:commandButton>
+						
+						<h:commandButton value="#{i18n['web.client.metadata.screen.button.Cancel']}" styleClass="btn_std_small" action="#{crudMetaDataHoraryBean.cancelEditingEmployee}">
+								<f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+							</h:commandButton>
+					</div>
+					<!-- END EMPLOYEE SECTION -->
+					
+					
+					 <!-- ASSOCIATE HORARY SECTION -->
+                    <h:panelGroup id="associatePanelGroup" rendered="#{crudMetaDataHoraryBean.reasignar}">
+                        <div class="tablebox">
+                            <div class="head">#{i18n['web.client.metadata.screen.title.AssociateHorary']}</div>
+                            <div class="body">
+                                <table width="100%">
+                                    <tr>
+										<th>#{i18n['web.metadata.title.horary']}</th>
+										<td>
+											<table>
+												
+												<tr>
+													<td><h:selectManyListbox id="listHoraryMassive"
+															value="#{crudMetaDataHoraryBean.selectedHoraryList}"
+															converter="horaryMetaDataConverter" size="5"
+															style="width: auto;">
+
+															<f:selectItems
+																value="#{crudMetaDataHoraryBean.horaryList}"
+																var="uLItem" itemValue="#{uLItem}"
+																itemLabel="#{uLItem.valueChr}" />
+														</h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['web.client.metadata.screen.button.Associate']}" styleClass="btn_std_small" id="btnAssociateFile" action="#{crudMetaDataHoraryBean.associateHorary}">
+                                <f:ajax execute=":crudForm:associatePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.metadata.screen.button.Cancel']}" styleClass="btn_std_small" action="#{crudMetaDataHoraryBean.cancelAssociateHorary}">
+                                <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+		 </h:panelGroup>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
+</html>

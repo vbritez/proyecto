@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/paymentCheckCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:textAppearance="@style/textSize" />
+
+    <TextView
+        android:id="@+id/paymentCheckAmountView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/paymentCheckAmountEdit"
+        android:layout_alignBottom="@+id/paymentCheckAmountEdit"
+        android:layout_marginRight="15dp"
+        android:text="@string/payment_amount"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/paymentCheckAmountEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/checkExpirationDateEdit"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/paymentCheckCount"
+        android:ems="10"
+        android:inputType="number" >
+        
+        <requestFocus />
+	</EditText>
+        
+    <TextView
+        android:id="@+id/bankView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/bankEdit"
+        android:layout_alignBottom="@+id/bankEdit"
+        android:layout_alignRight="@+id/paymentCheckAmountView"
+        android:text="@string/payment_bank"
+        android:textAppearance="@style/textSize" />   
+
+    <EditText
+        android:id="@+id/bankEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/paymentCheckAmountEdit"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/paymentCheckAmountEdit"
+        android:ems="10"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/checkNumberView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/bankView"
+        android:layout_below="@+id/bankEdit"
+        android:layout_marginTop="17dp"
+        android:text="@string/payment_check_number"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/checkNumberEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/bankEdit"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/bankEdit"
+        android:ems="10"
+        android:inputType="text" >
+
+    </EditText>
+    
+    <TextView
+        android:id="@+id/checkDateView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/checkNumberView"
+        android:layout_below="@+id/checkNumberEdit"
+        android:layout_marginTop="17dp"
+        android:text="@string/payment_check_date"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/checkDateEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/checkNumberEdit"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/checkNumberEdit"
+        android:ems="10"
+        android:inputType="date" />
+    
+    <TextView
+        android:id="@+id/checkExpirationDateView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/checkDateView"
+        android:layout_below="@+id/checkDateEdit"
+        android:layout_marginTop="17dp"
+        android:text="@string/payment_check_expiration_date"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/checkExpirationDateEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/checkDateEdit"
+        android:layout_toRightOf="@+id/checkExpirationDateView"
+        android:layout_alignParentRight="true"
+        android:ems="10"
+        android:inputType="date" />
+
+    <ImageView
+        android:id="@+id/paymentCheckRemove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/checkExpirationDateEdit"
+        android:layout_marginTop="15dp"
+        android:contentDescription="@string/imagen"
+        android:src="@drawable/delete" />
+
+</RelativeLayout>

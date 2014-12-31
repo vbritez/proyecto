@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/screenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.client.report.DeliveryReport']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="repdeliveryfull" value="#{i18n['web.client.report.DeliveryReport']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="repDeliveryFullForm">
+                    <p:focus for="repDeliveryFullForm:textDateFrom" />
+                    <div class="tablebox">
+                        <div class="head">#{i18n['web.client.reportdelivery.screen.title.reportParameters']}</div>
+                        <!-- PARAMETERS BOX -->
+                        <div class="body">
+                            <table class="tablesearch">
+                                <tr>
+                                    <th>#{i18n['web.client.search.field.FromDate']}</th>
+                                    <td>
+                                        <p:calendar id="textDateFrom" locale="#{iBean.locale}" value="#{reportDeliveryFullBean.dateFrom}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>#{i18n['web.client.search.field.ToDate']}</th>
+                                    <td>
+                                        <p:calendar id="textDateTo" locale="#{iBean.locale}" value="#{reportDeliveryFullBean.dateTo}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                    </td>
+                                </tr>
+                           <tr>
+									<th>#{i18n['web.client.screen.admin.webUsers.field.Classification']}</th>
+
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkClassificationList"
+															value="#{reportDeliveryFullBean.validatedAllClassification}"
+															disabled="#{reportDeliveryFullBean.selectedUserphoneList.size() gt 0 or reportDeliveryFullBean.validatedAllUsers}">
+															<f:ajax event="change"
+																listener="#{reportDeliveryFullBean.selectAll}"
+																execute=":repDeliveryFullForm:chkClassificationList"
+																render=":repDeliveryFullForm:listClasification :repDeliveryFullForm:chkUserphoneList :repDeliveryFullForm:listUserphone"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkClassificationist"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listClasification"
+														value="#{reportDeliveryFullBean.selectedClassificationList}"
+														converter="classificationConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportDeliveryFullBean.validatedAllClassification or reportDeliveryFullBean.validatedAllUsers 
+														or reportDeliveryFullBean.selectedUserphoneList.size() gt 0}">
+														<f:selectItems
+															value="#{reportDeliveryFullBean.classificationList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.descriptionChr}" />
+														<f:ajax
+															execute=":repDeliveryFullForm:listClasification"
+															render=":repDeliveryFullForm:chkUserphoneList :repDeliveryFullForm:listUserphone"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+								<tr>
+									<th>#{i18n['web.client.search.field.User']}</th>
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkUserphoneList"
+															value="#{reportDeliveryFullBean.validatedAllUsers}"
+															disabled="#{reportDeliveryFullBean.selectedClassificationList.size() gt 0 or reportDeliveryFullBean.validatedAllClassification}">
+															<f:ajax event="change"
+																listener="#{reportDeliveryFullBean.selectAll}"
+																execute=":repDeliveryFullForm:chkUserphoneList"
+																render=":repDeliveryFullForm:listUserphone :repDeliveryFullForm:listClasification :repDeliveryFullForm:chkClassificationList"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkUserphoneList"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listUserphone"
+														value="#{reportDeliveryFullBean.selectedUserphoneList}"
+														converter="userphoneConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportDeliveryFullBean.validatedAllUsers or reportDeliveryFullBean.validatedAllClassification 
+														or reportDeliveryFullBean.selectedClassificationList.size() gt 0}">
+
+														<f:selectItems
+															value="#{reportDeliveryFullBean.userphoneList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.nameChr}" />
+
+														<f:ajax
+															
+															execute=":repDeliveryFullForm:listUserphone"
+															render=":repDeliveryFullForm:chkClassificationList :repDeliveryFullForm:listClasification"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+
+											</tr>
+										</table>
+									</td>
+								</tr>
+                                <tr>
+                                    <th>#{i18n['web.client.table.tip.OrderBy']}</th>
+                                    <td>
+                                        <h:selectOneMenu id="listOrderby" value="#{reportDeliveryFullBean.selectedOrderby}">
+                                            <f:selectItems value="#{reportDeliveryFullBean.orderByList}" />
+                                        </h:selectOneMenu>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>#{i18n['web.client.label.ChartReportOption']}</th>
+                                    <td>
+                                        <h:selectOneRadio id="graphicReportOption" value="#{reportDeliveryFullBean.chartReportOption}" layout="pageDirection" style="width: auto; border: none;">
+                                            <f:selectItem itemValue="userphone" itemLabel="#{i18n['delivery.chart.option.Userphone']}" />
+                                        </h:selectOneRadio>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>#{i18n['web.client.label.ChartType']}</th>
+                                    <td>
+                                        <h:selectOneRadio id="graphicReportType" value="#{reportDeliveryFullBean.chartType}" layout="pageDirection" style="width: auto; border: none;">
+                                            <f:selectItem itemValue="bar" itemLabel="#{i18n['web.client.option.BarChart']}" />
+                                            <f:selectItem itemValue="pie" itemLabel="#{i18n['web.client.option.PieChart']}" />
+                                        </h:selectOneRadio>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="buttons_bottom">
+                        <h:commandButton id="btnGenerateChart" value="#{i18n['web.client.report.title.ChartReport']}" action="#{reportDeliveryFullBean.validateParametersChart}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="chart" target="#{reportDeliveryFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGeneratePDF" value="#{i18n['web.client.report.title.PDFReport']}" action="#{reportDeliveryFullBean.validateParameters}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="pdf" target="#{reportDeliveryFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGenerateXLS" value="#{i18n['web.client.report.title.XLSReport']}" action="#{reportDeliveryFullBean.validateParameters}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="xls" target="#{reportDeliveryFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGenerate" action="#{reportDeliveryFullBean.generateReport}" style="display: none;" rendered="#{reportDeliveryFullBean.parametersValidated}" />
+                        <h:commandButton id="btnGenerateChartReport" action="#{reportDeliveryFullBean.generateReportChart}" style="display: none;" rendered="#{reportDeliveryFullBean.parametersValidatedChart}" />
+                    </div>
+                    <!-- SCRIPTS -->
+                    <h:panelGroup rendered="#{reportDeliveryFullBean.parametersValidated}">
+                        <script type="text/javascript" charset="UTF-8">
+																									//         
+																									function autoGenerateReport() {
+																										document
+																												.getElementById('repDeliveryFullForm').target = '_blank';
+																										document
+																												.getElementById(
+																														'repDeliveryFullForm:btnGenerate')
+																												.click();
+																										document
+																												.getElementById('repDeliveryFullForm').target = '';
+																									}
+
+																									$(
+																											document)
+																											.ready(
+																													function() {
+																														setTimeout(
+																																"autoGenerateReport()",
+																																500);
+																													});
+																									//
+																								</script>
+                    </h:panelGroup>
+                    <h:panelGroup rendered="#{reportDeliveryFullBean.parametersValidatedChart}">
+                        <script type="text/javascript" charset="UTF-8">
+                            //<![CDATA[
+                            function autoGenerateReportChart() {
+                                document.getElementById('repDeliveryFullForm').target = '_blank';
+                                document.getElementById('repDeliveryFullForm:btnGenerateChartReport').click();
+                                document.getElementById('repDeliveryFullForm').target = '';
+                            }
+                            $(document).ready(function() {
+                                setTimeout("autoGenerateReportChart()", 500);
+                            });
+                            
+                            //]]>
+                        </script>
+                    </h:panelGroup>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

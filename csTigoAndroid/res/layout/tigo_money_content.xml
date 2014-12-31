@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+    
+    <Button
+        android:id="@+id/manageSessionButton"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/button_selector"
+        android:text="@string/tigomoney_login_management" />
+
+    <Button
+        android:id="@+id/consultIdButton"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@+id/manageSessionButton"
+        android:background="@drawable/button_selector"
+        android:text="@string/tigomoney_consult_id" />
+
+    <!-- <LinearLayout
+        android:id="@+id/tigomoneylayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical" >
+    </LinearLayout>-->
+
+</RelativeLayout>

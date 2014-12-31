@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:csui="http://java.sun.com/jsf/composite/uicomponents">
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title><h:outputText value="#{i18n['web.client.login.screen.header.CSTigoName']} - #{i18n['web.client.login.screen.title.InitSession']}" /></title>
+    <link type="image/x-icon" rel="shortcut icon" href="#{facesContext.externalContext.requestContextPath}/resources/images/favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="#{facesContext.externalContext.requestContextPath}/resources/css/screenFeatures.css" />
+    <script type="text/javascript" src="#{facesContext.externalContext.requestContextPath}/resources/js/varias/fvarias.js" />
+    <script type="text/javascript" src="#{facesContext.externalContext.requestContextPath}/resources/js/varias/i18n/localeBundle-#{iBean.languageAndCountry}.js" />
+    <script type="text/javascript" src="#{facesContext.externalContext.requestContextPath}/resources/js/varias/componentsValidations.js" />
+    <script type="text/javascript" src="#{facesContext.externalContext.requestContextPath}/resources/js/varias/messagesUIHandler.js" />
+</h:head>
+<h:body styleClass="bodyGray">
+    <h:panelGroup id="globalContainerPanelGroup" layout="block" style="width: 100%; min-height: 100%; height: auto !important;">
+        <!-- //////////////////////// HEADER //////////////////////// -->
+        <div id="header">
+            <div id="header_in">
+                <div id="logo">
+                    <img src="#{facesContext.externalContext.requestContextPath}/resources/images/logoTigo.png" alt="{i18n['web.client.login.screen.header.CSTigoName']} " />
+                </div>
+                <div id="logo_title">#{i18n['web.client.login.screen.header.CSTigoName']}</div>
+            </div>
+        </div>
+        <!-- //////////////////////// END HEADER //////////////////////// -->
+
+        <!-- //////////////////////// CONTAINER //////////////////////// -->
+        <div id="container_index">
+            <p:blockUI block="globalContainerPanelGroup" widgetVar="blocker">
+                #{i18n['web.client.login.message.Processing']}<br />
+                <p:graphicImage value="/resources/images/wait.gif" />
+            </p:blockUI>
+            <div id="login">
+                <div id="leftsmall"></div>
+                <div id="centersmall">
+                    <div class="title">
+                        <p>
+                            <img src="#{facesContext.externalContext.requestContextPath}/resources/images/padlock_ico.png" width="48" height="46" align="absmiddle" /> <strong><h:outputText value="#{i18n['web.client.login.screen.title.InitSession']}" /></strong>
+                        </p>
+                    </div>
+                    <p:growl id="growl" showDetail="true" sticky="false" />
+                    <div align="center">
+                        <h:form id="recoverForm">
+                            <p:panel id="pnl">
+                                <h:panelGroup rendered="#{not recoverUserwebpasswBySmsBean.enviado}">
+                                    <p:focus for="recoverForm:user" />
+                                    <table class="table_1">
+                                        <tr>
+                                            <td width="37%" class="txt_1"><h:outputText value="#{i18n['web.client.recoverpwdsms.screen.label.User']}:" /></td>
+                                            <td width="63%"><h:inputText id="user" autocomplete="off" value="#{recoverUserwebpasswBySmsBean.username}" required="true" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="txt_1"><h:outputText value="#{i18n['web.client.recoverpwdsms.screen.label.PhoneNumber']}:" /></td>
+                                            <td><csui:cellphoneInputText id="phoneNumber" value="#{recoverUserwebpasswBySmsBean.phoneNumber}" required="true" /></td>
+                                        </tr>
+                                    </table>
+                                    <br />
+                                    <br />
+                                    <div style="text-align: center;">
+                                        <h:button value="#{i18n['web.client.recoverpwd.screen.button.Cancel']}" outcome="loginclient" styleClass="btn_std_small" />
+                                        <h:commandButton id="btnRecover" value="#{i18n['web.client.recoverpwdsms.screen.button.Recover']}" styleClass="btn_std_small" action="#{recoverUserwebpasswBySmsBean.recoverPassword}">
+<!--                                             <f:ajax execute=":recoverForm:recoverPassw" render=":recoverForm:recoverPassw " onevent="manageAjaxEvents" onerror="manageAjaxErrors" /> -->
+                                        </h:commandButton>
+                                    </div>
+
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{recoverUserwebpasswBySmsBean.enviado}">
+                                    <div style="color: #043f90; font-size: 14px;">
+                                        <h:outputText value="#{i18n['web.client.recoverpwdsms.message.SmsSentForPasswordRecovery']}." />
+                                        <br />
+                                    </div>
+                                    <br />
+                                    <br />
+                                    <div colspan="2" style="text-align: center">
+                                        <h:button value="#{i18n['web.client.recoverpwd.screen.button.GoLogin']}" outcome="loginclient" styleClass="btn_std_small" />
+                                    </div>
+                                </h:panelGroup>
+                            </p:panel>
+                            <p:blockUI block="pnl" trigger="btnRecover" />
+                        </h:form>
+                    </div>
+                </div>
+                <div id="rightsmall"></div>
+            </div>
+        </div>
+
+        <!-- //////////////////////// END CONTAINER //////////////////////// -->
+    </h:panelGroup>
+    <!-- SCRIPTS -->
+</h:body>
+</html>

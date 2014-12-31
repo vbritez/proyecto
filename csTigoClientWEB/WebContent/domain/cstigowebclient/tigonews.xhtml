@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/screenDefaultClient.xhtml">
+    <ui:define name="title">Home</ui:define>
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="tigonews" value="#{i18n['screen.TigoNews']}" />
+    </ui:define>
+    <ui:define name="container">
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="tigonewsForm">
+                    <div class="tablebox">
+                        <div class="body">
+                            <div class="head">#{i18n['screen.TigoNews']}</div>
+                            <h:panelGroup id="newsTablePanelGroud">
+                                <div class="tableNews">
+                                    <p:dataGrid value="#{tigoNewsBean.newsList}" var="news" columns="1" rendered="#{tigoNewsBean.selectedNew eq null}">
+                                        <p:column>
+                                            <table>
+                                                <tr>
+                                                    <td style="width: 130px; height: 100px;"><h:graphicImage id="showimage" value="/ImageServlet/?type=small&amp;id=#{news.newCod}" style="width: 130px; height: 100px;" /></td>
+                                                    <td><h:panelGrid columns="1" cellpadding="10" style="border: 0px;">
+                                                            <h:commandLink value="#{news.titleChr}" style="font-weight: bold; font-size: 13px; text-align: left;" action="#{tigoNewsBean.viewBodyNews(news)}" />
+                                                            <h:outputText value="#{news.subtitleChr}" />
+                                                        </h:panelGrid></td>
+                                                </tr>
+                                            </table>
+                                        </p:column>
+                                    </p:dataGrid>
+                                </div>
+                            </h:panelGroup>
+                            <h:panelGroup id="loadmoreButtonPanelGroup">
+                                <div class="buttons_bottom">
+                                    <h:commandButton value="#{i18n['web.client.tigonews.title.LoadMore']}" styleClass="btn_std_large" title="#{i18n['web.client.tigonews.title.LoadMore']}" action="#{tigoNewsBean.loadMore}" disabled="#{not tigoNewsBean.loadMore}" rendered="#{tigoNewsBean.selectedNew eq null}">
+                                        <f:ajax execute=":tigonewsForm:newsTablePanelGroud" render=":tigonewsForm:newsTablePanelGroud :tigonewsForm:loadmoreButtonPanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandButton>
+                                </div>
+                            </h:panelGroup>
+
+                            <div class="fullNews">
+                                <h:panelGroup id="selectedNewPanelGroup" rendered="#{tigoNewsBean.selectedNew ne null}">
+                                    <h:panelGrid columns="1" cellpadding="30">
+                                        <h:outputText value="#{tigoNewsBean.selectedNew.titleChr}" styleClass="fullnews_title" />
+                                        <br />
+                                        <h:outputText value="#{tigoNewsBean.selectedNew.subtitleChr}" styleClass="fullnews_subtitle" />
+                                        <h:graphicImage id="showimage" value="/ImageServlet/?type=big&amp;id=#{tigoNewsBean.selectedNew.newCod}" />
+                                        <br />
+                                        <h:outputText value="#{tigoNewsBean.selectedNew.bodynewsChr}" styleClass="fullnews_body" />
+                                    </h:panelGrid>
+                                </h:panelGroup>
+                            </div>
+                            <div class="buttons_bottom">
+                                <h:commandButton value="#{i18n['web.client.tigonews.button.Back']}" styleClass="btn_std_small" action="#{tigoNewsBean.back}" rendered="#{tigoNewsBean.selectedNew ne null}">
+                                    <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                            </div>
+                        </div>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

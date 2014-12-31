@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui">
+<!-- INTERFACE -->
+<composite:interface>
+	<composite:attribute name="value" />
+	<composite:attribute name="id" />
+	<composite:attribute name="rendered" />
+	<composite:attribute name="style" />
+	<composite:attribute name="styleClass" />
+	<composite:attribute name="header" />
+
+</composite:interface>
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+
+
+	<p:dialog id="dialog" header="#{cc.attrs.header}" widgetVar="dlg" resizable="false" modal="true" height="100" >
+			<h:outputText id="salida" value="#{cc.attrs.value}" styleClass="columnWidthChar" />
+	</p:dialog>   
+
+	
+	<h:outputText id="#{cc.attrs.id}" value="#{cc.attrs.value}"  converter="columnWidthCharConverter" 
+	rendered="#{cc.attrs.rendered}" style="#{cc.attrs.style}" styleClass="#{cc.attrs.styleClass}" />
+	
+	
+	<p:commandLink rendered="#{cc.attrs.value.length() gt applicationBean.columnWidthChar}"
+			style="#{cc.attrs.style}" styleClass="#{cc.attrs.styleClass}" update="dialog" oncomplete="dlg.show()">
+			<h:outputText value="..." />
+	</p:commandLink >
+
+</composite:implementation>
+</html>

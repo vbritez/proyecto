@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/cs_footer_text"
+    android:orientation="horizontal"
+    android:paddingTop="10dp" >
+
+    <RelativeLayout
+        android:id="@+id/imagesLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" >
+
+        <ImageView
+            android:id="@+id/im_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/messages"
+            android:contentDescription="@string/imagen" />
+
+        <ImageView
+            android:id="@+id/im_options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/options"
+            android:contentDescription="@string/imagen" />
+
+        <ImageView
+            android:id="@+id/im_metadata_query"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/metadata_query"
+            android:contentDescription="@string/imagen" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/textlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/imagesLayout" >
+
+        <TextView
+            android:id="@+id/txt_messages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/messages"
+            android:textAppearance="@style/nonPlatformServicesItemText" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/options"
+            android:textAppearance="@style/nonPlatformServicesItemText" />
+
+        <TextView
+            android:id="@+id/txt_metadata_quety"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/user_data"
+            android:textAppearance="@style/nonPlatformServicesItemText" />
+    </RelativeLayout>
+
+</RelativeLayout>

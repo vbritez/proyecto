@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:csui="http://java.sun.com/jsf/composite/uicomponents" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
+<f:view locale="#{iBean.locale}" />
+<ui:composition template="/resources/templates/mapScreenDefaultClient.xhtml">
+	<!-- TITLE -->
+	<ui:define name="title">#{i18n['web.servicename.view.Ot']}</ui:define>
+	<!-- STATUS LOCATION -->
+	<ui:define name="status">
+		<h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="otview" value="#{i18n['web.servicename.view.Ot']}" />
+	</ui:define>
+	<!-- PRINCIPAL CONTAINER -->
+	<ui:define name="container">
+		<!-- GOOGLE MAPS API -->
+		<!-- 		<script src="https://maps.google.com/maps/api/js?client=#{applicationBean.appKey}&amp;sensor=false" type="text/javascript" /> -->
+		<div id="page_col">
+			<div id="cent_full">
+				<h:form id="fastReportForm" target="_blank">
+					<h:panelGroup rendered="#{otViewBean.dataModelDetail eq null}">
+						<div class="buttons_top">
+							<h:commandButton styleClass="btn_xls" title="#{i18n['web.client.report.tip.XLSReport']}" action="#{otViewBean.viewXLSCabDetail}" />
+							<h:commandButton styleClass="btn_pdf" title="#{i18n['web.client.report.tip.PDFReport']}" action="#{otViewBean.viewPDFCabDetail}" />
+						</div>
+					</h:panelGroup>
+				</h:form>
+				<h:form id="serviceForm">
+					<p:focus for="serviceForm:celularSearch:celularSearch" />
+					<h:panelGroup id="cabPanelGroup" rendered="#{otViewBean.dataModelDetail eq null}">
+						<div class="tablebox">
+							<div class="head">#{i18n['ot.title.ListOf']}</div>
+							<!-- SEARCH BOX -->
+							<h:panelGroup id="searchBoxGroupPanel">
+								<div class="headcontainer">
+									<table class="tablesearch">
+										<tr>
+											<th><h:outputText value="#{i18n['web.client.search.field.Mobile']}" /></th>
+											<td><csui:cellphoneInputText id="celularSearch" value="#{otViewBean.mobilePhoneNumber}" tabindex="1" /></td>
+											<th><h:outputText value="#{i18n['web.client.search.field.Show']}" /></th>
+											<td class="thin"><h:selectOneMenu id="listRowQuant" value="#{otViewBean.rowQuantSelected}" disabled="#{otViewBean.serviceValue ne null}" valueChangeListener="#{otViewBean.applyQuantity}" tabindex="2">
+													<f:selectItems value="#{otViewBean.rowQuantList}" />
+													<f:ajax event="change" execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:selectOneMenu></td>
+											<td rowspan="3" style="text-align: center;"><h:commandButton id="btnSearch" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Find']}" action="#{otViewBean.applyFilter}" disabled="#{otViewBean.serviceValue ne null}" tabindex="5">
+													<f:ajax execute=":serviceForm:searchBoxGroupPanel" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandButton></td>
+										</tr>
+										<tr>
+											<th><h:outputText value="#{i18n['web.client.search.field.User']}" /></th>
+											<td><h:selectOneMenu id="listSearchOption" value="#{otViewBean.selectedUserphone}" converter="userphoneConverter">
+													<f:selectItem itemLabel="(#{i18n['web.client.selectonemenu.All']})" itemValue="#{null}" />
+													<f:selectItems value="#{otViewBean.userphoneList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.nameChr}" />
+												</h:selectOneMenu></td>
+											<th><h:outputText value="#{i18n['web.client.search.field.UserName']}" /></th>
+											<td><h:inputText id="textNameCriteria" value="#{otViewBean.usermobileName}" /></td>
+										</tr>
+										<tr>
+											<th><h:outputText value="#{i18n['web.client.search.field.FromDate']}" /></th>
+											<td><p:calendar id="textDateFrom" locale="#{iBean.locale}" value="#{otViewBean.dateFrom}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" /></td>
+											<th><h:outputText value="#{i18n['web.client.search.field.ToDate']}" /></th>
+											<td><p:calendar id="textDateTo" locale="#{iBean.locale}" value="#{otViewBean.dateTo}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" /></td>
+										</tr>
+									</table>
+								</div>
+							</h:panelGroup>
+							<h:panelGroup id="listTablePanelGroup">
+								<!-- LIST TABLE -->
+								<div class="body">
+									<h:dataTable id="serviceListTable" value="#{otViewBean.dataModelHeader}" var="item" rendered="#{otViewBean.dataModelHeader.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+										<h:column>
+											<f:facet name="header">
+												<h:selectBooleanCheckbox id="chkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{otViewBean.serviceValue ne null}" onclick="checkUncheckAllInForm(this, this.checked);" />
+											</f:facet>
+											<h:selectBooleanCheckbox id="chkBoxSelected" value="#{otViewBean.selectedItems[item.servicevalueCod]}" disabled="#{otViewBean.serviceValue ne null}" />
+										</h:column>
+										<h:column>
+											<f:facet name="header">
+												<span> <h:commandLink value="#{i18n['ot.field.OtCode']}" action="#{otViewBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['ot.field.OtCode']}" disabled="#{otViewBean.serviceValue ne null}">
+														<f:setPropertyActionListener value="#{not otViewBean.sortHelper.ascending}" target="#{otViewBean.sortHelper.ascending}" />
+														<f:setPropertyActionListener value="column1Chr" target="#{otViewBean.sortHelper.field}" />
+														<f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:commandLink> <h:outputText value="#{otViewBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{otViewBean.sortHelper.field eq 'column1Chr'}" />
+												</span>
+											</f:facet>
+											<h:outputText value="#{item.column1Chr}">
+												<f:convertNumber groupingUsed="true" integerOnly="true" />
+											</h:outputText>
+										</h:column>
+
+										<h:column>
+											<f:facet name="header">
+												<span> <h:outputText value="#{i18n['ot.field.OtActivityDesc']}" title="#{i18n['ot.field.OtActivityDesc']}" />
+												</span>
+											</f:facet>
+											<csui:columnWidthChar value="#{otViewBean.mapActivities[item.column2Chr]}" rendered="#{otViewBean.mapActivities[item.column2Chr] ne null}" header="#{i18n['ot.field.OtActivityDesc']}" />
+										</h:column>
+
+										<h:column>
+											<f:facet name="header">
+												<span> <h:commandLink value="#{i18n['ot.field.ClientCode']}" action="#{otViewBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['ot.field.ClientCode']}" disabled="#{otViewBean.serviceValue ne null}">
+														<f:setPropertyActionListener value="#{not otViewBean.sortHelper.ascending}" target="#{otViewBean.sortHelper.ascending}" />
+														<f:setPropertyActionListener value="column3Chr" target="#{otViewBean.sortHelper.field}" />
+														<f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:commandLink> <h:outputText value="#{otViewBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{otViewBean.sortHelper.field eq 'column3Chr'}" />
+												</span>
+											</f:facet>
+											<h:outputText value="#{item.column3Chr}" />
+										</h:column>
+
+										<h:column>
+											<f:facet name="header">
+												<span> <h:outputText value="#{i18n['ot.field.ClientDesc']}" title="#{i18n['ot.field.ClientDesc']}" />
+												</span>
+											</f:facet>
+											<!-- 	                                           <csui:columnWidthChar value="#{otViewBean.mapClients[item.column3Chr]}" rendered="#{otViewBean.mapClients[item.column3Chr] ne null}" header="#{i18n['ot.field.ClientDesc']}"/> -->
+
+											<csui:columnWidthChar value="#{otViewBean.mapClients[item.column3Chr]}" rendered="#{item.column3Chr ne null}" header="#{i18n['ot.field.ClientDesc']}" />
+											<csui:columnWidthChar value="#{item.column10Chr}" rendered="#{item.column3Chr eq null}" header="#{i18n['ot.field.ClientDesc']}" />
+										</h:column>
+
+										<h:column>
+											<f:facet name="header">
+												<span> <h:outputText value="#{i18n['ot.field.ZoneDesc']}" title="#{i18n['ot.field.ZoneDesc']}" />
+												</span>
+											</f:facet>
+											<csui:columnWidthChar value="#{otViewBean.mapZones[item.column4Chr]}" rendered="#{otViewBean.mapZones[item.column4Chr] ne null}" header="#{i18n['ot.field.ZoneDesc']}" />
+										</h:column>
+
+										<h:column>
+											<f:facet name="header">
+												<span> <h:commandLink value="#{i18n['ot.field.WorkingGroup']}" action="#{otViewBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['ot.field.WorkingGroup']}" disabled="#{otViewBean.serviceValue ne null}">
+														<f:setPropertyActionListener value="#{not otViewBean.sortHelper.ascending}" target="#{otViewBean.sortHelper.ascending}" />
+														<f:setPropertyActionListener value="userphone.nameChr" target="#{otViewBean.sortHelper.field}" />
+														<f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:commandLink> <h:outputText value="#{otViewBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{otViewBean.sortHelper.field eq 'userphone.nameChr'}" />
+												</span>
+											</f:facet>
+											<csui:columnWidthChar value="#{item.userphone.nameChr}" rendered="#{item.userphone.userphoneCod != 0}" header="#{i18n['ot.field.WorkingGroup']}" />
+											<csui:columnWidthChar value=" " rendered="#{item.userphone.userphoneCod == 0}" header="#{i18n['ot.field.WorkingGroup']}" />
+										</h:column>
+
+										<h:column>
+											<f:facet name="header">
+												<span> <h:commandLink value="#{i18n['ot.field.OtCreatedDate']}" action="#{otBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['ot.field.OtCreatedDate']}" disabled="#{otViewBean.serviceValue ne null}">
+														<f:setPropertyActionListener value="#{not otViewBean.sortHelper.ascending}" target="#{otViewBean.sortHelper.ascending}" />
+														<f:setPropertyActionListener value="column5Chr" target="#{otBean.sortHelper.field}" />
+														<f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:commandLink> <h:outputText value="#{otBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{otBean.sortHelper.field eq 'column5Chr'}" />
+												</span>
+											</f:facet>
+											<h:outputText value="#{item.column5Chr}">
+												<f:convertDateTime pattern="#{applicationBean.defaultOutputDateFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+											</h:outputText>
+										</h:column>
+
+										<h:column>
+											<f:facet name="header">
+												<span> <h:commandLink value="#{i18n['ot.field.OTAssignedDate']}" action="#{otViewBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['ot.field.OTAssignedDate']}" disabled="#{otViewBean.serviceValue ne null}">
+														<f:setPropertyActionListener value="#{not otViewBean.sortHelper.ascending}" target="#{otViewBean.sortHelper.ascending}" />
+														<f:setPropertyActionListener value="column6Chr" target="#{otViewBean.sortHelper.field}" />
+														<f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:commandLink> <h:outputText value="#{otViewBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{otViewBean.sortHelper.field eq 'column6Chr'}" />
+												</span>
+											</f:facet>
+											<h:outputText value="#{item.column6Chr}">
+												<f:convertDateTime pattern="#{applicationBean.defaultOutputDateTimeFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+											</h:outputText>
+										</h:column>
+
+										<!--                                     <h:column> -->
+										<!--                                         <f:facet name="header"> -->
+										<!--                                             <span> -->
+										<!--                                                 <h:commandLink value="#{i18n['ot.field.OTStateDesc']}" action="#{otViewBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['ot.field.OTStateDesc']}" disabled="#{otViewBean.serviceValue ne null}"> -->
+										<!--                                                     <f:setPropertyActionListener value="#{not otViewBean.sortHelper.ascending}" target="#{otViewBean.sortHelper.ascending}" /> -->
+										<!--                                                     <f:setPropertyActionListener value="statusDescription" target="#{otViewBean.sortHelper.field}" /> -->
+										<!--                                                     <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" /> -->
+										<!--                                                 </h:commandLink> -->
+										<!--                                                 <h:outputText value="#{otViewBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{otViewBean.sortHelper.field eq 'statusDescription'}" /> -->
+										<!--                                             </span> -->
+										<!--                                         </f:facet> -->
+										<!--                                         <h:outputText value="#{item.statusDescription}" /> -->
+										<!--                                     </h:column> -->
+
+										<h:column>
+											<f:facet name="header">
+												<span> <h:outputText value="#{i18n['ot.field.OTStateDesc']}" title="#{i18n['ot.field.OTStateDesc']}" />
+												</span>
+											</f:facet>
+											<csui:columnWidthChar value="#{otViewBean.mapStatus[item.column7Chr]}" rendered="#{otViewBean.mapStatus[item.column7Chr] ne null}" header="#{i18n['ot.field.OTStateDesc']}" />
+										</h:column>
+
+									</h:dataTable>
+								</div>
+								<!-- PAGINATION -->
+								<div class="foot">
+									<h:panelGroup rendered="#{otViewBean.dataModelHeader.rowCount gt 0}">
+										<h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{otViewBean.previousHeaderPage}" disabled="#{not otViewBean.paginationHelper.hasPreviousPage or otViewBean.serviceValue ne null}">
+											<f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+										</h:commandLink>
+                                            &#160;|&#160;<h:outputText value="#{otViewBean.paginationHelper.pageFirstItem + 1}..#{otViewBean.paginationHelper.pageLastItem + 1} / #{otViewBean.paginationHelper.itemsCount}" />&#160;|&#160;
+                                            <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{otViewBean.nextHeaderPage}" disabled="#{not otViewBean.paginationHelper.hasNextPage or otViewBean.serviceValue ne null}">
+											<f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+										</h:commandLink>
+									</h:panelGroup>
+									<h:panelGroup rendered="#{otViewBean.dataModelHeader.rowCount le 0}">
+										<div style="text-align: center; font-weight: bold;">
+											<h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+										</div>
+									</h:panelGroup>
+								</div>
+							</h:panelGroup>
+						</div>
+						<!-- BUTTONS -->
+						<h:panelGroup id="buttonsPanelGroup">
+							<div class="buttons_bottom">
+								<h:commandButton value="#{i18n['web.client.screen.button.Localize']}" styleClass="btn_std_small" action="#{otViewBean.showHeaderMap}" rendered="#{otViewBean.geolocalizationAllowed and otViewBean.showMapOnHeader and otViewBean.dataModelHeader ne null and otViewBean.dataModelHeader.rowCount gt 0}">
+									<f:ajax execute=":serviceForm:listTablePanelGroup" render=":serviceForm:map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+								</h:commandButton>
+								<h:commandButton value="#{i18n['web.client.screen.button.Details']}" styleClass="btn_std_small" action="#{otViewBean.viewDetails}" disabled="#{otViewBean.serviceValue ne null}" rendered="#{otViewBean.dataModelHeader ne null and otViewBean.dataModelHeader.rowCount gt 0}">
+									<f:ajax execute=":serviceForm:listTablePanelGroup" render="@form :fastReportForm" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+								</h:commandButton>
+							</div>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<!-- DETAIL SECTION -->
+					<h:panelGroup id="detailTablePanelGroup" rendered="#{otViewBean.dataModelDetail ne null}">
+						<div class="buttons_top">
+							<h:commandButton styleClass="btn_xls" title="#{i18n['web.client.report.tip.XLSReport']}" action="#{otViewBean.viewXLSDetail}" onclick="return reportPrint('serviceForm');" />
+							<h:commandButton styleClass="btn_pdf" title="#{i18n['web.client.report.tip.PDFReport']}" action="#{otViewBean.viewPDFDetail}" onclick="return reportPrint('serviceForm');" />
+						</div>
+						<div class="tablebox">
+							<div class="head">
+								#{i18n['order.title.DetailOf']} (
+								<h:outputText value="#{otViewBean.mapActivities[otViewBean.serviceValue.column2Chr]}" />
+								)
+							</div>
+							<!-- LIST TABLE -->
+							<div class="body">
+								<h:dataTable id="detailListTable" value="#{otViewBean.dataModelDetail}" var="itemDetail" rendered="#{otViewBean.dataModelDetail.rowCount gt 0}" rowClasses="odd_row,even_row">
+									<h:column>
+										<f:facet name="header">
+											<span> <h:commandLink value="#{i18n['ot.label.Date']}" action="#{otViewBean.applySortDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['ot.label.Date']}" disabled="#{otViewBean.serviceValueDetail ne null}">
+													<f:setPropertyActionListener value="#{not otViewBean.sortHelperDetail.ascending}" target="#{otViewBean.sortHelperDetail.ascending}" />
+													<f:setPropertyActionListener value="recorddateDat" target="#{otViewBean.sortHelperDetail.field}" />
+													<f:ajax execute="@this" render=":serviceForm:detailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandLink> <h:outputText value="#{otViewBean.sortHelperDetail.ascending ? '&#9650;' : '&#9660;'}" rendered="#{otViewBean.sortHelperDetail.field eq 'recorddateDat'}" />
+											</span>
+										</f:facet>
+										<h:outputText value="#{itemDetail.recorddateDat}">
+											<f:convertDateTime pattern="#{applicationBean.defaultOutputDateFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+										</h:outputText>
+									</h:column>
+									<h:column>
+										<f:facet name="header">
+											<span> <h:outputText value="#{i18n['ot.field.OTStateDesc']}" title="#{i18n['ot.field.OTStateDesc']}" />
+											</span>
+										</f:facet>
+										<csui:columnWidthChar value="#{otViewBean.mapStatus[itemDetail.column1Chr]}" rendered="#{otViewBean.mapStatus[itemDetail.column1Chr] ne null}" header="#{i18n['ot.field.OTStateDesc']}" />
+									</h:column>
+									<h:column>
+										<f:facet name="header">
+											<span> <h:commandLink value="#{i18n['ot.label.Obs']}" action="#{otViewBean.applySortDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['ot.label.Obs']}" disabled="#{otViewBean.serviceValueDetail ne null}">
+													<f:setPropertyActionListener value="#{not otViewBean.sortHelperDetail.ascending}" target="#{otViewBean.sortHelperDetail.ascending}" />
+													<f:setPropertyActionListener value="column2Chr" target="#{otViewBean.sortHelperDetail.field}" />
+													<f:ajax execute="@this" render=":serviceForm:detailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandLink> <h:outputText value="#{otViewBean.sortHelperDetail.ascending ? '&#9650;' : '&#9660;'}" rendered="#{otViewBean.sortHelperDetail.field eq 'column2Chr'}" />
+											</span>
+										</f:facet>
+										<csui:columnWidthChar value="#{itemDetail.column2Chr}" rendered="#{itemDetail.column2Chr ne null}" header="#{i18n['ot.label.Obs']}" />
+									</h:column>
+								</h:dataTable>
+							</div>
+							<!-- PAGINATION -->
+							<div class="foot">
+								<h:panelGroup rendered="#{otViewBean.dataModelDetail.rowCount gt 0}">
+									<h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{otViewBean.previousDetailPage}" disabled="#{not otViewBean.paginationHelperDetail.hasPreviousPage or otViewBean.serviceValueDetail ne null}">
+										<f:ajax execute="@this" render=":serviceForm:detailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+									</h:commandLink>
+                                        &#160;|&#160;<h:outputText value="#{otViewBean.paginationHelperDetail.pageFirstItem + 1}..#{otViewBean.paginationHelperDetail.pageLastItem + 1} / #{otViewBean.paginationHelperDetail.itemsCount}" />&#160;|&#160;
+                                        <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{otViewBean.nextDetailPage}" disabled="#{not otViewBean.paginationHelperDetail.hasNextPage or otViewBean.serviceValueDetail ne null}">
+										<f:ajax execute="@this" render=":serviceForm:detailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+									</h:commandLink>
+								</h:panelGroup>
+								<h:panelGroup rendered="#{otViewBean.dataModelDetail.rowCount le 0}">
+									<div style="text-align: center; font-weight: bold;">
+										<h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+									</div>
+								</h:panelGroup>
+							</div>
+						</div>
+					</h:panelGroup>
+					<!-- BUTTONS -->
+					<h:panelGroup id="localizationButtonsPanelGroup">
+						<div class="buttons_bottom">
+							<h:commandButton value="#{i18n['web.client.screen.button.Localize']}" styleClass="btn_std_small" action="#{otViewBean.showDetailMap}" rendered="#{otViewBean.geolocalizationAllowed and otViewBean.showMapOnDetail and otViewBean.dataModelDetail ne null and otViewBean.dataModelDetail.rowCount gt 0}">
+								<f:ajax execute=":serviceForm:detailTablePanelGroup" render=":serviceForm:map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+							</h:commandButton>
+							<h:commandButton value="#{i18n['web.client.screen.button.ReturnToList']}" styleClass="btn_std_large" action="#{otViewBean.cancelDetail}" rendered="#{otViewBean.dataModelDetail ne null}">
+								<f:ajax execute="@this" render="@form :fastReportForm" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+							</h:commandButton>
+						</div>
+					</h:panelGroup>
+
+					<f:view contentType="text/html">
+						<!-- GOOGLE MAP -->
+						<h:panelGroup id="mapGroup" rendered="#{otViewBean.geolocalizationAllowed and ((otViewBean.dataModelHeader ne null and otViewBean.dataModelHeader.rowCount gt 0 and otViewBean.showMapOnHeader) or (otViewBean.dataModelDetail ne null and otViewBean.dataModelDetail.rowCount gt 0 and otViewBean.showMapOnDetail))}">
+							<div class="tablebox">
+								<div class="head">#{i18n['web.client.screen.subtitle.LocalizationMap']}</div>
+								<h:panelGroup id="map">
+									<div class="body" style="padding-left: 1px; padding-top: 2px;">
+										<p:gmap center="#{otViewBean.mapCenterStr}" zoom="#{otViewBean.mapZoom}" type="#{otViewBean.mapType}" style="width:979px;height:600px" model="#{otViewBean.mapModel}">
+											<p:ajax event="overlaySelect" listener="#{otViewBean.onMarkerSelect}" update="textbox" />
+											<p:ajax event="stateChange" listener="#{otViewBean.onMapStateChange}" />
+											<p:ajax event="pointSelect" listener="#{otViewBean.onPointSelect}" update="map" />
+											<p:gmapInfoWindow maxWidth="4">
+												<p:outputPanel id="textbox">
+													<h:outputText value="#{otViewBean.selectedMarker.data}" rendered="#{not otViewBean.clientMarker}" escape="false" />
+													<h:panelGroup style="width:320px;height:150px" id="clientMark" rendered="#{otViewBean.clientMarker}">
+														<table style="width: 300px; height: 120px">
+															<tr>
+																<td><h:outputText id="descriptionClientMarkerOut" value="#{i18n['web.client.abstractServiceBean.map.Title']}" /></td>
+																<td><h:inputText id="descriptionClientMarker" value="#{otViewBean.selectedMarker.title}" /></td>
+															</tr>
+															<tr>
+																<td><h:outputText id="titleClientMarkerOut" value="#{i18n['web.client.abstractServiceBean.map.Description']}" /></td>
+																<td><h:inputText id="titleClientMarker" value="#{otViewBean.selectedMarker.data}" /></td>
+															</tr>
+															<tr>
+																<td colspan="2" style="text-align: right;"><h:commandButton id="btnSaveMark" styleClass="btn_std_small" value="#{i18n['web.client.abstractServiceBean.map.button.SaveMark']}" action="#{otViewBean.saveClientMarker}">
+																		<f:ajax execute=":serviceForm:mapGroup" render="map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+																	</h:commandButton> <h:commandButton id="DeleteMark" styleClass="btn_std_small" value="#{i18n['web.client.abstractServiceBean.map.button.DeleteMark']}" action="#{otViewBean.deleteClientMarker}">
+																		<f:ajax execute=":serviceForm:mapGroup" render="map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+																	</h:commandButton></td>
+															</tr>
+														</table>
+													</h:panelGroup>
+												</p:outputPanel>
+											</p:gmapInfoWindow>
+										</p:gmap>
+									</div>
+								</h:panelGroup>
+							</div>
+						</h:panelGroup>
+					</f:view>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:csui="http://java.sun.com/jsf/composite/uicomponents" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/screenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.client.trackingconf.screenname']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="trackingconf" value="#{i18n['web.client.trackingconf.screenname']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="crudForm">
+
+                    <div class="tablebox">
+                        <div class="head">
+                            #{i18n['web.client.screen.admin.phoneUsers.title.ListOf']}
+                            <h:outputText value="#{i18n['web.client.screen.admin.phoneUsers.title.OfClient']} #{trackingconfBean.client.nameChr}" rendered="#{trackingconfBean.client ne null}" />
+                        </div>
+                        <!-- SEARCH BOX -->
+                        <h:panelGroup id="searchBoxGroupPanel">
+                            <p:focus for="crudForm:listSearchOption" />
+                            <div class="headcontainer">
+                                <table class="tablesearch">
+                                    <tr>
+                                        <th>#{i18n['web.client.search.field.FindBy']}</th>
+                                        <td>
+                                            <h:selectOneMenu id="listSearchOption" value="#{trackingconfBean.filterSelectedField}" onchange="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{trackingconfBean.entity ne null}">
+                                                <f:selectItem itemLabel="(#{i18n['web.client.search.field.OptionSelect']})" itemValue="-1" />
+                                                <f:selectItems value="#{trackingconfBean.filterFields}" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                        <th>#{i18n['web.client.search.field.Criteria']}</th>
+                                        <td>
+                                            <h:inputText id="textSearchCriteria" value="#{trackingconfBean.filterCriteria}" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{trackingconfBean.entity ne null}" />
+                                        </td>
+                                        <td>
+                                            <h:commandButton id="btnSearch" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Find']}" action="#{trackingconfBean.applyFilter}" disabled="#{trackingconfBean.entity ne null}">
+                                                <f:ajax execute=":crudForm:searchBoxGroupPanel" render=":crudForm:listTablePanelGroup :crudForm:btnClean" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton>
+                                            <h:commandButton id="btnClean" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Clean']}" action="#{trackingconfBean.cleanFilter}" disabled="#{trackingconfBean.filterCriteria eq '' or trackingconfBean.entity ne null }">
+                                                <f:ajax execute="@this" render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton>
+                                        </td>
+                                        <th>#{i18n['web.client.search.field.Show']}</th>
+                                        <td class="thin">
+                                            <h:selectOneMenu id="listRowQuant" value="#{trackingconfBean.rowQuantSelected}" disabled="#{trackingconfBean.entity ne null }" valueChangeListener="#{trackingconfBean.applyQuantity}">
+                                                <!--onchange="return showStdConfirmShowAllRegistries(this);"-->
+                                                <f:selectItems value="#{trackingconfBean.rowQuantList}" />
+                                                <f:ajax event="change" execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <!-- SCRIPTS -->
+                            <script type="text/javascript" charset="UTF-8">
+																													if (document
+																															.getElementById('crudForm:listSearchOption').disabled == false) {
+																														searchFieldOnchange(
+																																'crudForm:listSearchOption',
+																																'crudForm:textSearchCriteria',
+																																'crudForm:btnSearch');
+																													}
+																													//
+
+																													
+                                                                                                                    
+
+                                                                                                                    //METODO QUE SE EJECUTA ANTES DE GUARDAR
+                                                                                                                    function showProcessExecutingMessage(callerObject) {
+                                                                                                                        var dateFromStr = document.getElementById('crudForm:textDateFrom').value;
+                                                                                                                        var dateFrom = new Date();
+                                                                                                                        var dt1 = parseInt(dateFromStr.substring(0,2),10);
+                                                                                                                        var mon1 = parseInt(dateFromStr.substring(3,5),10);
+                                                                                                                        var yr1 = parseInt(dateFromStr.substring(6,10),10);
+                                                                                                                    
+                                                                                                                        dateFrom.setDate(dt1);
+                                                                                                                        dateFrom.setMonth(mon1 - 1); // January = 0
+                                                                                                                        dateFrom.setFullYear(yr1);
+                                                                                                                    
+                                                                                                                        var oldDateFromStr = document.getElementById('crudForm:oldTextDateFrom').value;
+                                                                                                                        var oldDate = new Date();
+                                                                                                                        var dt2 = parseInt(oldDateFromStr.substring(0,2),10);
+                                                                                                                        var mon2 = parseInt(oldDateFromStr.substring(3,5),10);
+                                                                                                                        var yr2 = parseInt(oldDateFromStr.substring(6,10),10);
+                                                                                                                    
+                                                                                                                        oldDate.setDate(dt2);
+                                                                                                                        oldDate.setMonth(mon2 - 1); // January = 0
+                                                                                                                        oldDate.setFullYear(yr2);  
+                                                                                                                            
+                                                                                                                        var message = "La configuración ya se encuentra en ejecución o está por ser ejecutado.Esta seguro que desea modificarla?";
+                                                                                                                    
+                                                                                                                        var today = new Date();
+                                                                                                                        today.setHours(0);
+                                                                                                                        today.setMinutes(0);
+                                                                                                                        today.setSeconds(0,0);
+                                                                                                                            
+                                                                                                                        if (document.getElementById('crudForm:isEditing').value) {
+                                                                                                                            if ( today > oldDate ) { //
+                                                                                                                                return showConfirmMessage(message,callerObject);
+                                                                                                                    
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                        return true;
+                                                                                                                    }																													
+
+                                                                                                                    function showStdConfirmDeassignTrackingPeriodMessage(callerObject) {
+                                                                                                                        return showConfirmMessage(trackingPeriodDeassign,callerObject);
+                                                                                                                    }
+                                                                                                                    
+                                                                                                                    
+
+																													function showStdConfirmDeleteTrackingPeriodMessage(
+																															callerObject) {
+																														return showConfirmMessage(
+																																trackingPeriodDelete,
+																																callerObject);
+																													}	
+
+																													function yesButton(callerObject) {
+																														return true;
+																													}
+
+																													function noButton(callerObject) {
+																														return false;
+																													}
+
+																													function validateHourPattern(inputObj,e) {
+																														reg = /\d\d:\d\d/;
+																														var value = inputObj.value;
+																														alert(value);
+																														if (!reg
+																																.test(value))
+																															inputObj.value = "00:00";
+																														//alert("no macheo");
+																														else
+																															alert("no macheo");
+																													}
+																												</script>
+                        </h:panelGroup>
+                        <h:panelGroup id="listTablePanelGroup">
+                            <!-- LIST TABLE **********************************************************************************************-->
+                            <div class="body">
+                                <h:dataTable id="crudListTable" value="#{trackingconfBean.dataModel}" var="item" rendered="#{trackingconfBean.dataModel.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <h:selectBooleanCheckbox id="chkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{trackingconfBean.entity ne null }" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                        </f:facet>
+                                        <h:selectBooleanCheckbox id="chkBoxSelected" value="#{trackingconfBean.selectedItems[item.userphoneCod]}" disabled="#{trackingconfBean.entity ne null }" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.admin.phoneUsers.field.UserCode']}" action="#{trackingconfBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.admin.phoneUsers.field.UserCode']}" disabled="#{trackingconfBean.entity ne null }">
+                                                    <f:setPropertyActionListener value="#{not trackingconfBean.sortHelper.ascending}" target="#{trackingconfBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="userphoneCod" target="#{trackingconfBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{trackingconfBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{trackingconfBean.sortHelper.field eq 'userphoneCod'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.userphoneCod}">
+                                            <f:convertNumber groupingUsed="true" integerOnly="true" />
+                                        </h:outputText>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.admin.phoneUsers.field.Names']}" action="#{trackingconfBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.admin.phoneUsers.field.Names']}" disabled="#{trackingconfBean.entity ne null }">
+                                                    <f:setPropertyActionListener value="#{not trackingconfBean.sortHelper.ascending}" target="#{trackingconfBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="nameChr" target="#{trackingconfBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{trackingconfBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{trackingconfBean.sortHelper.field eq 'nameChr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{item.nameChr}" header="#{i18n['web.client.screen.admin.phoneUsers.field.Names']}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.admin.phoneUsers.field.MobileNumber']}" action="#{trackingconfBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.admin.phoneUsers.field.MobileNumber']}" disabled="#{trackingconfBean.entity ne null }">
+                                                    <f:setPropertyActionListener value="#{not trackingconfBean.sortHelper.ascending}" target="#{trackingconfBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="cellphoneNum" target="#{trackingconfBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{trackingconfBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{trackingconfBean.sortHelper.field eq 'cellphoneNum'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.cellphoneNum}" converter="cellphoneConverter" />
+                                    </h:column>
+
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.screen.admin.phoneUsers.field.AssignedTracking']}" action="#{trackingconfBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.admin.phoneUsers.field.AssignedTracking']}" disabled="#{trackingconfBean.entity ne null }">
+                                                    <f:setPropertyActionListener value="#{not trackingconfBean.sortHelper.ascending}" target="#{trackingconfBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="trackingPeriod" target="#{trackingconfBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{trackingconfBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{trackingconfBean.sortHelper.field eq 'trackingPeriod'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{item.trackingPeriod}" header="#{i18n['web.client.screen.admin.phoneUsers.field.AssignedTracking']}" />
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+                            <!-- PAGINATION -->
+                            <div class="foot">
+                                <h:panelGroup rendered="#{trackingconfBean.dataModel.rowCount gt 0}">
+                                    <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{trackingconfBean.previousPage}" disabled="#{not trackingconfBean.paginationHelper.hasPreviousPage or trackingconfBean.entity ne null }">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                    &#160;|&#160;
+                                    <h:outputText value="#{trackingconfBean.paginationHelper.pageFirstItem + 1}..#{trackingconfBean.paginationHelper.pageLastItem + 1} / #{trackingconfBean.paginationHelper.itemsCount}" />&#160;|&#160;
+                                    <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{trackingconfBean.nextPage}" disabled="#{not trackingconfBean.paginationHelper.hasNextPage or trackingconfBean.entity ne null }">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{trackingconfBean.dataModel.rowCount le 0}">
+                                    <div style="text-align: center; font-weight: bold;">
+                                        <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                    <!-- BUTTONS -->
+                    <h:panelGroup id="buttonPanelGroup">
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['web.client.trackingconf.button.DeassignPeriod']}" styleClass="btn_std_large" action="#{trackingconfBean.deassignPeriodsMassively}" disabled="#{trackingconfBean.entity ne null}">
+                                <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.trackingconf.button.AssignPeriod']}" styleClass="btn_std_large" action="#{trackingconfBean.assignPeriodsMassively}" disabled="#{trackingconfBean.entity ne null}">
+                                <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.trackingconf.button.ConfigTracking']}" styleClass="btn_std_large" action="#{trackingconfBean.configTracking}" disabled="#{trackingconfBean.entity ne null}">
+                                <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+                    <!-- DETAIL SECTION -->
+                    <div class="tablebox">
+                        <h:panelGroup id="confTablePanelGroup">
+                            <h:panelGroup rendered="#{trackingconfBean.entity ne null}">
+                                <div class="head">#{i18n['web.client.trackingconf.screen.title.TotaLListOf']}</div>
+                                <div class="body">
+                                    <h:dataTable id="detailListTable" value="#{trackingconfBean.dataModelDetail}" var="itemDetail" rendered="#{trackingconfBean.dataModelDetail.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <h:selectBooleanCheckbox id="chkBoxSelectedDetailAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{trackingconfBean.entityDetail ne null}" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                            </f:facet>
+                                            <h:selectBooleanCheckbox id="chkBoxSelectedDetail" value="#{trackingconfBean.selectedItemsDetail[itemDetail.trackingPeriodCod]}" disabled="#{trackingconfBean.entityDetail ne null}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:outputText value="#{i18n['web.client.guardroundconf.service.field.Period']}" />
+                                                </span>
+                                            </f:facet>
+                                            <csui:columnWidthChar value="#{itemDetail.description}" header="#{i18n['web.client.guardroundconf.service.field.Period']}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:outputText value="#{i18n['web.client.trackingconf.service.field.CreationDate']}" />
+                                                </span>
+                                            </f:facet>
+                                            <h:outputText value="#{itemDetail.dateFrom}">
+                                                <f:convertDateTime pattern="#{applicationBean.defaultOutputDateFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                            </h:outputText>
+                                        </h:column>                                        
+                                    </h:dataTable>
+                                </div>
+                                <!-- PAGINATION -->
+                                <div class="foot">
+                                    <h:panelGroup rendered="#{trackingconfBean.dataModelDetail.rowCount gt 0}">
+                                        <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{trackingconfBean.previousPageDetail}" disabled="#{not trackingconfBean.paginationHelperDetail.hasPreviousPage or trackingconfBean.entityDetail ne null }">
+                                            <f:ajax execute="@this" render=":crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandLink>
+                                    &#160;|&#160;
+                                    <h:outputText value="#{trackingconfBean.paginationHelperDetail.pageFirstItem + 1}..#{trackingconfBean.paginationHelperDetail.pageLastItem + 1} / #{trackingconfBean.paginationHelperDetail.itemsCount}" />&#160;|&#160;
+                                    <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{trackingconfBean.nextPageDetail}" disabled="#{not trackingconfBean.paginationHelperDetail.hasNextPage or trackingconfBean.entityDetail ne null }">
+                                            <f:ajax execute="@this" render=":crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandLink>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{trackingconfBean.dataModelDetail.rowCount le 0}">
+                                        <div style="text-align: center; font-weight: bold;">
+                                            <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                        </div>
+                                    </h:panelGroup>
+                                </div>
+                                <!-- BUTTONS -->
+                                <h:panelGroup id="buttonDetailPanelGroup">
+                                    <div class="buttons_bottom">
+                                        <h:commandButton value="#{i18n['web.client.trackingconf.button.Assign']}" styleClass="btn_std_small" action="#{trackingconfBean.saveAssignPeriods}" disabled="#{trackingconfBean.entityDetail ne null}" rendered="#{trackingconfBean.assignConfigurationsMassively}">
+                                            <f:ajax execute=":crudForm:confTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup :crudForm:searchBoxGroupPanel" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandButton>
+                                        <h:commandButton value="#{i18n['web.client.trackingconf.button.DeassignPeriod']}" styleClass="btn_std_large" action="#{trackingconfBean.saveDeassignPeriodsMassively}" disabled="#{trackingconfBean.entityDetail ne null}" rendered="#{trackingconfBean.deassignConfigurationsMassively}" onclick="return showStdConfirmDeassignTrackingPeriodMessage(this);">
+                                            <f:ajax execute=":crudForm:confTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup :crudForm:searchBoxGroupPanel" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandButton>
+                                        <h:commandButton value="#{i18n['web.admin.screen.button.New']}" styleClass="btn_std_small" action="#{trackingconfBean.newEntityDetail}" disabled="#{trackingconfBean.entityDetail ne null}" rendered="#{not trackingconfBean.deassignConfigurationsMassively and not trackingconfBean.assignConfigurationsMassively}">
+                                            <f:ajax execute=":crudForm:confTablePanelGroup" render=":crudForm:editingPanelGroup :crudForm:buttonDetailPanelGroup :crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandButton>
+                                        <h:commandButton value="#{i18n['web.admin.screen.button.Edit']}" styleClass="btn_std_small" action="#{trackingconfBean.editEntityDetail}" disabled="#{trackingconfBean.entityDetail ne null}" rendered="#{not trackingconfBean.deassignConfigurationsMassively and not trackingconfBean.assignConfigurationsMassively}">
+                                            <f:ajax execute=":crudForm:confTablePanelGroup" render=":crudForm:editingPanelGroup :crudForm:buttonDetailPanelGroup :crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandButton>
+                                        <h:commandButton value="#{i18n['web.admin.screen.button.Delete']}" styleClass="btn_std_small" disabled="#{trackingconfBean.entityDetail ne null}" rendered="#{not trackingconfBean.deassignConfigurationsMassively and not trackingconfBean.assignConfigurationsMassively}" onclick="return showStdConfirmDeleteTrackingPeriodMessage(this);" action="#{trackingconfBean.deleteEditingDetail}">
+                                            <f:ajax execute=":crudForm:confTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup :crudForm:searchBoxGroupPanel" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandButton>
+                                        <h:commandButton value="#{i18n['web.admin.screen.button.Cancel']}" styleClass="btn_std_small" action="#{trackingconfBean.cancelEditing}" disabled="#{trackingconfBean.entityDetail ne null}">
+                                            <f:ajax execute=":crudForm:confTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup :crudForm:searchBoxGroupPanel" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandButton>
+                                    </div>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </h:panelGroup>
+                    </div>
+                    <!-- EDIT SECTION -->
+                    <h:panelGroup id="editingPanelGroup">
+                        <h:panelGroup rendered="#{trackingconfBean.entityDetail ne null}">
+                            <p:focus for="crudForm:descriptionEdit" />
+                            <div class="tablebox">
+                                <div class="body">
+                                    <div class="head">#{i18n['web.client.trackingconf.screen.title.TrackingConfDetail']}
+                                        '<h:outputText value="  #{trackingconfBean.entityDetail.description}" />'
+                                    </div>
+                                    <table width="100%">
+                                        <tr>
+                                            <th>#{i18n['web.client.guardroundconf.service.field.Description']}</th>
+                                            <td colspan="5"><h:inputText id="descriptionEdit" value="#{trackingconfBean.entityDetail.description}" maxlength="100" size="40" tabindex="10" /> 
+                                                <h:inputHidden id="isEditing" value="#{trackingconfBean.isEditing}" /></td>
+                                            <td><h:inputHidden id="textDateFrom" value="#{trackingconfBean.entityDetail.dateFrom}" >
+                                                  <f:convertDateTime pattern="#{applicationBean.defaultInputDateFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                                </h:inputHidden> 
+                                                <h:inputHidden id="oldTextDateFrom" value="#{trackingconfBean.oldDateFrom}">
+                                                    <f:convertDateTime pattern="#{applicationBean.defaultInputDateFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                                </h:inputHidden>
+                                            </td> 
+                                            <td>
+                                                <h:inputHidden id="textDateTo" value="#{trackingconfBean.entityDetail.dateTo}" >
+                                                    <f:convertDateTime pattern="#{applicationBean.defaultInputDateFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                                </h:inputHidden> 
+                                                <h:inputHidden id="oldTextDateTo" value="#{trackingconfBean.oldDateTo}">
+                                                    <f:convertDateTime pattern="#{applicationBean.defaultInputDateFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                                </h:inputHidden></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <th>#{i18n['web.client.guardroundconf.screen.field.DaysOfWeek']}</th>
+                                            <td colspan="5"><h:selectOneMenu id="daysOption" value="#{trackingconfBean.daysOption}" tabindex="40">
+                                                    <f:selectItem itemLabel="(#{i18n['web.client.trackingconf.service.label.SelectOneOption']})" itemValue="-1" />
+                                                    <f:selectItem itemLabel="#{i18n['web.client.trackingconf.screen.option.EveryDay']}" itemValue="1" />
+                                                    <f:selectItem itemLabel="#{i18n['web.client.trackingconf.screen.option.SpecifyDays']}" itemValue="2" />
+                                                    <f:ajax event="valueChange" execute=":crudForm:editingPanelGroup" render=":crudForm:editingPanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:selectOneMenu></td>
+                                            <td></td><td></td><td></td><td></td>
+                                        </tr>
+                                        <h:panelGroup id="everydayPanelGroup" rendered="#{trackingconfBean.daysOption == 1}">
+                                            <tr>
+                                                <th></th>
+                                                <td><h:outputText value="#{i18n['web.client.trackingconf.screen.field.StartTime']} " /> 
+                                                    <p:calendar value="#{trackingconfBean.everyDayConf.startTime}" pattern="HH:mm" timeOnly="true" locale="#{iBean.locale}" /></td>
+                                                <td><h:outputText value="#{i18n['web.client.trackingconf.service.label.EndTime']} " /> 
+                                                    <p:calendar value="#{trackingconfBean.everyDayConf.duration}" pattern="HH:mm" timeOnly="true" locale="#{iBean.locale}" /></td>
+                                                <td><h:outputText value="#{i18n['web.client.trackingconf.service.label.Interval']} " /> 
+                                                    <p:spinner id="spinnerInterval" value="#{trackingconfBean.everyDayConf.interval}" stepFactor="#{trackingconfBean.stepFactor}" min="#{trackingconfBean.stepFactor}" required="true" /></td>
+                                                <td></td><td></td><td></td><td></td><td></td><td></td>
+                                            </tr>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="specificDaysPanelGroup" rendered="#{trackingconfBean.daysOption == 2}">
+                                            <tr>
+                                                <th></th>
+                                                <td><h:outputText value="#{i18n['web.client.trackingconf.screen.field.DaysOfWeek']}" /></td>
+                                                <td><h:outputText value="#{i18n['web.client.trackingconf.screen.field.StartTime']}" /></td>
+                                                <td><h:outputText value="#{i18n['web.client.trackingconf.service.label.EndTime']}" /></td>
+                                                <td><h:outputText value="#{i18n['web.client.trackingconf.service.label.Interval']}" /></td>
+                                                <td></td><td></td><td></td><td></td><td></td>
+                                            </tr>
+                                            <ui:repeat value="#{trackingconfBean.confList}" var="conf">
+                                                <tr>
+                                                    <th></th>
+                                                    <td><h:selectBooleanCheckbox value="#{conf.checked}" /> <h:outputText value=" " /> <h:outputText value="#{conf.dayOfWeekString} " /></td>
+                                                    <td><p:calendar value="#{conf.startTime}" pattern="HH:mm" timeOnly="true" locale="#{iBean.locale}" /></td>
+                                                    <td><p:calendar value="#{conf.duration}" pattern="HH:mm" timeOnly="true" locale="#{iBean.locale}" /></td>
+                                                    <td><p:spinner id="spinnerIntervalMonday" value="#{conf.interval}" stepFactor="#{trackingconfBean.stepFactor}" min="#{trackingconfBean.stepFactor}" required="true"/></td>
+                                                    <td></td><td></td><td></td><td></td><td></td>
+                                                </tr>
+
+                                            </ui:repeat>
+                                        </h:panelGroup>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="buttons_bottom">
+                                <h:commandButton value="#{i18n['web.admin.screen.button.Save']}" styleClass="btn_std_small" action="#{trackingconfBean.saveEditingDetail}" onclick="return showProcessExecutingMessage(this);">
+                                    <f:ajax execute=":crudForm:editingPanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                                <h:commandButton value="#{i18n['web.admin.screen.button.Delete']}" styleClass="btn_std_small" action="#{trackingconfBean.deleteEditingDetail}" disabled="#{trackingconfBean.entityDetail.trackingPeriodCod eq null}" onclick="return showStdConfirmDeleteTrackingPeriodMessage(this);">
+                                    <f:ajax execute=":crudForm:confTablePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                                <h:commandButton value="#{i18n['web.admin.screen.button.Cancel']}" styleClass="btn_std_small" action="#{trackingconfBean.cancelEditingDetail}">
+                                    <f:ajax execute=":crudForm:editingPanelGroup" render=":crudForm:confTablePanelGroup :crudForm:editingPanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                            </div>
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

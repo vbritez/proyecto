@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+
+    <Button
+        android:id="@+id/serviceUpdateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/button_selector"
+        android:text="@string/service_operation_delete_update" />
+
+    <Spinner
+        android:id="@+id/serviceSelector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/serviceUpdateButton"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp" >
+
+        <requestFocus />
+    </Spinner>
+
+    <Button
+        android:id="@+id/serviceOperationDeleteRetrieveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/serviceSelector"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button_selector"
+        android:text="@string/service_operation_retrieve_send" />
+
+</RelativeLayout>

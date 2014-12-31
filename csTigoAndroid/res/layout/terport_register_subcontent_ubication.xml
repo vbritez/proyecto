@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/terportRegisterUbicationView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/terport_register_ubication"
+        android:textAppearance="@style/textSize" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/terportRegisterUbication1Edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_weight="0.20"
+            android:inputType="text"
+            android:maxLength="1" >
+        </EditText>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/terport_register_barra"
+            android:textAppearance="@style/textSize" />
+
+        <EditText
+            android:id="@+id/terportRegisterUbication2Edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.20"
+            android:inputType="text"
+            android:maxLength="2" >
+        </EditText>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/terport_register_barra"
+            android:textAppearance="@style/textSize" />
+
+        <EditText
+            android:id="@+id/terportRegisterUbication3Edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.20"
+            android:inputType="number"
+            android:maxLength="2" >
+        </EditText>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/terport_register_guion"
+            android:textAppearance="@style/textSize" />
+
+        <EditText
+            android:id="@+id/terportRegisterUbication4Edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.20"
+            android:inputType="number"
+            android:maxLength="2" >
+        </EditText>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/terport_register_barra"
+            android:textAppearance="@style/textSize" />
+
+        <EditText
+            android:id="@+id/terportRegisterUbication5Edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="7dp"
+            android:layout_weight="0.20"
+            android:inputType="number"
+            android:maxLength="1" >
+        </EditText>
+    </LinearLayout>
+
+</LinearLayout>

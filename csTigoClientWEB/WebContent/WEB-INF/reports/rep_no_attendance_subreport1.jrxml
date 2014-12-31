@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_no_attendance_subreport1" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="LocaleBundle">
+	<property name="ireport.zoom" value="1.6105100000000012"/>
+	<property name="ireport.x" value="281"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="FECHA" class="java.lang.String"/>
+	<parameter name="CLIENT_COD" class="java.lang.Long"/>
+	<parameter name="WHERE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    mde.code_chr, mde.value_chr
+FROM META_DATA mde
+WHERE
+    1= 1
+AND mde.COD_META = 7
+AND MDE.COD_CLIENT = $P!{CLIENT_COD}
+AND mde.COD_MEMBER = 1
+$P!{WHERE}
+AND NOT EXISTS
+    (
+        SELECT
+            sv.*
+        FROM
+            SERVICE_VALUE sv
+        INNER JOIN
+            USERPHONE u
+        ON
+            u.USERPHONE_COD = sv.COD_USERPHONE
+        WHERE
+            sv.COD_SERVICE =11
+        AND u.COD_CLIENT = $P!{CLIENT_COD}
+        AND sv.ENABLED_CHR = 1
+        AND to_char(sv.RECORDDATE_DAT,'dd/MM/yyyy') like '$P!{FECHA}'
+        AND sv.COLUMN1_CHR = mde.CODE_CHR)
+order by mde.code_chr, mde.value_chr]]>
+	</queryString>
+	<field name="CODE_CHR" class="java.lang.String"/>
+	<field name="VALUE_CHR" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="394" y="0" width="201" height="15"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{FECHA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="94" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CODE_CHR}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="94" y="0" width="300" height="15"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{VALUE_CHR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

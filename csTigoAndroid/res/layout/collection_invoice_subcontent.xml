@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/invoiceCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:textAppearance="@style/textSize" />
+    <EditText
+        android:id="@+id/invoiceNumberEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/invoiceCount"
+        android:layout_toRightOf="@+id/invoiceAmountView"
+        android:ems="10"
+        android:inputType="text" />
+    <EditText
+        android:id="@+id/invoiceAmountEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/invoiceNumberEdit"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/invoiceNumberEdit"
+        android:ems="10"
+        android:inputType="number" />
+    <TextView
+        android:id="@+id/invoiceNumberView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/invoiceNumberEdit"
+        android:layout_alignBottom="@+id/invoiceNumberEdit"
+        android:layout_marginRight="15dp"
+        android:text="@string/invoice_number"
+        android:textAppearance="@style/textSize" />
+    <TextView
+        android:id="@+id/invoiceAmountView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/invoiceAmountEdit"
+        android:layout_alignBottom="@+id/invoiceAmountEdit"
+        android:layout_alignRight="@+id/invoiceNumberView"
+        android:layout_marginRight="15dp"
+        android:text="@string/invoice_amount"
+        android:textAppearance="@style/textSize" />
+    <ImageView
+        android:id="@+id/invoicetRemove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/invoiceAmountEdit"
+        android:layout_marginTop="14dp"
+        android:contentDescription="@string/imagen"
+        android:src="@drawable/delete" />
+</RelativeLayout>

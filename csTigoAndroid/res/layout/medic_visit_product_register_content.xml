@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/order_product"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/order_product"
+        android:textAppearance="@style/textSize" />
+
+    <LinearLayout
+        android:id="@+id/orderProductlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/order_product"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/order_product"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/productAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/orderProductlayout"
+        android:contentDescription="@string/imagen"
+        android:src="@drawable/add" />
+
+    <Button
+        android:id="@+id/orderRegisterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/orderProductlayout"
+        android:layout_below="@+id/productAdd"
+        android:layout_marginTop="44dp"
+        android:background="@drawable/button_selector"
+        android:text="@string/order_register" />
+
+</RelativeLayout>

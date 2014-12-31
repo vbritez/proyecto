@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<ui:composition
+	template="/resources/templates/screenDefaultClient.xhtml">
+	<!-- TITLE -->
+	<ui:define name="title">#{i18n['web.client.report.AuditoryReport']}</ui:define>
+	<!-- STATUS LOCATION -->
+	<ui:define name="status">
+		<h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="repaudit"
+			value="#{i18n['web.client.report.AuditoryReport']}" />
+	</ui:define>
+	<!-- PRINCIPAL CONTAINER -->
+	<ui:define name="container">
+		<div id="page_col">
+			<div id="cent_full">
+				<h:form id="repAuditForm">
+					<p:focus for="repAuditForm:textDateFrom" />
+					<div class="tablebox">
+						<div class="head">#{i18n['web.client.screen.report.auditory.title.ParametersOf']}</div>
+						<!-- PARAMETERS BOX -->
+						<div class="body">
+							<table class="tablesearch">
+								<tr>
+									<th>#{i18n['web.client.search.field.FromDate']}</th>
+									<td><p:calendar id="textDateFrom" locale="#{iBean.locale}"
+											value="#{reportAuditBean.dateFrom}"
+											timeZone="#{applicationBean.defaultTimeZoneID}"
+											pattern="#{applicationBean.defaultInputDateFormat}" /></td>
+								</tr>
+								<tr>
+									<th>#{i18n['web.client.search.field.ToDate']}</th>
+									<td><p:calendar id="textDateTo" locale="#{iBean.locale}"
+											value="#{reportAuditBean.dateTo}"
+											timeZone="#{applicationBean.defaultTimeZoneID}"
+											pattern="#{applicationBean.defaultInputDateFormat}" /></td>
+								</tr>
+
+								<tr>
+									<th>#{i18n['web.client.screen.admin.webUsers.field.Classification']}</th>
+
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkClassificationList"
+															value="#{reportAuditBean.validatedAllClassification}"
+															disabled="#{reportAuditBean.selectedUserphoneList.size() gt 0 or reportAuditBean.validatedAllUsers}">
+															<f:ajax event="change"
+																listener="#{reportAuditBean.selectAll}"
+																execute=":repAuditForm:chkClassificationList"
+																render=":repAuditForm:listClasification :repAuditForm:chkUserphoneList :repAuditForm:listUserphone"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkClassificationist"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listClasification"
+														value="#{reportAuditBean.selectedClassificationList}"
+														converter="classificationConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportAuditBean.validatedAllClassification or reportAuditBean.validatedAllUsers 
+														or reportAuditBean.selectedUserphoneList.size() gt 0}">
+														<f:selectItems
+															value="#{reportAuditBean.classificationList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.descriptionChr}" />
+														<f:ajax
+															execute=":repAuditForm:listClasification"
+															render=":repAuditForm:chkUserphoneList :repAuditForm:listUserphone"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+								<tr>
+									<th>#{i18n['web.client.search.field.User']}</th>
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkUserphoneList"
+															value="#{reportAuditBean.validatedAllUsers}"
+															disabled="#{reportAuditBean.selectedClassificationList.size() gt 0 or reportAuditBean.validatedAllClassification}">
+															<f:ajax event="change"
+																listener="#{reportAuditBean.selectAll}"
+																execute=":repAuditForm:chkUserphoneList"
+																render=":repAuditForm:listUserphone :repAuditForm:listClasification :repAuditForm:chkClassificationList"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkUserphoneList"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listUserphone"
+														value="#{reportAuditBean.selectedUserphoneList}"
+														converter="userphoneConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportAuditBean.validatedAllUsers or reportAuditBean.validatedAllClassification 
+														or reportAuditBean.selectedClassificationList.size() gt 0}">
+
+														<f:selectItems
+															value="#{reportAuditBean.userphoneList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.nameChr}" />
+
+														<f:ajax
+															
+															execute=":repAuditForm:listUserphone"
+															render=":repAuditForm:chkClassificationList :repAuditForm:listClasification"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div class="buttons_bottom">
+						<h:commandButton id="btnGeneratePDF"
+							value="#{i18n['web.client.report.title.PDFReport']}"
+							action="#{reportAuditBean.validateParameters}"
+							styleClass="btn_std_large">
+							<f:setPropertyActionListener value="pdf"
+								target="#{reportAuditBean.reportType}" />
+							<f:ajax execute="@form" render="@form" onevent="manageAjaxEvents"
+								onerror="manageAjaxErrors" />
+						</h:commandButton>
+						<h:commandButton id="btnGenerateXLS"
+							value="#{i18n['web.client.report.title.XLSReport']}"
+							action="#{reportAuditBean.validateParameters}"
+							styleClass="btn_std_large">
+							<f:setPropertyActionListener value="xls"
+								target="#{reportAuditBean.reportType}" />
+							<f:ajax execute="@form" render="@form" onevent="manageAjaxEvents"
+								onerror="manageAjaxErrors" />
+						</h:commandButton>
+						<h:commandButton id="btnGenerate"
+							action="#{reportAuditBean.generateReport}" style="display: none;"
+							rendered="#{reportAuditBean.parametersValidated}" />
+					</div>
+					<!-- SCRIPTS -->
+					<h:panelGroup rendered="#{reportAuditBean.parametersValidated}">
+						<script type="text/javascript" charset="UTF-8">
+							//         
+							function autoGenerateReport() {
+								document.getElementById('repAuditForm').target = '_blank';
+								document.getElementById(
+										'repAuditForm:btnGenerate').click();
+								document.getElementById('repAuditForm').target = '';
+							}
+
+							$(document).ready(function() {
+								setTimeout("autoGenerateReport()", 500);
+							});
+							//
+						</script>
+					</h:panelGroup>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
+</html>

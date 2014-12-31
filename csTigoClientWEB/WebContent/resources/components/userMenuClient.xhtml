@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html">
+<!--
+    @version $Id: userMenuClient.xhtml 1046 2012-04-09 13:41:42Z javier.kovacs $
+    -->
+<ui:component id="userMenu">
+    <!-- USER MENU -->
+    <h:form id="userMenuForm">
+        <div id="options_r">
+            <div id="options_r_content">
+                <h:outputText value="#{i18n['web.client.appheader.screen.label.User']}:" />
+                &#160;&#160;<strong><h:outputText value="#{securityBean.loggedInUserClient.nameChr}" /></strong> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                <h:commandLink value="#{i18n['web.client.appheader.screen.label.MyOptions']}" title="#{i18n['web.client.appheader.screen.label.MyOptionsTips']}" action="/domain/cstigowebclient/userchangepassword" />
+                &#160;|&#160;
+                <h:commandLink value="#{i18n['web.client.appheader.screen.label.Exit']}" title="#{i18n['web.client.appheader.screen.label.ExitTips']}" action="#{securityBean.logoutClientSession}" />
+            </div>
+        </div>
+    </h:form>
+    <!-- END USER MENU -->
+</ui:component>
+</html>

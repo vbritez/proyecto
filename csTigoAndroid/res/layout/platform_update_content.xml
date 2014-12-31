@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/enable_device_button"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/button_selector"
+        android:text="@string/platform_enable_device" />
+
+    <Button
+        android:id="@+id/service_update_button"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/enable_device_button"
+        android:background="@drawable/button_selector"
+        android:text="@string/platform_update_services" />
+    
+    <Button
+        android:id="@+id/icon_update_button"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/service_update_button"
+        android:background="@drawable/button_selector"
+        android:text="@string/icon_update_services" />
+
+    <Button
+        android:id="@+id/service_option_button"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/icon_update_button"
+        android:background="@drawable/button_selector"
+        android:text="@string/service_option" />
+    
+    <Button
+        android:id="@+id/internet_option_button"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/service_option_button"
+        android:background="@drawable/button_selector"
+        android:text="@string/internet_option" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/service_option_button"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginTop="50dp"
+        android:text="@string/platform_general_options"
+        android:textStyle="bold" />
+
+    <CheckBox
+        android:id="@+id/serviceDisabledCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/textView1"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/platform_general_options_service_disabled" />
+
+    <CheckBox
+        android:id="@+id/platformVibrateCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/serviceDisabledCheck"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/platform_vibrate" />
+
+    <CheckBox
+        android:id="@+id/smsShowAllCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/platformVibrateCheck"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/platform_sms_show_all" />
+
+</RelativeLayout>

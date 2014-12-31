@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_client_goal_sr1" pageWidth="539" pageHeight="99" whenNoDataType="AllSectionsNoDetail" columnWidth="539" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true">
+	<property name="ireport.zoom" value="1.7715610000000013"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\dev\\soluciones\\productos\\soluciones_corporativas\\03.implementacion\\csTigoClientWEB\\WebContent\\WEB-INF\\reports\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PERIODO_DESDE" class="java.lang.String"/>
+	<parameter name="PERIODO_HASTA" class="java.lang.String"/>
+	<parameter name="DIA_DESDE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DIA_HASTA" class="java.lang.String">
+		<defaultValueExpression><![CDATA["31"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USERPHONE_COD" class="java.lang.Long"/>
+	<parameter name="WHERE" class="java.lang.String">
+		<parameterDescription><![CDATA[SQL Criteria]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COD_META" class="java.lang.Long" isForPrompting="false">
+		<defaultValueExpression><![CDATA[10L]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SQL_RANGO_FECHAS" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["select TO_DATE('01/01/2012', 'dd/MM/yyyy') fecha_ini, TO_DATE('31/01/2012', 'dd/MM/yyyy') fecha_fin from dual union select TO_DATE('01/02/2012', 'dd/MM/yyyy') fecha_ini, TO_DATE('28/02/2012', 'dd/MM/yyyy') fecha_fin from dual"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="GOAL_NUM" class="java.lang.Integer" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[$P!{SQL_RANGO_FECHAS}]]>
+	</queryString>
+	<field name="FECHA_INI" class="java.util.Date"/>
+	<field name="FECHA_FIN" class="java.util.Date"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band/>
+	</title>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="53" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="539" height="53"/>
+				<subreportParameter name="WHERE">
+					<subreportParameterExpression><![CDATA[$P{WHERE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="GOAL_NUM">
+					<subreportParameterExpression><![CDATA[$P{GOAL_NUM}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="USERPHONE_COD">
+					<subreportParameterExpression><![CDATA[$P{USERPHONE_COD}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="COD_META">
+					<subreportParameterExpression><![CDATA[$P{COD_META}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="FECHA_INI">
+					<subreportParameterExpression><![CDATA[$F{FECHA_INI}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="FECHA_FIN">
+					<subreportParameterExpression><![CDATA[$F{FECHA_FIN}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "rep_client_goal_sr2_xls.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+
+    <Button
+        android:id="@+id/metadataUpdateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/button_selector"
+        android:text="@string/metadata_update_create" />
+
+    <Spinner
+        android:id="@+id/metaSelector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/metadataUpdateButton"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp" />
+
+    <CheckBox
+        android:id="@+id/generateCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/metaSelector"
+        android:text="@string/metadata_create_autogenerate_code" />
+
+    <TextView
+        android:id="@+id/metadataCreateCodeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/generateCode"
+        android:hint="@string/metadata_create_code_empty"
+        android:text="@string/metadata_create_code"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/metadataCreateCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/metadataCreateCodeTitle"
+        android:ems="10"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/metadataCreateValueTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/metadataCreateCode"
+        android:text="@string/metadata_create_value"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/metadataCreateValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/metadataCreateValueTitle"
+        android:ems="10"
+        android:inputType="text" />
+    
+    <CheckBox
+        android:id="@+id/metadataCreateGetGps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/metadataCreateValue"
+        android:text="@string/metadata_create_get_gps_point" />
+    
+<!--     <TextView -->
+<!--         android:id="@+id/metadataCreateGetGpsMessage" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_below="@+id/metadataCreateGetGps" -->
+<!--         android:text="@string/metadata_create_get_gps_point_message" -->
+<!--         android:textAppearance="@style/textSize" /> -->
+            
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content" 
+        android:layout_below="@+id/metadataCreateGetGps"
+        />
+
+    <Button
+        android:id="@+id/metadataCreateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/spinner"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button_selector"
+        android:text="@string/metadata_create_send" />
+
+</RelativeLayout>

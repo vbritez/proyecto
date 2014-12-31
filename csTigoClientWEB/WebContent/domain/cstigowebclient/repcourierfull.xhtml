@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/screenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['report.Courier']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+        &#160;/&#160;<h:commandLink action="repcourierfull" value="#{i18n['report.Courier']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <f:event type="preRenderComponent" listener="#{reportCourierFullBean.destroyScope}" id="destroyScope" />
+        <div id="page_col">
+            <div id="cent_full">
+
+                <h:form id="repCourierFullForm">
+                    <p:focus for="repCourierFullForm:textDateFrom" />
+                    <div class="tablebox">
+                        <div class="head">#{i18n['courier.screen.title.reportParameters']}</div>
+                        <!-- PARAMETERS BOX -->
+                        <h:panelGroup id="tablePanelGroup">
+                            <div class="body">
+                                <table class="tablesearch">
+                                    <tr>
+                                        <th>#{i18n['web.client.search.field.FromDate']}</th>
+                                        <td><p:calendar id="textDateFrom" locale="#{iBean.locale}" 
+                                        				value="#{reportCourierFullBean.dateFrom}" 
+                                        				timeZone="#{applicationBean.defaultTimeZoneID}" 
+                                        				pattern="#{applicationBean.defaultInputDateFormat}" >
+                                        	<p:ajax event="dateSelect" listener="#{reportCourierFullBean.valueChangeDate1}" 
+                                        			update="repCourierFullForm:tablePanelGroup" />
+										</p:calendar>
+                                        </td>
+                                    
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.search.field.ToDate']}</th>
+                                        <td><p:calendar id="textDateTo" locale="#{iBean.locale}" value="#{reportCourierFullBean.dateTo}" 
+                                        				timeZone="#{applicationBean.defaultTimeZoneID}" 
+                                        				pattern="#{applicationBean.defaultInputDateFormat}" >
+                                        	<p:ajax event="dateSelect" listener="#{reportCourierFullBean.valueChangeDate2}" 
+                                        			update="repCourierFullForm:tablePanelGroup"/>
+											</p:calendar>
+                                        </td>
+                                    </tr>
+                                    <tr>
+									<th>#{i18n['web.client.screen.admin.webUsers.field.Classification']}</th>
+
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkClassificationList"
+															value="#{reportCourierFullBean.validatedAllClassification}"
+															disabled="#{reportCourierFullBean.selectedUserphoneList.size() gt 0 or reportCourierFullBean.validatedAllUsers}">
+															<f:ajax event="change"
+																listener="#{reportCourierFullBean.selectAll}"
+																execute=":repCourierFullForm:chkClassificationList"
+																render=":repCourierFullForm:listClasification :repCourierFullForm:chkUserphoneList :repCourierFullForm:listUserphone"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listClasification"
+														value="#{reportCourierFullBean.selectedClassificationList}"
+														converter="classificationConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportCourierFullBean.validatedAllClassification or reportCourierFullBean.validatedAllUsers 
+														or reportCourierFullBean.selectedUserphoneList.size() gt 0}">
+														<f:selectItems
+															value="#{reportCourierFullBean.classificationList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.descriptionChr}" />
+														<f:ajax
+															execute=":repCourierFullForm:listClasification"
+															render=":repCourierFullForm:chkUserphoneList :repCourierFullForm:listUserphone"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+								<tr>
+									<th>#{i18n['web.client.search.field.User']}</th>
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkUserphoneList"
+															value="#{reportCourierFullBean.validatedAllUsers}"
+															disabled="#{reportCourierFullBean.selectedClassificationList.size() gt 0 or reportCourierFullBean.validatedAllClassification}">
+															<f:ajax event="change"
+																listener="#{reportCourierFullBean.selectAll}"
+																execute=":repCourierFullForm:chkUserphoneList"
+																render=":repCourierFullForm:listUserphone :repCourierFullForm:listClasification :repCourierFullForm:chkClassificationList"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkUserphoneList"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listUserphone"
+														value="#{reportCourierFullBean.selectedUserphoneList}"
+														converter="userphoneConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportCourierFullBean.validatedAllUsers or reportCourierFullBean.validatedAllClassification 
+														or reportCourierFullBean.selectedClassificationList.size() gt 0}">
+
+														<f:selectItems
+															value="#{reportCourierFullBean.userphoneList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.nameChr}" />
+
+														<f:ajax
+															
+															execute=":repCourierFullForm:listUserphone"
+															render=":repCourierFullForm:chkClassificationList :repCourierFullForm:listClasification"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+
+											</tr>
+										</table>
+									</td>
+								</tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.table.tip.OrderBy']}</th>
+                                        <td><h:selectOneMenu id="listOrderby" value="#{reportCourierFullBean.selectedOrderby}">
+                                                <f:selectItems value="#{reportCourierFullBean.orderByList}" />
+                                            </h:selectOneMenu></td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>#{i18n['web.client.label.ChartReportOption']}</th>
+                                        <td><h:selectOneRadio id="graphicReportOption" value="#{reportCourierFullBean.chartReportOption}" layout="pageDirection" style="width: auto; border: none;">
+                                                <f:selectItem itemValue="userphone" itemLabel="#{i18n['courier.chart.option.Userphone']}" />
+                                                <f:selectItem itemValue="motive" itemLabel="#{i18n['courier.chart.option.Motive']}" />
+                                                <f:ajax event="valueChange" execute=":repCourierFullForm:tablePanelGroup" render=":repCourierFullForm:tablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:selectOneRadio></td>
+                                    </tr>
+                                    <tr>
+                                        <th><h:outputText value="#{i18n['courier.chart.label.SelectMotives']}" rendered="#{reportCourierFullBean.chartReportOption eq 'motive'}" /></th>
+                                        <td><p:pickList id="pickList" value="#{reportCourierFullBean.categories}" var="motive" itemLabel="#{motive}" itemValue="#{motive}" style="width: auto; border: none;" rendered="#{reportCourierFullBean.chartReportOption eq 'motive'}" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.label.ChartType']}</th>
+                                        <td><h:selectOneRadio id="graphicReportType" value="#{reportCourierFullBean.chartType}" layout="pageDirection" style="width: auto; border: none;">
+                                                <f:selectItem itemValue="bar" itemLabel="#{i18n['web.client.option.BarChart']}" />
+                                                <f:selectItem itemValue="pie" itemLabel="#{i18n['web.client.option.PieChart']}" />
+                                            </h:selectOneRadio></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                    <div class="buttons_bottom">
+                        <h:commandButton id="btnGenerateChart" value="#{i18n['web.client.report.title.ChartReport']}" action="#{reportCourierFullBean.validateParametersChart}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="chart" target="#{reportCourierFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGeneratePDF" value="#{i18n['web.client.report.title.PDFReport']}" action="#{reportCourierFullBean.validateParameters}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="pdf" target="#{reportCourierFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGenerateXLS" value="#{i18n['web.client.report.title.XLSReport']}" action="#{reportCourierFullBean.validateParameters}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="xls" target="#{reportCourierFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGenerate" action="#{reportCourierFullBean.generateReport}" style="display: none;" rendered="#{reportCourierFullBean.parametersValidated}" />
+                        <h:commandButton id="btnGenerateChartReport" action="#{reportCourierFullBean.generateReportChart}" style="display: none;" rendered="#{reportCourierFullBean.parametersValidatedChart}" />
+                    </div>
+                    <!-- SCRIPTS -->
+                    <h:panelGroup rendered="#{reportCourierFullBean.parametersValidated}">
+                        <script type="text/javascript" charset="UTF-8">
+																									//         
+																									function autoGenerateReport() {
+																										document
+																												.getElementById('repCourierFullForm').target = '_blank';
+																										document
+																												.getElementById(
+																														'repCourierFullForm:btnGenerate')
+																												.click();
+																										document
+																												.getElementById('repCourierFullForm').target = '';
+																									}
+
+																									$(
+																											document)
+																											.ready(
+																													function() {
+																														setTimeout(
+																																"autoGenerateReport()",
+																																500);
+																													});
+																									//
+																								</script>
+                    </h:panelGroup>
+
+                    <h:panelGroup rendered="#{reportCourierFullBean.parametersValidatedChart}">
+                        <script type="text/javascript" charset="UTF-8">
+																									//         
+																									function autoGenerateReportChart() {
+																										document
+																												.getElementById('repCourierFullForm').target = '_blank';
+																										document
+																												.getElementById(
+																														'repCourierFullForm:btnGenerateChartReport')
+																												.click();
+																										document
+																												.getElementById('repCourierFullForm').target = '';
+																									}
+																									$(
+																											document)
+																											.ready(
+																													function() {
+																														setTimeout(
+																																"autoGenerateReportChart()",
+																																500);
+																													});
+
+																									//
+																								</script>
+                    </h:panelGroup>
+                    <!-- <script type="text/javascript" charset="UTF-8">
+                            //<![CDATA[
+                            function handleTransfer(e) {
+                                //item = e.item
+                                //fromList = e.from
+                                //toList = e.toList
+                                //type = e.type (type of transfer; command, dblclick or dragdrop)
+                                var count = e.toList.count();
+                            }                            
+                            //]]>
+                   </script> -->
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

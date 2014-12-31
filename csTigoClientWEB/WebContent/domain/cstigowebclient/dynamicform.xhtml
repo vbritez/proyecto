@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:csui="http://java.sun.com/jsf/composite/uicomponents" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/mapScreenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.servicename.DynamicForm']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="dynamicform" value="#{i18n['web.servicename.DynamicForm']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <!-- GOOGLE MAPS API -->
+<!--         <script src="https://maps.google.com/maps/api/js?client=#{applicationBean.appKey}&amp;sensor=false" type="text/javascript" /> -->
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="fastReportForm" target="_blank">
+                    <h:panelGroup rendered="#{dynamicFormBean.dataModelDetail eq null}">
+                        <div class="buttons_top">
+                            <h:commandButton styleClass="btn_xls" title="#{i18n['web.client.report.tip.XLSReport']}" action="#{dynamicFormBean.viewXLSCabDetail}" />
+                            <h:commandButton styleClass="btn_pdf" title="#{i18n['web.client.report.tip.PDFReport']}" action="#{dynamicFormBean.viewPDFCabDetail}" />
+                        </div>
+                    </h:panelGroup>
+                </h:form>
+                <h:form id="serviceForm">
+                    <p:focus for="serviceForm:listFeatureElement" />
+                    <h:panelGroup id="cabPanelGroup" rendered="#{dynamicFormBean.dataModelDetail eq null}">
+                        <div class="tablebox">
+                            <div class="head">#{i18n['dynamicform.title.ListOf']}</div>
+                            <!-- SEARCH BOX -->
+                            <h:panelGroup id="searchBoxGroupPanel">
+                                <div class="headcontainer">
+                                    <table class="tablesearch">
+                                        <tr>
+                                            <th>
+                                                <h:outputText value="#{i18n['dynamicform.search.field.DynamicForm']}" />
+                                            </th>
+                                            
+                                            <td class="thin">
+                                                <h:selectOneMenu id="listFeatureElement" value="#{dynamicFormBean.selectedFeatureElement}" tabindex="1" converter="featureElementConverter">
+                                                    <f:selectItem itemValue="#{null}" itemLabel="" />
+                                                    <f:selectItems value="#{dynamicFormBean.featureElementList}" var="fLItem" itemValue="#{fLItem}" itemLabel="#{fLItem.descriptionChr}"/>
+                                                    <f:ajax event="change" execute="@this" render=":serviceForm:searchBoxGroupPanel" onevent="manageAjaxEvents" onerror="manageAjaxErrors" listener="#{dynamicFormBean.onChangeFeatureElement}"/>
+                                                </h:selectOneMenu>
+                                            </td>
+                                            
+                                            <th>
+                                                <h:outputText value="#{i18n['web.client.search.field.Show']}" />
+                                            </th>
+                                            <td class="thin">
+                                                <h:selectOneMenu id="listRowQuant" value="#{dynamicFormBean.rowQuantSelected}" disabled="#{dynamicFormBean.entity ne null}" valueChangeListener="#{dynamicFormBean.applyQuantity}" tabindex="2">
+                                                    <f:selectItems value="#{dynamicFormBean.rowQuantList}" />
+                                                    <f:ajax event="change" execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:selectOneMenu>
+                                            </td>
+                                            <td rowspan="3" style="text-align: center;">
+                                                <h:commandButton id="btnSearch" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Find']}" action="#{dynamicFormBean.applyFilter}" disabled="#{dynamicFormBean.entity ne null}" tabindex="5">
+                                                    <f:ajax execute=":serviceForm:searchBoxGroupPanel" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandButton>
+                                            </td>
+                                        </tr>
+                                        <h:panelGroup id="userPanelGroup">
+                                            <h:panelGroup id="userphonePanelGroup">
+                                                <tr>
+                                                    <th>
+                                                        <h:outputText value="#{i18n['web.client.search.field.User']}" />
+                                                    </th>
+                                                    <td>
+                                                        <h:selectOneMenu id="listUserphone" value="#{dynamicFormBean.selectedUserphone}" converter="userphoneConverter" >
+                                                            <f:selectItem itemLabel="(#{i18n['web.client.selectonemenu.All']})" itemValue="#{null}" />
+                                                            <f:selectItems value="#{dynamicFormBean.userphoneList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.nameChr}" />
+                                                        </h:selectOneMenu>
+                                                    </td>
+                                                    <th>
+                                                        <h:outputText value="#{i18n['web.client.search.field.UserName']}" />
+                                                    </th>
+                                                    <td>
+                                                        <h:inputText id="textNameUserphoneCriteria" value="#{dynamicFormBean.usermobileName}" />
+                                                    </td>
+                                                </tr>
+                                            </h:panelGroup>
+                                        </h:panelGroup>
+                                        <tr>
+                                            <th>
+                                                <h:outputText value="#{i18n['web.client.search.field.FromDate']}" />
+                                            </th>
+                                            <td>
+                                                <p:calendar id="textDateFrom" locale="#{iBean.locale}" value="#{dynamicFormBean.dateFrom}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                            </td>
+                                            <th>
+                                                <h:outputText value="#{i18n['web.client.search.field.ToDate']}" />
+                                            </th>
+                                            <td>
+                                                <p:calendar id="textDateTo" locale="#{iBean.locale}" value="#{dynamicFormBean.dateTo}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </h:panelGroup>
+                            <h:panelGroup id="listTablePanelGroup">
+                                <!-- LIST TABLE -->
+                                <div class="body">
+                                <h:dataTable id="serviceListTable" value="#{dynamicFormBean.dataModel}" var="item" rendered="#{dynamicFormBean.dataModel.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                    <h:column id="column1">
+                                        <f:facet name="header">
+                                            <h:selectBooleanCheckbox id="chkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{dynamicFormBean.entity ne null}" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                        </f:facet>
+                                        <h:selectBooleanCheckbox id="chkBoxSelected" value="#{dynamicFormBean.selectedItems[item.featureValueCod]}" disabled="#{dynamicFormBean.entity ne null}" />
+                                    </h:column>     
+                                    
+                                    <h:column id="column2">
+                                        <f:facet name="header">
+                                            <span>
+<!--                                                 <h:commandLink value="#{i18n['featurevalue.field.MobileNumber']}" title="#{i18n['featurevalue.field.MobileNumber']}" disabled="#{crudFeatureElementsBean.entity ne null}"> -->
+<!--                                                     <f:setPropertyActionListener value="#{not crudFeatureElementsBean.sortHelper.ascending}" target="#{crudFeatureElementsBean.sortHelper.ascending}" /> -->
+<!--                                                     <f:setPropertyActionListener value="cellphoneNum" target="#{crudFeatureElementsBean.sortHelper.field}" /> -->
+<!--                                                     <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" /> -->
+<!--                                                 </h:commandLink> -->
+<!--                                                 <h:outputText value="#{crudFeatureElementsBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudFeatureElementsBean.sortHelper.field eq 'cellphoneNum'}" /> -->
+                                                    <h:outputText value="#{i18n['dynamicform.field.MobileNumber']}" disabled="#{crudFeatureElementsBean.entity ne null}"/>
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.cellphoneNum}" converter="cellphoneConverter" />
+                                    </h:column>  
+                                    
+                                    <h:column id="column3">
+                                        <f:facet name="header">
+                                            <span>
+<!--                                                 <h:commandLink value="#{i18n['featurevalue.field.Names']}"  title="#{i18n['featurevalue.field.Names']}" disabled="#{dynamicFormBean.entity ne null}"> -->
+<!--                                                     <f:setPropertyActionListener value="#{not dynamicFormBean.sortHelper.ascending}" target="#{dynamicFormBean.sortHelper.ascending}" /> -->
+<!--                                                     <f:setPropertyActionListener value="nameChr" target="#{dynamicFormBean.sortHelper.field}" /> -->
+<!--                                                     <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" /> -->
+<!--                                                 </h:commandLink> -->
+<!--                                                 <h:outputText value="#{dynamicFormBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{dynamicFormBean.sortHelper.field eq 'nameChr'}" /> -->
+                                                    <h:outputText value="#{i18n['dynamicform.field.Names']}" disabled="#{crudFeatureElementsBean.entity ne null}"/>
+                                            </span>
+                                        </f:facet>
+          
+                                        <csui:columnWidthChar value="#{item.nameChr}" header="#{i18n['featurevalue.field.Names']}" />
+                                    </h:column>   
+                                    
+                                    <h:column id="column4">
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['dynamicform.field.idFeatureValue']}" action="#{dynamicFormBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['dynamicform.field.idFeatureValue']}" disabled="#{dynamicFormBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not dynamicFormBean.sortHelper.ascending}" target="#{dynamicFormBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="featureValueCod" target="#{dynamicFormBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{dynamicFormBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{dynamicFormBean.sortHelper.field eq 'featureValueCod'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.featureValueCod}" />
+                                    </h:column>                          
+
+                                    <h:column id="column5">
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['dynamicform.field.DynamicForm']}" action="#{dynamicFormBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['dynamicform.field.DynamicForm']}" disabled="#{dynamicFormBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not dynamicFormBean.sortHelper.ascending}" target="#{dynamicFormBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="featureElement.descriptionChr" target="#{dynamicFormBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{dynamicFormBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{dynamicFormBean.sortHelper.field eq 'featureElement.descriptionChr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{item.featureElement.descriptionChr}" header="#{i18n['featurevalue.field.FeatureElement']}" />
+                                    </h:column>
+
+                                    <h:column id="column6">
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['dynamicform.field.Date']}" action="#{dynamicFormBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['dynamicform.field.Date']}" disabled="#{dynamicFormBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not dynamicFormBean.sortHelper.ascending}" target="#{dynamicFormBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="message.dateinDat" target="#{dynamicFormBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{dynamicFormBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{dynamicFormBean.sortHelper.field eq 'message.dateinDat'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.message.dateinDat}">
+                                                <f:convertDateTime pattern="#{applicationBean.defaultOutputDateTimeFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                        </h:outputText>
+                                    </h:column>
+                                </h:dataTable>
+
+                            </div>
+                                <!-- PAGINATION -->
+                                <div class="foot">
+                                    <h:panelGroup rendered="#{dynamicFormBean.dataModel.rowCount gt 0}">
+                                        <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{dynamicFormBean.previousHeaderPage}" disabled="#{not dynamicFormBean.paginationHelper.hasPreviousPage or dynamicFormBean.entity ne null}">
+                                            <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandLink>
+                                            &#160;|&#160;<h:outputText value="#{dynamicFormBean.paginationHelper.pageFirstItem + 1}..#{dynamicFormBean.paginationHelper.pageLastItem + 1} / #{dynamicFormBean.paginationHelper.itemsCount}" />&#160;|&#160;
+                                            <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{dynamicFormBean.nextHeaderPage}" disabled="#{not dynamicFormBean.paginationHelper.hasNextPage or dynamicFormBean.entity ne null}">
+                                            <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandLink>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{dynamicFormBean.dataModel.rowCount le 0}">
+                                        <div style="text-align: center; font-weight: bold;">
+                                            <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                        </div>
+                                    </h:panelGroup>
+                                </div>
+                            </h:panelGroup>
+                        </div>
+                        <!-- BUTTONS -->
+                        <h:panelGroup id="buttonsPanelGroup">
+                            <div class="buttons_bottom">
+                                <h:commandButton value="#{i18n['web.client.screen.button.Localize']}" styleClass="btn_std_small" action="#{dynamicFormBean.showHeaderMap}" rendered="#{dynamicFormBean.geolocalizationAllowed and dynamicFormBean.showMapOnHeader and dynamicFormBean.dataModel ne null and dynamicFormBean.dataModel.rowCount gt 0}">
+                                    <f:ajax execute=":serviceForm:listTablePanelGroup" render=":serviceForm:map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                                <h:commandButton value="#{i18n['web.client.screen.button.Details']}" styleClass="btn_std_small" action="#{dynamicFormBean.viewDetails}" disabled="#{dynamicFormBean.entity ne null}" rendered="#{dynamicFormBean.dataModel ne null and dynamicFormBean.dataModel.rowCount gt 0}">
+                                    <f:ajax execute=":serviceForm:listTablePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                            </div>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                    
+                    
+                    <!--DETAIL SECTION -->
+                    <h:panelGroup id="detailTablePanelGroup" rendered="#{dynamicFormBean.dataModelDetail ne null}">
+                        <div class="buttons_top">
+                            <h:commandButton styleClass="btn_xls" title="#{i18n['web.client.report.tip.XLSReport']}" action="#{dynamicFormBean.viewXLSDetail}" onclick="return reportPrint('serviceForm');" />
+                            <h:commandButton styleClass="btn_pdf" title="#{i18n['web.client.report.tip.PDFReport']}" action="#{dynamicFormBean.viewPDFDetail}" onclick="return reportPrint('serviceForm');" />
+                        </div>
+                        <div class="tablebox">
+                            <div class="head">
+                                #{i18n['dynamicform.title.DetailOf']} #{dynamicFormBean.selectedFeatureElement.descriptionChr} #{i18n['dynamicform.title.Of']} #{dynamicFormBean.entity.nameChr} (
+                                <h:outputText value="#{dynamicFormBean.entity.cellphoneNum}" converter="cellphoneConverter" />
+                                )
+                            </div>
+                            <!--LIST TABLE -->
+                            <div class="body">
+                                <h:dataTable id="detailListTable" value="#{dynamicFormBean.dataModelDetail}" var="itemDetail" rendered="#{dynamicFormBean.dataModelDetail.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <h:selectBooleanCheckbox id="detailChkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{dynamicFormBean.entityDetail ne null}" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                        </f:facet>
+                                        <h:selectBooleanCheckbox id="detailChkBoxSelected" value="#{dynamicFormBean.selectedDetailItems[itemDetail.featureValueDataCod]}" disabled="#{dynamicFormBean.entityDetail ne null}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['dynamicform.field.FeatureValueDataCod']}" action="#{dynamicFormBean.applySortDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['dynamicform.field.FeatureValueDataCod']}" disabled="#{dynamicFormBean.entityDetail ne null}">
+                                                    <f:setPropertyActionListener value="#{not dynamicFormBean.sortHelperDetail.ascending}" target="#{dynamicFormBean.sortHelperDetail.ascending}" />
+                                                    <f:setPropertyActionListener value="featureValueDataCod" target="#{dynamicFormBean.sortHelperDetail.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:detailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{dynamicFormBean.sortHelperDetail.ascending ? '&#9650;' : '&#9660;'}" rendered="#{dynamicFormBean.sortHelperDetail.field eq 'featureValueDataCod'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{itemDetail.featureValueDataCod}">
+                                            <f:convertNumber groupingUsed="true" integerOnly="true" />
+                                        </h:outputText>
+                                    </h:column>
+                                    
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['dynamicform.field.Entry']}" action="#{dynamicFormBean.applySortDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['dynamicform.field.Entry']}" disabled="#{dynamicFormBean.entityDetail ne null}">
+                                                    <f:setPropertyActionListener value="#{not dynamicFormBean.sortHelperDetail.ascending}" target="#{dynamicFormBean.sortHelperDetail.ascending}" />
+                                                    <f:setPropertyActionListener value="featureElementEntry.titleChr" target="#{dynamicFormBean.sortHelperDetail.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:detailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{dynamicFormBean.sortHelperDetail.ascending ? '&#9650;' : '&#9660;'}" rendered="#{dynamicFormBean.sortHelperDetail.field eq 'featureElementEntry.titleChr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{itemDetail.featureElementEntry.titleChr}" header="#{i18n['featurevalue.field.Entry']}"/>
+                                    </h:column>
+                                    
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['dynamicform.field.Value']}" action="#{dynamicFormBean.applySortDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['dynamicform.field.Value']}" disabled="#{dynamicFormBean.entityDetail ne null}">
+                                                    <f:setPropertyActionListener value="#{not dynamicFormBean.sortHelperDetail.ascending}" target="#{dynamicFormBean.sortHelperDetail.ascending}" />
+                                                    <f:setPropertyActionListener value="dataChr" target="#{dynamicFormBean.sortHelperDetail.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:detailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{dynamicFormBean.sortHelperDetail.ascending ? '&#9650;' : '&#9660;'}" rendered="#{dynamicFormBean.sortHelperDetail.field eq 'dataChr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{itemDetail.dataChr}" header="#{i18n['featurevalue.field.Value']}"/>
+                                    </h:column>
+                                    
+                                </h:dataTable>
+                            </div>
+                            
+                            <!--PAGINATION -->
+                            <div class="foot">
+                                <h:panelGroup rendered="#{dynamicFormBean.dataModelDetail.rowCount gt 0}">
+                                    <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{dynamicFormBean.previousDetailPage}" disabled="#{not dynamicFormBean.paginationHelperDetail.hasPreviousPage or dynamicFormBean.entityDetail ne null}">
+                                        <f:ajax execute="@this" render=":serviceForm:detailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                        &#160;|&#160;<h:outputText value="#{dynamicFormBean.paginationHelperDetail.pageFirstItem + 1}..#{dynamicFormBean.paginationHelperDetail.pageLastItem + 1} / #{dynamicFormBean.paginationHelperDetail.itemsCount}" />&#160;|&#160;
+                                        <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{dynamicFormBean.nextDetailPage}" disabled="#{not dynamicFormBean.paginationHelperDetail.hasNextPage or dynamicFormBean.entityDetail ne null}">
+                                        <f:ajax execute="@this" render=":serviceForm:detailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{dynamicFormBean.dataModelDetail.rowCount le 0}">
+                                    <div style="text-align: center; font-weight: bold;">
+                                        <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                    <!--BUTTONS -->
+                    <h:panelGroup id="localizationButtonsPanelGroup" rendered="#{dynamicFormBean.dataModelDetail ne null and dynamicFormBean.dataModelDetail.rowCount gt 0}">
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['web.client.screen.button.Localize']}" styleClass="btn_std_small" action="#{dynamicFormBean.showHeaderMap}" rendered="#{dynamicFormBean.geolocalizationAllowed and dynamicFormBean.showMapOnDetail and dynamicFormBean.dataModelDetail ne null and dynamicFormBean.dataModelDetail.rowCount gt 0}">
+                                <f:ajax execute=":serviceForm:detailTablePanelGroup" render=":serviceForm:map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.screen.button.ReturnToList']}" styleClass="btn_std_large" action="#{dynamicFormBean.cancelDetail}">
+                                <f:ajax execute="@this" render="@form :serviceForm:map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+                    <f:view contentType="text/html">
+                        <!--GOOGLE MAP -->
+                        <h:panelGroup id="mapGroup" rendered="#{dynamicFormBean.geolocalizationAllowed and ((dynamicFormBean.dataModel ne null and dynamicFormBean.dataModel.rowCount gt 0 and dynamicFormBean.showMapOnHeader) or (dynamicFormBean.dataModelDetail ne null and dynamicFormBean.dataModelDetail.rowCount gt 0 and dynamicFormBean.showMapOnDetail))}">
+                            <div class="tablebox">
+                                <div class="head">#{i18n['web.client.screen.subtitle.LocalizationMap']}</div>
+                                <h:panelGroup id="map">
+                                    <div class="body" style="padding-left: 1px; padding-top: 2px;">
+                                        <p:gmap center="#{dynamicFormBean.mapCenterStr}" zoom="#{dynamicFormBean.mapZoom}" type="#{dynamicFormBean.mapType}" style="width:979px;height:600px" model="#{dynamicFormBean.mapModel}">
+                                            <p:ajax event="overlaySelect" listener="#{dynamicFormBean.onMarkerSelect}" update="textbox" />
+                                            <p:ajax event="stateChange" listener="#{dynamicFormBean.onMapStateChange}" />
+                                            <p:ajax event="pointSelect" listener="#{dynamicFormBean.onPointSelect}" update="map" />
+                                            <p:gmapInfoWindow maxWidth="4">
+                                                <p:outputPanel id="textbox">
+                                                    <h:outputText value="#{dynamicFormBean.selectedMarker.data}" rendered="#{not dynamicFormBean.clientMarker}" escape="false" />
+                                                    <h:panelGroup style="width:320px;height:150px" id="clientMark" rendered="#{dynamicFormBean.clientMarker}">
+                                                        <table style="width: 300px; height: 120px">
+                                                            <tr>
+                                                                <td>
+                                                                    <h:outputText id="descriptionClientMarkerOut" value="#{i18n['web.client.abstractServiceBean.map.Title']}" />
+                                                                </td>
+                                                                <td>
+                                                                    <h:inputText id="descriptionClientMarker" value="#{dynamicFormBean.selectedMarker.title}" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <h:outputText id="titleClientMarkerOut" value="#{i18n['web.client.abstractServiceBean.map.Description']}" />
+                                                                </td>
+                                                                <td>
+                                                                    <h:inputText id="titleClientMarker" value="#{dynamicFormBean.selectedMarker.data}" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2" style="text-align: right;">
+                                                                    <h:commandButton id="btnSaveMark" styleClass="btn_std_small" value="#{i18n['web.client.abstractServiceBean.map.button.SaveMark']}" action="#{dynamicFormBean.saveClientMarker}">
+                                                                        <f:ajax execute=":serviceForm:mapGroup" render="map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                                    </h:commandButton>
+                                                                    <h:commandButton id="DeleteMark" styleClass="btn_std_small" value="#{i18n['web.client.abstractServiceBean.map.button.DeleteMark']}" action="#{dynamicFormBean.deleteClientMarker}">
+                                                                        <f:ajax execute=":serviceForm:mapGroup" render="map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                                    </h:commandButton>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </h:panelGroup>
+                                                </p:outputPanel>
+                                            </p:gmapInfoWindow>
+                                        </p:gmap>
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </h:panelGroup>
+                    </f:view>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

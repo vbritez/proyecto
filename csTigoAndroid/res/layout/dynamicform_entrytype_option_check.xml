@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/dynamicformEntryTypeOptionCheckTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:textAppearance="@style/textSize" />
+
+    <CheckBox
+        android:id="@+id/dynamicformEntryTypeOptionCheck1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/dynamicformEntryTypeOptionCheckTitle"
+        android:layout_below="@+id/dynamicformEntryTypeOptionCheckTitle" />
+
+    <CheckBox
+        android:id="@+id/dynamicformEntryTypeOptionCheck2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/dynamicformEntryTypeOptionCheckTitle"
+        android:layout_below="@+id/dynamicformEntryTypeOptionCheck1" />
+
+    <CheckBox
+        android:id="@+id/dynamicformEntryTypeOptionCheck3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/dynamicformEntryTypeOptionCheckTitle"
+        android:layout_below="@+id/dynamicformEntryTypeOptionCheck2" />
+
+    <CheckBox
+        android:id="@+id/dynamicformEntryTypeOptionCheck4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/dynamicformEntryTypeOptionCheckTitle"
+        android:layout_below="@+id/dynamicformEntryTypeOptionCheck3" />
+
+    <CheckBox
+        android:id="@+id/dynamicformEntryTypeOptionCheck5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/dynamicformEntryTypeOptionCheckTitle"
+        android:layout_below="@+id/dynamicformEntryTypeOptionCheck4" />
+
+</RelativeLayout>

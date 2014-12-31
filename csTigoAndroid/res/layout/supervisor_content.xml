@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+
+    <Button
+        android:id="@+id/userphoneUpdateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/button_selector"
+        android:text="@string/supervisor_userphone_button_update" >
+
+        <requestFocus />
+    </Button>
+    
+    <Spinner
+        android:id="@+id/userphoneSelector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/userphoneUpdateButton">
+        
+    </Spinner>
+    
+  <TextView
+        android:id="@+id/supervisorTrackingMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userphoneSelector"
+        android:textAppearance="@style/trackingMessage" /> 
+      
+<LinearLayout
+        android:id="@+id/mapSubcontentlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/supervisorTrackingMessage"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/supervisorTrackingMessage"
+        android:orientation="vertical" >
+        
+    
+        </LinearLayout>
+
+    <Button
+        android:id="@+id/supervisorTrackButton"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/mapSubcontentlayout"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button_selector"
+        android:text="@string/supervisor_track_button" />
+
+</RelativeLayout>

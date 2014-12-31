@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+    
+    <TextView
+            android:id="@+id/consultTitle"
+            android:layout_width="200dp"
+            android:layout_height="17dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="3dp"
+            android:text="@string/tigomoney_consult_status_title"
+            android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/consultIdBirthDateView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/consultTitle"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/tigomoney_birth_date"
+        android:textAppearance="@style/textSize" />
+
+<!--     <EditText -->
+<!--         android:id="@+id/identificationEdit" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_alignParentLeft="true" -->
+<!--         android:layout_below="@+id/identificationView" -->
+<!--         android:layout_marginLeft="7dp" -->
+<!--         android:layout_marginRight="7dp" -->
+<!--         android:ems="10" -->
+<!--         android:inputType="number" > -->
+<!--         <requestFocus /> -->
+<!--     </EditText> -->
+
+<!-- 	<DatePicker -->
+<!--         android:id="@+id/consultIdBirthDateEdit" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_alignParentLeft="true" -->
+<!--         android:layout_below="@+id/consultIdBirthDateView" -->
+<!--         android:layout_marginLeft="7dp" -->
+<!--         android:layout_marginRight="7dp" -->
+<!--         android:ems="10" -->
+<!--         android:inputType="date" > -->
+<!--         <requestFocus /> -->
+<!--     </DatePicker> -->
+
+<!-- 	<EditText -->
+<!--         android:id="@+id/consultIdBirthDateEdit" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_alignParentLeft="true" -->
+<!--         android:layout_below="@+id/consultIdBirthDateView" -->
+<!--         android:layout_marginLeft="7dp" -->
+<!--         android:layout_marginRight="7dp" -->
+<!--         android:ems="10" -->
+<!--         android:textAppearance="?android:attr/textAppearanceLarge" -->
+<!--         android:inputType="date" > -->
+<!--     </EditText> -->
+    
+    <TextView
+        android:id="@+id/identificationView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/picker"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/tigomoney_consult_status_identification"
+        android:textAppearance="@style/textSize" />
+    
+    
+    
+
+   <EditText
+        android:id="@+id/identificationEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/identificationView"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:ems="10"
+        android:inputType="phone" >
+    </EditText> 
+    
+<!--     <DatePicker -->
+<!--         android:id="@+id/consultIdBirthDateEdit" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_alignParentLeft="true" -->
+<!--         android:layout_below="@+id/consultIdBirthDateView" -->
+<!--         android:layout_marginLeft="7dp" -->
+<!--         android:layout_marginRight="7dp" -->
+<!--         android:ems="10" -->
+<!--         android:inputType="date" > -->
+<!--     </DatePicker> -->
+    
+    <Button
+        android:id="@+id/tigomoneyConsultIdButton"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/identificationEdit"
+        android:layout_below="@+id/identificationEdit"
+        android:layout_marginTop="44dp"
+        android:background="@drawable/button_selector"
+        android:text="@string/tigomoney_consult" />
+
+ 
+
+ 
+
+ 
+    <DatePicker
+        android:id="@+id/picker"
+       android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+         android:layout_below="@+id/consultIdBirthDateView"/>
+
+</RelativeLayout>

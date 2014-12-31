@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/screenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.client.report.TerportReport']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="repterportfull" value="#{i18n['web.client.report.TerportReport']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="repTerportFullForm">
+                   <!-- <p:focus for="repTerportFullForm:textDateFrom" /> -->
+                    <div class="tablebox">
+                        <div class="head">#{i18n['web.client.report.terport.screen.title.reportParameters']}</div>
+                        <!-- PARAMETERS BOX -->
+                        <div class="body">
+                            <table class="tablesearch">
+                                <tr>
+                                    <th>#{i18n['web.client.search.field.FromDate']}</th>
+                                    <td>
+                                        <p:calendar id="textDateFrom" locale="#{iBean.locale}" value="#{reportTerportFullBean.dateFrom}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultOutputDateTimeFormat}" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>#{i18n['web.client.search.field.ToDate']}</th>
+                                    <td>
+                                        <p:calendar id="textDateTo" locale="#{iBean.locale}" value="#{reportTerportFullBean.dateTo}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultOutputDateTimeFormat}" />
+                                    </td>
+                                </tr>
+                                  <tr>
+									<th>#{i18n['web.client.screen.admin.webUsers.field.Classification']}</th>
+
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkClassificationList"
+															value="#{reportTerportFullBean.validatedAllClassification}"
+															disabled="#{reportTerportFullBean.selectedUserphoneList.size() gt 0 or reportTerportFullBean.validatedAllUsers}">
+															<f:ajax event="change"
+																listener="#{reportTerportFullBean.selectAll}"
+																execute=":repTerportFullForm:chkClassificationList"
+																render=":repTerportFullForm:listClasification :repTerportFullForm:chkUserphoneList :repTerportFullForm:listUserphone"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkClassificationist"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listClasification"
+														value="#{reportTerportFullBean.selectedClassificationList}"
+														converter="classificationConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportTerportFullBean.validatedAllClassification or reportTerportFullBean.validatedAllUsers 
+														or reportTerportFullBean.selectedUserphoneList.size() gt 0}">
+														<f:selectItems
+															value="#{reportTerportFullBean.classificationList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.descriptionChr}" />
+														<f:ajax
+															execute=":repTerportFullForm:listClasification"
+															render=":repTerportFullForm:chkUserphoneList :repTerportFullForm:listUserphone"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+								<tr>
+									<th>#{i18n['web.client.search.field.User']}</th>
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkUserphoneList"
+															value="#{reportTerportFullBean.validatedAllUsers}"
+															disabled="#{reportTerportFullBean.selectedClassificationList.size() gt 0 or reportTerportFullBean.validatedAllClassification}">
+															<f:ajax event="change"
+																listener="#{reportTerportFullBean.selectAll}"
+																execute=":repTerportFullForm:chkUserphoneList"
+																render=":repTerportFullForm:listUserphone :repTerportFullForm:listClasification :repTerportFullForm:chkClassificationList"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkUserphoneList"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listUserphone"
+														value="#{reportTerportFullBean.selectedUserphoneList}"
+														converter="userphoneConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportTerportFullBean.validatedAllUsers or reportTerportFullBean.validatedAllClassification 
+														or reportTerportFullBean.selectedClassificationList.size() gt 0}">
+
+														<f:selectItems
+															value="#{reportTerportFullBean.userphoneList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.nameChr}" />
+
+														<f:ajax
+															
+															execute=":repTerportFullForm:listUserphone"
+															render=":repTerportFullForm:chkClassificationList :repTerportFullForm:listClasification"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+
+											</tr>
+										</table>
+									</td>
+								</tr>
+								
+								<tr>
+									<th>#{i18n['web.client.search.field.Attendant']}</th>
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkAttendantList"
+															value="#{reportTerportFullBean.validatedAllAttendants}">
+															<f:ajax event="change"
+																listener="#{reportTerportFullBean.selectAllAttendant}"
+																execute=":repTerportFullForm:chkAttendantList"
+																render=":repTerportFullForm:listAttendant :repTerportFullForm:chkAttendantList"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkAttendantList"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listAttendant"
+														value="#{reportTerportFullBean.selectedAttendantsList}"
+														size="5" style="width: auto;"
+														converter="metadataAttendantConverter" disabled="#{reportTerportFullBean.validatedAllAttendants}">
+
+														<f:selectItems value="#{reportTerportFullBean.attendantMetadataList}" var="uLItem" 
+														itemValue="#{uLItem}" itemLabel="#{uLItem.valueChr}" />
+
+														<f:ajax
+															execute=":repTerportFullForm:listAttendant"
+															render=":repTerportFullForm:listAttendant :repTerportFullForm:chkAttendantList"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox> <!-- se agrega el checkbox de todos los encargados --></td>
+
+											</tr>
+										</table>
+									</td>
+								</tr>
+								
+								
+								<tr>
+									<th>#{i18n['web.client.search.field.Operator']}</th>
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkOperatorList"
+															value="#{reportTerportFullBean.validatedAllOperators}">
+															<f:ajax event="change"
+																listener="#{reportTerportFullBean.selectAllOperator}"
+																execute=":repTerportFullForm:chkOperatorList"
+																render=":repTerportFullForm:listOperator :repTerportFullForm:chkOperatorList"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkOperatorList"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listOperator"
+														value="#{reportTerportFullBean.selectedOperatorList}"
+														size="5" style="width: auto;"
+														converter="metadataOperatorConverter" disabled="#{reportTerportFullBean.validatedAllOperators}">
+
+														<f:selectItems value="#{reportTerportFullBean.operatorMetadataList}" var="uLItem" 
+														itemValue="#{uLItem}" itemLabel="#{uLItem.valueChr}" />
+
+														<f:ajax
+															execute=":repTerportFullForm:listOperator"
+															render=":repTerportFullForm:listOperator :repTerportFullForm:chkOperatorList"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox> <!-- se agrega el checkbox de todos los operadores --></td>
+
+											</tr>
+										</table>
+									</td>
+								</tr>
+								
+								<tr>
+									<th>#{i18n['web.client.search.field.Machine']}</th>
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkMachineList"
+															value="#{reportTerportFullBean.validatedAllMachine}">
+															<f:ajax event="change"
+																listener="#{reportTerportFullBean.selectAllMachine}"
+																execute=":repTerportFullForm:chkMachineList"
+																render=":repTerportFullForm:listMachine :repTerportFullForm:chkMachineList"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkMachineList"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listMachine"
+														value="#{reportTerportFullBean.selectedMachineList}"
+														size="5" style="width: auto;"
+														converter="metadataMachineConverter" disabled="#{reportTerportFullBean.validatedAllMachine}">
+
+														<f:selectItems value="#{reportTerportFullBean.machineMetadataList}" var="uLItem" 
+														itemValue="#{uLItem}" itemLabel="#{uLItem.valueChr}" />
+
+														<f:ajax
+															execute=":repTerportFullForm:listMachine"
+															render=":repTerportFullForm:listMachine :repTerportFullForm:chkMachineList"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox> <!-- se agrega el checkbox de todas las maquinas --></td>
+
+											</tr>
+										</table>
+									</td>
+								</tr>
+								
+								
+								
+								<tr>
+								<th>#{i18n['web.client.search.field.Container']}</th>
+								<td>
+									<h:inputText value="#{reportTerportFullBean.container}" maxlength="13"/>
+								</td>
+								
+								</tr>
+								
+								<tr>
+								<th>#{i18n['web.client.search.field.NewUbication']}</th>
+								<td>
+									<h:inputText id="newUbicationEdit" value="#{reportTerportFullBean.newUbication}" maxlength="12"
+									onkeyup="disableNumChapa();"/>
+								
+								</td>
+								
+								</tr>
+								
+								<tr>
+								<th>#{i18n['web.client.search.field.NumChapa']}</th>
+								<td>
+									<h:inputText id="numChapaEdit" value="#{reportTerportFullBean.numChapa}" 
+									onkeyup="disableNewUbication();"/>
+									
+							
+								</td>
+								
+								</tr>
+								
+								
+                                <tr>
+                                    <th>#{i18n['web.client.search.field.OrderBy']}</th>
+                                    <td>
+                                        <h:selectOneMenu id="listOrderby" value="#{reportTerportFullBean.selectedOrderby}">
+                                            <f:selectItems value="#{reportTerportFullBean.orderByList}" />
+                                        </h:selectOneMenu>
+                                    </td>
+                                </tr>
+                                
+                            </table>
+                        </div>
+                    </div>
+                    <div class="buttons_bottom">
+                        <h:commandButton id="btnGeneratePDF" value="#{i18n['web.client.report.title.PDFReport']}" action="#{reportTerportFullBean.validateParameters}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="pdf" target="#{reportTerportFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGenerateXLS" value="#{i18n['web.client.report.title.XLSReport']}" action="#{reportTerportFullBean.validateParameters}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="xls" target="#{reportTerportFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGenerate" action="#{reportTerportFullBean.generateReport}" style="display: none;" rendered="#{reportTerportFullBean.parametersValidated}" />
+                    </div>
+                    <!-- SCRIPTS -->
+                    <h:panelGroup rendered="#{reportTerportFullBean.parametersValidated}">
+                        <script type="text/javascript" charset="UTF-8">
+																									//         
+																									function autoGenerateReport() {
+																										document
+																												.getElementById('repTerportFullForm').target = '_blank';
+																										document
+																												.getElementById(
+																														'repTerportFullForm:btnGenerate')
+																												.click();
+																										document
+																												.getElementById('repTerportFullForm').target = '';
+																									}
+
+																									$(
+																											document)
+																											.ready(
+																													function() {
+																														setTimeout(
+																																"autoGenerateReport()",
+																																500);
+																													});
+																									//
+	
+																								</script>
+                    </h:panelGroup>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

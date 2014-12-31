@@ -1,0 +1,539 @@
+.clear {
+	clear: both;
+}
+
+.reload {
+	color: #686868;
+	font-weight: bold;
+	font-size: 11px;
+	padding: 4px 12px 4px 12px;
+	cursor: pointer;
+	background-color: #f0f0f0;
+	border: 1px solid #C7D0DD;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	background-image: url(/resources/sp/img/reload.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+	width: 24px;
+	height: 24px;
+	margin-bottom: -5px;
+}
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	background: #3668AB;
+}
+
+a {
+	text-decoration: none;
+}
+
+span.blue-tigo {
+	color: #3668AB;
+	font-weight: bold;
+}
+
+span.blue-tigo2 {
+	color: #3668AB;
+	float: left;
+	font-size: 0.689em;
+}
+
+h3.bloque {
+	color: #3668AB;
+	font-weight: bold;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 0.750em;
+	margin-bottom: 0.750em;
+}
+
+a.header {
+	float: left;
+	width: 100%;
+	background: url(/resources/sp/img/top2.jpg) repeat-x;
+	height: 58px;
+	border-bottom: solid 2px #133162;
+	display: block;
+	text-decoration: none;
+}
+
+#header-container {
+	float: left;
+	width: 100%;
+	height: 57px;
+	border-bottom: solid 1px #6186be;
+}
+
+#header-container #logo {
+	float: left;
+}
+
+h1.header-titulo {
+	font-family: "Arial Black", Gadget, sans-serif;
+	margin-right: 0.750em;
+	font-weight: bold;
+	font-size: 1em;
+	color: #FFF;
+	margin-top: 1.500em;
+	float: right;
+}
+
+a.top-banner {
+	clear: both;
+	float: left;
+	background: #1B3B65;
+	width: 98.4%;
+	padding: 1%;
+	display: block;
+	text-decoration: none;
+}
+
+a.top-banner .info {
+	float: left;
+	width: 70%;
+}
+
+a.top-banner h2 {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 0.750em;
+	font-weight: bold;
+	color: #FFF;
+	float: left;
+	margin-bottom: 0.750em;
+}
+
+a.top-banner p {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 0.689em;
+	color: #FFF;
+	float: left;
+	clear: both;
+}
+
+a.top-banner span.yellow {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FCB621;
+}
+
+a.top-banner img {
+	float: right;
+}
+
+#bienvenida {
+	width: 94.5%;
+	padding: 3%;
+	background: #FAFAFA;
+	float: left;
+	border-bottom: solid 1px #CCCCCC;
+}
+
+#bienvenida img {
+	float: left;
+	margin-right: 15px;
+}
+
+#bienvenida p {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 0.750em;
+	font-weight: bold;
+	color: #3165AB;
+}
+
+#bienvenida p span {
+	color: #7FA405;
+}
+
+#content {
+	clear: both;
+	width: 100%;
+	border-top: solid 3px #e8e8e8;
+	margin: 0 auto;
+	background: #ececec;
+}
+
+#content .text-bloque {
+	background: #ECECEC;
+	width: 94.5%;
+	padding: 3%;
+	clear: both;
+	border-top: solid 1px #FFF;
+	border-bottom: solid 1px #CCCCCC;
+	text-align: center;
+	text-shadow: 1px 1px 1px #fff;
+}
+
+#content .text-bloque p {
+	clear: both;
+	font-size: 0.689em;
+	font-family: Verdana, Geneva, sans-serif;
+	color: #333333;
+}
+
+#content .text-bloque2 {
+	background: #F6F6F6;
+	width: 94.5%;
+	padding: 3%;
+	clear: both;
+	border-top: solid 1px #FFF;
+	border-bottom: solid 1px #CCCCCC;
+	text-align: center;
+	text-shadow: 1px 1px 1px #fff;
+}
+
+#content .text-bloque2 p {
+	clear: both;
+	font-size: 0.689em;
+	font-family: Verdana, Geneva, sans-serif;
+	color: #333333;
+}
+
+#content .text-bloque2 .proceso1 span,#content .text-bloque2 .proceso2 span,#content .text-bloque2 .proceso3 span
+	{
+	color: #3668AB;
+	font-weight: bold;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 0.750em;
+	clear: both;
+}
+
+#content .text-bloque2 .proceso1 {
+	margin-top: 0.750em;
+	width: 33%;
+	text-align: center;
+	float: left;
+}
+
+#content .text-bloque2 .proceso2 {
+	margin-top: 0.750em;
+	width: 33%;
+	text-align: center;
+	float: left;
+	background: url(/resources/sp/img/flecha-pedazo-der.jpg) left 40%
+		no-repeat;
+}
+
+#content .text-bloque2 .proceso2 .invisible {
+	width: 100%;
+	text-align: center;
+	float: left;
+	background: url(/resources/sp/img/flecha-pedazo-izq.jpg) right 40%
+		no-repeat;
+}
+
+#content .text-bloque2 .proceso1 .invisible {
+	width: 100%;
+	text-align: center;
+	float: left;
+	background: url(/resources/sp/img/flecha-pedazo-izq.jpg) right 40%
+		no-repeat;
+}
+
+#content .text-bloque2 .proceso3 {
+	margin-top: 0.750em;
+	width: 33%;
+	text-align: center;
+	float: left;
+	background: url(/resources/sp/img/flecha-pedazo-der.jpg) left 40%
+		no-repeat;
+}
+
+#content .text-bloque2 .proceso1 img {
+	text-align: center;
+}
+
+.green-button {
+	border: none;
+	border-top: solid 2px #C8E269;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 0.875em;
+	padding: 3% 15% 2.5% 15%;
+	color: #FFF;
+	text-shadow: 1px 1px 1px #000;
+	-webkit-border-radius: 1.5em;
+	-moz-border-radius: 1.5em;
+	border-radius: 1.5em;
+	vertical-align: middle;
+	background: #A4CD0A;
+	background: -moz-linear-gradient(top, #A4CD0A 0%, #84A609 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #A4CD0A),
+		color-stop(100%, #84A609) );
+	background: -webkit-linear-gradient(top, #A4CD0A 0%, #84A609 100%);
+	background: -o-linear-gradient(top, #A4CD0A 0%, #84A609 100%);
+	background: -ms-linear-gradient(top, #A4CD0A 0%, #84A609 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(  startColorstr='#A4CD0A',
+		endColorstr='#84A609', GradientType=0 );
+	background: linear-gradient(top, #A4CD0A 0%, #84A609 100%);
+}
+
+#progreso {
+	clear: both;
+	width: 96.4%;
+	padding: 0 2%;
+	background: #142D4F;
+	float: left;
+}
+
+#progreso a {
+	width: 33%;
+	text-align: center;
+	float: left;
+	display: block;
+	text-decoration: none;
+	height: 100%;
+	padding: 2% 0;
+	background: url(/resources/sp/img/separador.png) left center no-repeat;
+}
+
+#progreso a.selected {
+	background: url(/resources/sp/img/triangulo.png) bottom center no-repeat;
+}
+
+#progreso a.first {
+	background: none;
+}
+
+#progreso a p {
+	color: #fff;
+	font-weight: bold;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 0.750em;
+	clear: both;
+}
+
+#progreso a span {
+	color: #fff;
+	font-weight: bold;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 1.875em;
+	clear: both;
+}
+
+a.text-bloque3 {
+	background: url(/resources/sp/img/next.jpg) right #ECECEC no-repeat;
+	width: 96%;
+	padding: 2%;
+	display: block;
+	text-decoration: none;
+	clear: both;
+	border-top: solid 1px #FFF;
+	border-bottom: solid 1px #CCCCCC;
+	text-align: center;
+	text-shadow: 1px 1px 1px #fff;
+}
+
+a.text-bloque3 p {
+	clear: both;
+	font-size: 0.689em;
+	font-family: Verdana, Geneva, sans-serif;
+	color: #333333;
+	text-align: left;
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+a.text-bloque3 p span {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+a.text-bloque4 {
+	background: url(/resources/sp/img/next.jpg) right #ECECEC no-repeat;
+	width: 96.4%;
+	padding: 2%;
+	display: block;
+	text-decoration: none;
+	clear: both;
+	border-top: solid 1px #FFF;
+	border-bottom: solid 1px #CCCCCC;
+	text-align: center;
+	text-shadow: 1px 1px 1px #fff;
+	float: left;
+}
+
+a.text-bloque4 img {
+	float: left;
+	margin-right: 0.689em;
+}
+
+a.text-bloque4 p {
+	font-size: 0.689em;
+	font-family: Verdana, Geneva, sans-serif;
+	color: #666666;
+	text-align: left;
+	margin-top: 2%;
+	margin-bottom: 0px;
+	font-weight: bold;
+}
+
+a.text-bloque4 p span {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+a.text-bloque5 {
+	background: url(/resources/sp/img/nextl.png) left #ECECEC no-repeat;
+	width: 96%;
+	padding: 2%;
+	display: block;
+	text-decoration: none;
+	clear: both;
+	border-top: solid 1px #FFF;
+	border-bottom: solid 1px #CCCCCC;
+	text-align: center;
+	text-shadow: 1px 1px 1px #fff;
+	float: left;
+}
+
+a.text-bloque5 img {
+	float: left;
+	margin-right: 0.689em;
+}
+
+a.text-bloque5 p {
+	font-size: 0.689em;
+	font-family: Verdana, Geneva, sans-serif;
+	color: #666666;
+	text-align: left;
+	margin-top: 15px;
+	margin-left: 20px;
+	margin-bottom: 0px;
+	font-weight: bold;
+}
+
+a.text-bloque5 p span {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.plan-elegido {
+	background: #FFF;
+	width: 94%;
+	padding: 3%;
+	clear: both;
+	border-top: solid 1px #FFF;
+	border-bottom: solid 1px #CCCCCC;
+	text-shadow: 1px 1px 1px #fff;
+	float: left;
+}
+
+.plan-elegido span.left {
+	float: left;
+	color: #939BB2;
+	font-size: 1.125em;
+	font-family: Verdana, Geneva, sans-serif;
+	font-weight: bold;
+}
+
+.plan-elegido span.right {
+	float: right;
+	color: #939BB2;
+	font-size: 1.125em;
+	font-weight: bold;
+	font-family: Verdana, Geneva, sans-serif;
+}
+
+#footer {
+	clear: both;
+	height: 80px;
+	width: 94%;
+	padding: 3%;
+	background: #505fba;
+}
+
+#footer .logo-tigo-footer img {
+	float: right;
+	margin-top: -6%;
+	height: 40%;
+}
+
+#footer .tigo-footer-info {
+	width: 94%;
+	padding: 3%;
+	float: left;
+	color: #FFF;
+	box-shadow: inset 1px 0 6px #000;
+	-moz-box-shadow: inset 1px 0 6px #000;
+	-webkit-box-shadow: inset 1px 0 6px #000;
+	-webkit-border-radius: 1.5em;
+	-moz-border-radius: 1.5em;
+	border-radius: 1.5em;
+}
+
+#footer .tigo-footer-info a {
+	color: #FFF;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 0.750em;
+}
+
+#footer p {
+	color: #CCC;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 0.689em;
+	clear: both;
+	float: left;
+	text-align: center;
+	margin-left: 5%;
+	margin-top: 1%;
+}
+
+img.sign {
+	clear: both;
+	text-align: center;
+	margin: 0 auto;
+	margin-bottom: 20px;
+}
+
+table.tabla {
+	text-align: center;
+}
+
+table.tabla td {
+	float: left;
+	padding-top: 2%;
+	padding-bottom: 2%;
+	padding-right: 2%;
+}
+
+.inputt {
+	float: left;
+	padding: 0.689em;
+	border: solid 1px #999;
+	background: #FFF;
+	width: 100%;
+}
+
+.reload {
+    color: #686868;
+    font-weight: bold;
+    font-size: 11px;
+    padding: 4px 12px 4px 12px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    border: 1px solid #C7D0DD;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    background-image: url(/resources/fs/img/reload.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 24px;
+    height: 24px;
+    margin-bottom: -5px;
+}
+
+.textosimplerojo {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 0.750em;
+	font-weight: bold;
+	color: #FF0000;
+    margin: 0px 0px 0px 20px;
+}
+
+.textosimpleverde {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 0.750em;
+	font-weight: bold;
+	color: #7FA405;
+    margin: 0px 0px 0px 20px;
+}

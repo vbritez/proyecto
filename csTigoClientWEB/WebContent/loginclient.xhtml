@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title><h:outputText value="#{i18n['web.client.login.screen.header.CSTigoName']} - #{i18n['web.client.login.screen.title.InitSession']}" /></title>
+    <link type="image/x-icon" rel="shortcut icon" href="#{facesContext.externalContext.requestContextPath}/resources/images/favicon.ico" />
+    <h:outputStylesheet library="css" name="screenFeatures.css" />
+    <h:outputScript library="js/varias" name="fvarias.js" />
+    <h:outputScript library="js/varias" name="componentsValidations.js" />
+    <h:outputScript library="js/varias" name="ajaxUIHandler.js" />
+    <h:outputScript library="js/varias" name="messagesUIHandler.js" />
+</h:head>
+<h:body styleClass="bodyGray" onload="document.getElementById('loginForm:user').focus();">
+    <h:panelGroup id="globalContainerPanelGroup" layout="block" style="width: 100%; min-height: 100%; height: auto !important;">
+        <f:event type="preRenderComponent" listener="#{sessionBean.signalPageAcces}" id="auditory" />
+        <!-- //////////////////////// HEADER //////////////////////// -->
+        <div id="header">
+            <div id="header_in">
+                <div id="logo">
+                    <img src="#{facesContext.externalContext.requestContextPath}/resources/images/logoTigo.png" alt="{i18n['web.client.login.screen.header.CSTigoName']} " />
+                </div>
+                <div id="logo_title">#{i18n['web.client.login.screen.header.CSTigoName']}</div>
+            </div>
+        </div>
+        <!-- //////////////////////// END HEADER //////////////////////// -->
+        <!-- //////////////////////// CONTAINER //////////////////////// -->
+        <div id="container_index">
+            <p:blockUI block="globalContainerPanelGroup" widgetVar="blocker">
+                #{i18n['web.client.login.message.Processing']}<br />
+                <p:graphicImage value="/resources/images/wait.gif" />
+            </p:blockUI>
+            <div id="login">
+                <div id="left"></div>
+                <div id="center">
+                    <div class="title">
+                        <p>
+                            <img src="#{facesContext.externalContext.requestContextPath}/resources/images/padlock_ico.png" width="48" height="46" align="absmiddle" /> <strong><h:outputText value="#{i18n['web.client.login.screen.title.InitSession']}" /></strong>
+                        </p>
+                    </div>
+                    <p:growl id="growl" showDetail="true" sticky="false" />
+                    <div align="center">
+                        <h:form id="loginForm">
+                            <p:panel id="pnl">
+                                <table class="table_1">
+                                    <tr>
+                                        <td width="37%" class="txt_1"><h:outputText value="#{i18n['web.client.login.screen.label.User']}:" /></td>
+                                        <td width="63%"><h:inputText id="user" autocomplete="off" value="#{loginWebuserBean.user}" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="txt_1"><h:outputText value="#{i18n['web.client.login.screen.label.Pwd']}:" /></td>
+                                        <td><h:inputSecret id="password" autocomplete="off" value="#{loginWebuserBean.password}" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" style="text-align: right;"><h:graphicImage id="captchaImage" value="/captcha.jpg?time=#{loginWebuserBean.timeString}" width="200" height="70" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="txt_1"><h:outputText value="#{i18n['web.client.login.screen.label.CaptchaCode']}:" /></td>
+                                        <td><label> <h:inputText id="captchaAnswerInput" value="#{loginWebuserBean.captchaAnswer}" maxlength="15" style="width: 115px; height: 19px;" title="#{i18n['web.client.login.screen.label.CaptchaTitle']}" /> <h:commandButton type="button" id="reloadCaptchaButton" styleClass="reload" onclick="reloadImg('loginForm:captchaImage','loginForm:captchaAnswerInput' ,'#{facesContext.externalContext.requestContextPath}/captcha.jpg?time=' + getTimeString());" title="#{i18n['web.client.login.screen.label.CaptchaButton']}" />
+                                        </label></td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td style="text-align: right"><h:commandButton id="btnIn" value="#{i18n['web.client.login.screen.button.Enter']}" styleClass="btn_std_small" action="#{loginWebuserBean.initSession}" onclick="showAjaxWaitMessage(true);" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><div align="center">
+                                                <h:commandLink value="#{i18n['web.client.login.screen.link.ForgotPassword']}" action="userrecoverpasswbysms" />
+                                            </div></td>
+                                    </tr>
+                                </table>
+                            </p:panel>
+                            <p:blockUI block="pnl" trigger="btnIn" />
+                        </h:form>
+                    </div>
+                </div>
+                <div id="right"></div>
+            </div>
+        </div>
+        <!-- //////////////////////// END CONTAINER //////////////////////// -->
+    </h:panelGroup>
+</h:body>
+</html>

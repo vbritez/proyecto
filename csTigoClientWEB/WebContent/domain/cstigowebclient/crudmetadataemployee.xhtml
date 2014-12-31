@@ -1,0 +1,662 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/fileUploadDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.client.meta.Employee']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="crudmetadataemployee" value="#{i18n['web.client.meta.Employee']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+    <!-- GOOGLE MAPS API -->
+<!-- 		<script src="https://maps.google.com/maps/api/js?client=#{applicationBean.appKey}&amp;sensor=false" type="text/javascript" /> -->
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="fastReportForm" target="_blank">
+                    <div class="buttons_top">
+                        <h:commandButton styleClass="btn_xls" title="#{i18n['web.client.report.tip.XLSReport']}" action="#{crudMetaDataEmployeeBean.viewXLS}" />
+                        <h:commandButton styleClass="btn_pdf" title="#{i18n['web.client.report.tip.PDFReport']}" action="#{crudMetaDataEmployeeBean.viewPDF}" />
+                    </div>
+                </h:form>
+                <h:form id="crudForm">
+                    <div class="tablebox">
+                        <div class="head">#{i18n['web.client.metadataemployee.screen.title.ListOf']}</div>
+                        <!-- SEARCH BOX -->
+                        <h:panelGroup id="searchBoxGroupPanel">
+                            <p:focus for="crudForm:listSearchOption" />
+                            <div class="headcontainer">
+                                <table class="tablesearch">
+                                    <tr>
+                                        <th>#{i18n['web.client.search.field.FindBy']}</th>
+                                        <td>
+                                            <h:selectOneMenu id="listSearchOption" value="#{crudMetaDataEmployeeBean.filterSelectedField}" onchange="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{crudMetaDataEmployeeBean.data ne null}">
+                                                <f:selectItem itemLabel="(#{i18n['web.client.search.field.OptionSelect']})" itemValue="-1" />
+                                                <f:selectItems value="#{crudMetaDataEmployeeBean.filterFields}" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                        <th>#{i18n['web.client.search.field.Criteria']}</th>
+                                        <td>
+                                            <h:inputText id="textSearchCriteria" value="#{crudMetaDataEmployeeBean.filterCriteria}" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{crudMetaDataEmployeeBean.data ne null}" />
+                                        </td>
+                                        <td>
+                                            <h:commandButton id="btnSearch" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Find']}" action="#{crudMetaDataEmployeeBean.applyFilter}" disabled="#{crudMetaDataEmployeeBean.data ne null}">
+                                                <f:ajax execute=":crudForm:searchBoxGroupPanel" render=":crudForm:listTablePanelGroup :crudForm:btnClean" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton>
+                                            <h:commandButton id="btnClean" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Clear']}" action="#{crudMetaDataEmployeeBean.cleanFilter}" disabled="#{crudMetaDataEmployeeBean.filterCriteria eq '' or crudMetaDataEmployeeBean.data ne null}">
+                                                <f:ajax execute="@this" render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton>
+                                        </td>
+                                        <th>#{i18n['web.client.search.field.Show']}</th>
+                                        <td class="thin">
+                                            <h:selectOneMenu id="listRowQuant" value="#{crudMetaDataEmployeeBean.rowQuantSelected}" disabled="#{crudMetaDataEmployeeBean.data ne null}" valueChangeListener="#{crudMetaDataEmployeeBean.applyQuantity}">
+                                                <!--onchange="return showStdConfirmShowAllRegistries(this);"-->
+                                                <f:selectItems value="#{crudMetaDataEmployeeBean.rowQuantList}" />
+                                                <f:ajax event="change" execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <!-- SCRIPTS -->
+                            <script type="text/javascript" charset="UTF-8">
+																													//         
+																													if (document
+																															.getElementById('crudForm:listSearchOption').disabled == false) {
+																														searchFieldOnchange(
+																																'crudForm:listSearchOption',
+																																'crudForm:textSearchCriteria',
+																																'crudForm:btnSearch');
+																													}
+																													//
+																												</script>
+                        </h:panelGroup>
+                        <h:panelGroup id="listTablePanelGroup">
+                            <!-- LIST TABLE -->
+                            <div class="body">
+                                <h:dataTable id="crudListTable" value="#{crudMetaDataEmployeeBean.dataModelSpecific}" var="item" rendered="#{crudMetaDataEmployeeBean.dataModelSpecific.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <h:selectBooleanCheckbox id="chkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{crudMetaDataEmployeeBean.data ne null}" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                        </f:facet>
+                                        <h:selectBooleanCheckbox id="chkBoxSelected" value="#{crudMetaDataEmployeeBean.selectedItems[item.dataPK]}" disabled="#{crudMetaDataEmployeeBean.data ne null}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.metadataemployee.screen.field.EmployeeCode']}" action="#{crudMetaDataEmployeeBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.metadataemployee.screen.field.EmployeeCode']}" disabled="#{crudMetaDataEmployeeBean.data ne null}">
+                                                    <f:setPropertyActionListener value="#{not crudMetaDataEmployeeBean.sortHelper.ascending}" target="#{crudMetaDataEmployeeBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="dataPK.codigo" target="#{crudMetaDataEmployeeBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudMetaDataEmployeeBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudMetaDataEmployeeBean.sortHelper.field eq 'dataPK.codigo'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.dataPK.codigo}">
+                                            <f:convertNumber groupingUsed="true" integerOnly="true" />
+                                        </h:outputText>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.metadataemployee.screen.field.Names']}" action="#{crudMetaDataEmployeeBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.metadataemployee.screen.field.Names']}" disabled="#{crudMetaDataEmployeeBean.data ne null}">
+                                                    <f:setPropertyActionListener value="#{not crudMetaDataEmployeeBean.sortHelper.ascending}" target="#{crudMetaDataEmployeeBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="nombre" target="#{crudMetaDataEmployeeBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudMetaDataEmployeeBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudMetaDataEmployeeBean.sortHelper.field eq 'nombre'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.nombre}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.metadataemployee.screen.field.CI']}" action="#{crudMetaDataEmployeeBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.metadataclient.screen.field.Client']}" disabled="#{crudMetaDataEmployeeBean.data ne null}">
+                                                    <f:setPropertyActionListener value="#{not crudMetaDataEmployeeBean.sortHelper.ascending}" target="#{crudMetaDataEmployeeBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="ci" target="#{crudMetaDataEmployeeBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudMetaDataEmployeeBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudMetaDataEmployeeBean.sortHelper.field eq 'ci'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.ci}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.metadataemployee.screen.field.Area']}" action="#{crudMetaDataEmployeeBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.metadataclient.screen.field.Client']}" disabled="#{crudMetaDataEmployeeBean.data ne null}">
+                                                    <f:setPropertyActionListener value="#{not crudMetaDataEmployeeBean.sortHelper.ascending}" target="#{crudMetaDataEmployeeBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="area" target="#{crudMetaDataEmployeeBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{crudMetaDataEmployeeBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{crudMetaDataEmployeeBean.sortHelper.field eq 'area'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.area}" />
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+                            <!-- PAGINATION -->
+                            <div class="foot">
+                                <h:panelGroup rendered="#{crudMetaDataEmployeeBean.dataModel.rowCount gt 0}">
+                                    <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{crudMetaDataEmployeeBean.previousPage}" disabled="#{not crudMetaDataEmployeeBean.paginationHelper.hasPreviousPage or crudMetaDataEmployeeBean.data ne null}">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                        &#160;|&#160;<h:outputText value="#{crudMetaDataEmployeeBean.paginationHelper.pageFirstItem + 1}..#{crudMetaDataEmployeeBean.paginationHelper.pageLastItem + 1} / #{crudMetaDataEmployeeBean.paginationHelper.itemsCount}" />&#160;|&#160;
+                                        <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{crudMetaDataEmployeeBean.nextPage}" disabled="#{not crudMetaDataEmployeeBean.paginationHelper.hasNextPage or crudMetaDataEmployeeBean.data ne null}">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{crudMetaDataEmployeeBean.dataModel.rowCount le 0}">
+                                    <div style="text-align: center; font-weight: bold;">
+                                        <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                    <!-- BUTTONS -->
+                    <div class="buttons_bottom">
+                    <h:commandButton value="#{i18n['web.client.metadataemployee.screen.button.AssociateHorary']}" styleClass="btn_std_large" action="#{crudMetaDataEmployeeBean.showReasignar}" disabled="#{crudMetaDataEmployeeBean.data ne null or crudMetaDataEmployeeBean.uploadSectionVisible or crudMetaDataEmployeeBean.reasignar}" >
+							<f:ajax execute=":crudForm:listTablePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+						</h:commandButton>
+                   		<h:commandButton value="#{i18n['web.client.metadata.screen.button.AssociateUserphone']}" styleClass="btn_std_large" action="#{crudMetaDataEmployeeBean.associatePlusMember}" disabled="#{crudMetaDataEmployeeBean.data ne null or crudMetaDataEmployeeBean.uploadSectionVisible or crudMetaDataEmployeeBean.reasignar}">
+                            <f:ajax execute=":crudForm:listTablePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton value="#{i18n['web.client.metadata.screen.button.MassDelete']}" styleClass="btn_std_large" action="#{crudMetaDataEmployeeBean.deleteEntitiesMass}" disabled="#{crudMetaDataEmployeeBean.data ne null or crudMetaDataEmployeeBean.uploadSectionVisible or crudMetaDataEmployeeBean.reasignar}" onclick="return showStdSonfirmDeleteRegistryMeta(this);">
+                            <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton value="#{i18n['web.client.metadata.screen.button.MassLoad']}" styleClass="btn_std_large" action="#{crudMetaDataEmployeeBean.showUploadSection}" disabled="#{crudMetaDataEmployeeBean.data ne null or crudMetaDataEmployeeBean.uploadSectionVisible or crudMetaDataEmployeeBean.reasignar}">
+                            <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton value="#{i18n['web.client.metadata.screen.button.New']}" styleClass="btn_std_small" action="#{crudMetaDataEmployeeBean.newEntity}" disabled="#{crudMetaDataEmployeeBean.data ne null or crudMetaDataEmployeeBean.uploadSectionVisible or crudMetaDataEmployeeBean.reasignar}">
+                            <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton value="#{i18n['web.client.metadata.screen.button.Edit']}" styleClass="btn_std_small" action="#{crudMetaDataEmployeeBean.editEntityPlusMember}" disabled="#{crudMetaDataEmployeeBean.data ne null or crudMetaDataEmployeeBean.uploadSectionVisible or crudMetaDataEmployeeBean.reasignar}">
+                            <f:ajax execute=":crudForm:listTablePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton value="#{i18n['web.client.metadata.screen.button.Delete']}" styleClass="btn_std_small" action="#{crudMetaDataEmployeeBean.deleteEntitiesPlusMember}" disabled="#{crudMetaDataEmployeeBean.data ne null or crudMetaDataEmployeeBean.uploadSectionVisible or crudMetaDataEmployeeBean.reasignar}" onclick="return showStdSonfirmDeleteRegistryCollection(this);">
+                            <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                    </div>
+                    <!-- EDITING SECTION -->
+                    <h:panelGroup id="editingPanelGroup" rendered="#{crudMetaDataEmployeeBean.data ne null and not crudMetaDataEmployeeBean.associateSectionVisible}">
+                        <p:focus for="crudForm:codEdit" />
+                        <div class="tablebox">
+                            <div class="head">#{i18n['web.client.metadataemployee.screen.title.EmployeeDetails']}</div>
+                            <div class="body">
+                                <table width="100%">
+                                    <tr>
+                                        <th>#{i18n['web.client.metadataemployee.screen.field.EmployeeCode']}</th>
+                                        <td>
+                                            <h:inputText id="codEdit" value="#{crudMetaDataEmployeeBean.data.dataPK.codigo}" maxlength="200" size="40" disabled="#{crudMetaDataEmployeeBean.data.dataPK.codClient ne null}" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.metadataemployee.screen.field.Names']}</th>
+                                        <td>
+                                            <h:inputText id="textNameEdit" value="#{crudMetaDataEmployeeBean.data.nombre}" maxlength="200" size="40" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.metadataemployee.screen.field.CI']}</th>
+                                        <td>
+                                            <h:inputText id="textCIEdit" value="#{crudMetaDataEmployeeBean.data.ci}" maxlength="200" size="40" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.metadataemployee.screen.field.Area']}</th>
+                                        <td>
+                                            <h:inputText id="textAreaEdit" value="#{crudMetaDataEmployeeBean.data.area}" maxlength="200" size="40" />
+                                        </td>
+                                    </tr>
+                                    
+                                    
+                                   <h:panelGroup id="horaryAssociationPanelGroup">
+                    <h:panelGroup >
+                      <!-- Asociar con HORARIOS -->
+                      <tr>
+                        <th>#{i18n['web.client.metadataemployee.screen.field.Horary']}</th>
+                        <td><h:panelGroup id="horaryPanelGroup">
+                            <table class="listmultiplecheckbox">
+                              <tr style="border-bottom: 1px dotted #D2E2F4;">
+                                <th>#{i18n['web.client.metadataemployee.associate.horary.NotAssigned']}</th>
+                                <th>#{i18n['web.client.metadataemployee.associate.horary.Assigned']}</th>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <table>
+                                    <tr>
+                                      <td><h:panelGroup>
+                                          <h:selectBooleanCheckbox id="chkHoraryList" value="#{crudMetaDataEmployeeBean.validatedAllHorary}" disabled="#{crudMetaDataEmployeeBean.horaryList.size() eq 0}">
+                                            <f:ajax event="change" execute=":crudForm:chkHoraryList" render=":crudForm:chkHoraryList" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                          </h:selectBooleanCheckbox>
+
+                                          <h:outputLabel for="chkHoraryList" value="(#{i18n['web.client.selectonemenu.All']})" />
+                                        </h:panelGroup></td>
+                                    </tr>
+                                    <tr>
+                                      <td><h:selectManyListbox id="listHoraries" value="#{crudMetaDataEmployeeBean.selectedHoraryList}" converter="horaryMetaDataConverter" size="10" style="width: auto;" disabled="#{crudMetaDataEmployeeBean.validatedAllHorary or crudMetaDataEmployeeBean.horaryList.size() eq 0}">
+
+                                          <f:selectItems value="#{crudMetaDataEmployeeBean.horaryList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.valueChr}" />
+                                        </h:selectManyListbox>&#160;&#160;<h:commandButton styleClass="btn_std_small" value="#{i18n['web.client.reportconfig.button.AddToList']}" action="#{crudMetaDataEmployeeBean.addHoraryToList}" disabled="#{crudMetaDataEmployeeBean.horaryList.size() eq 0}">
+                                          <f:ajax execute=":crudForm:horaryPanelGroup" render=":crudForm:horaryPanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandButton> <!-- se agrega el checkbox de todos los usuarios --></td>
+                                    </tr>
+                                  </table>
+                                </td>
+
+                                <td>
+                                  <table>
+                                    <tr>
+                                      <td><h:panelGroup>
+                                          <h:selectBooleanCheckbox id="chkHoraryAssociatedList" value="#{crudMetaDataEmployeeBean.validatedAllHoraryAssociated}" disabled="#{crudMetaDataEmployeeBean.associatedHoraryList.size() eq 0}">
+                                            <f:ajax event="change" execute=":crudForm:chkHoraryAssociatedList" render=":crudForm:listHoraryAssociated" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                          </h:selectBooleanCheckbox>
+
+                                          <h:outputLabel for="chkHoraryAssociatedList" value="(#{i18n['web.client.selectonemenu.All']})" />
+                                        </h:panelGroup></td>
+                                    </tr>
+                                    <tr>
+                                      <td><h:selectManyListbox id="listHoraryAssociated" value="#{crudMetaDataEmployeeBean.selectedAssociatedHoraryList}" converter="horaryMetaDataConverter" style="width: auto;" disabled="#{crudMetaDataEmployeeBean.validatedAllHoraryAssociated or crudMetaDataEmployeeBean.associatedHoraryList.size() eq 0}" size="10">
+                                          <f:selectItems value="#{crudMetaDataEmployeeBean.associatedHoraryList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.valueChr}" />
+                                        </h:selectManyListbox>&#160;&#160;<h:commandButton styleClass="btn_std_small" value="#{i18n['web.client.reportconfig.button.RemoveFromList']}" action="#{crudMetaDataEmployeeBean.removeHoraryFromList}" disabled="#{crudMetaDataEmployeeBean.associatedHoraryList.size() eq 0}">
+                                          <f:ajax execute=":crudForm:horaryPanelGroup" render=":crudForm:horaryPanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandButton></td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>
+                            </table>
+                          </h:panelGroup></td>
+                      </tr>
+                    </h:panelGroup>
+                  </h:panelGroup>
+                                   
+                                    
+                                    
+                                    		<tr>
+										<th>#{i18n['web.metadata.title.userphone']}</th>
+										<td><h:panelGroup id="userphonePanelGroup">
+												<table class="listmultiplecheckbox">
+													<tr style="border-bottom: 1px dotted #D2E2F4;">
+														<th>#{i18n['web.client.metadataclient.screen.field.UserphoneNotAssigned']}</th>
+														<th>#{i18n['web.client.metadataclient.screen.field.UserphoneAssigned']}</th>
+													</tr>
+													<tr>
+														<td>
+															<table>
+																<tr>
+																	<td>
+																	<h:panelGroup>
+																		<h:selectBooleanCheckbox id="chkUserphoneList"
+																			value="#{crudMetaDataEmployeeBean.validatedAllUserphones}"
+																			disabled="#{crudMetaDataEmployeeBean.userphoneList.size() eq 0}">
+																			<f:ajax event="change"
+																				execute=":crudForm:chkUserphoneList"
+																				render=":crudForm:listUserphone"
+																				onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+																		</h:selectBooleanCheckbox>
+		
+																		<h:outputLabel for="chkUserphoneList"
+																			value="(#{i18n['web.client.selectonemenu.All']})" />
+																	</h:panelGroup></td>
+																</tr>
+															<tr>
+																<td><h:selectManyListbox id="listUserphone"
+																	value="#{crudMetaDataEmployeeBean.selectedUserphoneList}"
+																	converter="userphoneConverter" size="5"
+																	style="width: auto;"
+																	disabled="#{crudMetaDataEmployeeBean.validatedAllUserphones or crudMetaDataEmployeeBean.userphoneList.size() eq 0}">
+	
+																	<f:selectItems
+																		value="#{crudMetaDataEmployeeBean.userphoneList}"
+																		var="uLItem" itemValue="#{uLItem}"
+																		itemLabel="#{dLItem.nameChr}" />
+																</h:selectManyListbox>&#160;&#160;<h:commandButton styleClass="btn_std_small"
+																	value="#{i18n['web.client.reportconfig.button.AddToList']}"
+																	action="#{crudMetaDataEmployeeBean.addToList}"
+																	disabled="#{crudMetaDataEmployeeBean.userphoneList.size() eq 0}">
+																	<f:ajax execute=":crudForm:userphonePanelGroup"
+																		render=":crudForm:userphonePanelGroup"
+																		onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+																</h:commandButton>
+																<!-- se agrega el checkbox de todos los usuarios --></td>
+															</tr>
+															</table>	
+														</td>
+														
+														<td>
+															<table>
+																<tr><td>
+																	<h:panelGroup>
+																		<h:selectBooleanCheckbox id="chkUserphoneAssociatedList"
+																			value="#{crudMetaDataEmployeeBean.validatedAllUserphonesAssociated}"
+																			disabled="#{crudMetaDataEmployeeBean.associatedUserphonesList.size() eq 0}">
+																			<f:ajax event="change"
+																				execute=":crudForm:chkUserphoneAssociatedList"
+																				render=":crudForm:listUserphoneAssociated"
+																				onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+																		</h:selectBooleanCheckbox>
+		
+																		<h:outputLabel for="chkUserphoneList"
+																			value="(#{i18n['web.client.selectonemenu.All']})" />
+																	</h:panelGroup></td>
+																</tr>
+															<tr>
+																<td><h:selectManyListbox id="listUserphoneAssociated"
+																		value="#{crudMetaDataEmployeeBean.selectedAssociatedUserphones}"
+																		converter="userphoneConverter" style="width: auto;"
+																		disabled="#{crudMetaDataEmployeeBean.validatedAllUserphonesAssociated or crudMetaDataEmployeeBean.associatedUserphonesList.size() eq 0}"
+																		size="5">
+																		<f:selectItems
+																			value="#{crudMetaDataEmployeeBean.associatedUserphonesList}" />
+																	</h:selectManyListbox>&#160;&#160;<h:commandButton styleClass="btn_std_small"
+																		value="#{i18n['web.client.reportconfig.button.RemoveFromList']}"
+																		action="#{crudMetaDataEmployeeBean.removeFromList}"
+																		disabled="#{crudMetaDataEmployeeBean.associatedUserphonesList.size() eq 0}">
+																		<f:ajax execute=":crudForm:userphonePanelGroup"
+																			render=":crudForm:userphonePanelGroup"
+																			onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+																	</h:commandButton></td>
+															</tr>
+															</table>	
+														</td>
+													</tr>
+												</table>
+											</h:panelGroup></td>
+									</tr>
+                               <tr>
+										<th>#{i18n['web.metadata.title.geoCoord']}</th>
+										<td><h:selectBooleanCheckbox id="chkGeoCoord"
+												value="#{crudMetaDataEmployeeBean.geoCoor}"
+												oncomplete="document.getElementById('crudForm:mapGroup').reload();">
+												<f:ajax event="change" execute=":crudForm:editingPanelGroup"
+													render="@form"
+													listener="#{crudMetaDataEmployeeBean.listenerCheckGeoCoor}"
+													onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+											</h:selectBooleanCheckbox></td>
+									</tr>
+
+									<h:panelGroup id="iconPanel">
+										<h:panelGroup id="iconPanelGroupEdit"
+											rendered="#{crudMetaDataEmployeeBean.geoCoor}">
+											<tr>
+
+												<th>#{i18n['web.metadataicon.title.icon']}</th>
+												<td><h:panelGroup id="iconPanelGroupEdit2">
+														<table class="listmultiplecheckbox">
+															<ui:repeat value="#{crudMetaDataEmployeeBean.dataIconList}"
+																var="item"
+																rendered="#{crudMetaDataEmployeeBean.dataIconList ne null and crudMetaDataEmployeeBean.dataIconList.size() gt 0}">
+																<h:panelGroup id="ff">
+																	<tr>
+																		<td style="vertical-align: top;"><h:selectBooleanCheckbox
+																				id="iconCheck"
+																				value="#{crudMetaDataEmployeeBean.selectedDataIconMap[item.valueChr]}">
+																				<f:ajax event="change"
+																					execute=":crudForm:editingPanelGroup"
+																					render="@form"
+																					listener="#{crudMetaDataEmployeeBean.listenerDataIconSelect(item)}"
+																					onevent="manageAjaxEvents"
+																					onerror="manageAjaxErrors" />
+																			</h:selectBooleanCheckbox> &#160;&#160; <h:graphicImage url="#{item.valueChr}"
+																				width="20" />
+																				&#160;&#160; <h:outputText value="#{crudMetaDataEmployeeBean.dataIconDescription[item.valueChr]}" /></td>
+																	</tr>
+																</h:panelGroup>
+															</ui:repeat>
+														</table>
+													</h:panelGroup></td>
+
+											</tr>
+										</h:panelGroup>
+									</h:panelGroup>
+								</table>
+							</div>
+						</div>
+
+						<f:view contentType="text/html">
+							<!-- GOOGLE MAP -->
+							<h:panelGroup id="mapGroup"
+								rendered="#{crudMetaDataEmployeeBean.selectedDataIcon ne null}">
+								<div class="tablebox">
+									<div class="head">#{i18n['web.client.screen.subtitle.LocalizationMap']}</div>
+									<h:panelGroup id="map">
+										<div class="body" style="padding-left: 1px; padding-top: 2px;">
+											<p:gmap center="#{crudMetaDataEmployeeBean.mapCenterStr}"
+												zoom="#{crudMetaDataEmployeeBean.mapZoom}"
+												type="#{crudMetaDataEmployeeBean.mapType}"
+												style="width:979px;height:600px"
+												model="#{crudMetaDataEmployeeBean.mapModel}">
+												<p:ajax event="overlaySelect"
+													listener="#{crudMetaDataEmployeeBean.onMarkerSelect}"
+													update="textbox" />
+												<p:ajax event="stateChange"
+													listener="#{crudMetaDataEmployeeBean.onMapStateChange}" />
+												<p:ajax event="pointSelect"
+													listener="#{crudMetaDataEmployeeBean.onPointSelect}"
+													update="map" />
+												<p:gmapInfoWindow maxWidth="4">
+													<p:outputPanel id="textbox">
+
+														<h:outputText
+															value="#{crudMetaDataEmployeeBean.selectedMarker.data}"
+															rendered="#{not crudMetaDataEmployeeBean.clientMarker}"
+															escape="false" />
+														<h:panelGroup style="width:320px;height:150px"
+															id="clientMark"
+															rendered="#{crudMetaDataEmployeeBean.clientMarker}">
+															<table style="width: 300px; height: 120px">
+																<tr>
+																	<td><h:outputText id="descriptionClientMarkerOut"
+																			value="#{i18n['web.client.abstractServiceBean.map.Title']}" /></td>
+																	<td><h:inputText id="descriptionClientMarker"
+																			value="#{crudMetaDataEmployeeBean.selectedMarker.title}" /></td>
+																</tr>
+																<tr>
+																	<td><h:outputText id="titleClientMarkerOut"
+																			value="#{i18n['web.client.abstractServiceBean.map.Description']}" /></td>
+																	<td><h:inputText id="titleClientMarker"
+																			value="#{crudMetaDataEmployeeBean.selectedMarker.data}" /></td>
+																</tr>
+																<tr>
+																	<td colspan="2" style="text-align: right;"><h:commandButton
+																			id="btnSaveMark" styleClass="btn_std_small"
+																			value="#{i18n['web.client.abstractServiceBean.map.button.SaveMark']}"
+																			action="#{crudMetaDataEmployeeBean.saveClientMarker}">
+																			<f:ajax execute=":crudForm:mapGroup" render="map"
+																				onevent="manageAjaxEvents"
+																				onerror="manageAjaxErrors" />
+																		</h:commandButton> <h:commandButton id="DeleteMark"
+																			styleClass="btn_std_small"
+																			value="#{i18n['web.client.abstractServiceBean.map.button.DeleteMark']}"
+																			action="#{crudMetaDataEmployeeBean.deleteClientMarker}">
+																			<f:ajax execute=":crudForm:mapGroup" render="map"
+																				onevent="manageAjaxEvents"
+																				onerror="manageAjaxErrors" />
+																		</h:commandButton></td>
+																</tr>
+															</table>
+														</h:panelGroup>
+													</p:outputPanel>
+												</p:gmapInfoWindow>
+											</p:gmap>
+										</div>
+									</h:panelGroup>
+								</div>
+							</h:panelGroup>
+						</f:view>
+						
+						<div class="buttons_bottom">
+							<h:commandButton
+								value="#{i18n['web.client.metadata.screen.button.Save']}"
+								styleClass="btn_std_small"
+								action="#{crudMetaDataEmployeeBean.savePlusMember}">
+								<f:ajax execute=":crudForm:editingPanelGroup" render="@form"
+									onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+							</h:commandButton>
+							<h:commandButton
+								value="#{i18n['web.client.metadata.screen.button.Delete']}"
+								styleClass="btn_std_small"
+								action="#{crudMetaDataEmployeeBean.deleteEditingPlusMember}"
+								disabled="#{crudMetaDataEmployeeBean.data.dataPK.codigo eq null}"
+								onclick="return showStdConfirmDeleteRegistryMessage(this);">
+								<f:ajax execute="@this" render="@form"
+									onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+							</h:commandButton>
+							<h:commandButton
+								value="#{i18n['web.client.metadata.screen.button.Cancel']}"
+								styleClass="btn_std_small"
+								action="#{crudMetaDataEmployeeBean.cancelEditing}">
+								<f:ajax execute="@this" render="@form"
+									onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+							</h:commandButton>
+						</div>
+					</h:panelGroup>
+
+                    <!-- UPLOAD FILE SECTION -->
+                    <h:panelGroup id="filePanelGroup" rendered="#{crudMetaDataEmployeeBean.uploadSectionVisible}">
+                        <div class="tablebox">
+                            <div class="head">#{i18n['web.client.metadata.screen.title.FileDetails']}</div>
+                            <div class="body">
+                                <table width="100%">
+                                    <tr>
+                                        <th>#{i18n['web.client.metadata.screen.title.File']}</th>
+                                        <td>
+                                            <h:outputText id="fileDataEditing" value="#{crudMetaDataEmployeeBean.fileName}" />
+                                            <h:inputHidden id="saveuserphone" value="#{crudMetaDataEmployeeBean.saveUserphone}" />
+                                        </td>
+                                        <td>
+                                            <p:fileUpload id="fileUploader" allowTypes="/(\.|\/)(csv)$/" fileUploadListener="#{crudMetaDataEmployeeBean.handleFileUpload}" auto="true" update=":crudForm:btnProcessFile :crudForm:fileDataEditing" label="#{i18n['web.client.metadata.screen.title.Explore']}" sizeLimit="#{applicationBean.fileUploadMaxFileSize}" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['web.client.metadata.screen.button.Process']}" styleClass="btn_std_small" id="btnProcessFile" 
+                            action="#{crudMetaDataEmployeeBean.procesarArchivo}" disabled="#{not crudMetaDataEmployeeBean.fileReady}"
+                            onclick="return showStdConfirmUserphoneSaveMessage(this); ">
+                                <f:ajax execute=":crudForm:filePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.metadata.screen.button.Cancel']}" styleClass="btn_std_small" action="#{crudMetaDataEmployeeBean.cancelUpload}">
+                                <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        </div>
+                        
+                        <!-- MENSAJE DE CONFIRMACION PARA SI EL ARCHIVO CSV TIENE RELACION CON USERPHONE -->
+	                    <h:panelGroup id="confirmDialogPanelGroup">
+	                        <p:confirmDialog id="confirmDialogSaveUserphone" message="#{i18n['web.client.screen.message.saveUserphonemetaMessage']}" severity="alert" widgetVar="confirmationSaveUserphone">
+	                            <p:commandButton id="confirmUserphoneSave" value="#{i18n['web.client.screen.field.Yes']}" oncomplete="confirmationSaveUserphone.hide()" onclick="confirmUserphoneYesButtonClick()" />
+	                            <p:commandButton id="declineUserphoneSave" value="#{i18n['web.client.screen.field.No']}" oncomplete="confirmationSaveUserphone.hide()" onclick="confirmUserphoneNoButtonClick()" />
+	                        </p:confirmDialog>
+	                    </h:panelGroup>
+                    </h:panelGroup>
+                    
+                     <!-- ASSOCIATE SECTION -->
+                    <h:panelGroup id="associatePanelGroup" rendered="#{crudMetaDataEmployeeBean.associateSectionVisible}">
+                        <div class="tablebox">
+                            <div class="head">#{i18n['web.client.metadata.screen.title.AssociateUserphone']}</div>
+                            <div class="body">
+                                <table width="100%">
+                                    <tr>
+										<th>#{i18n['web.metadata.title.userphone']}</th>
+										<td>
+											<table>
+												<tr>
+													<td><h:panelGroup>
+															<h:selectBooleanCheckbox id="chkUserphoneListMassive"
+																value="#{crudMetaDataEmployeeBean.validatedAllUserphones}"
+																disabled="#{crudMetaDataEmployeeBean.userphoneList.size() eq 0}">
+																<f:ajax event="change"
+																	execute=":crudForm:chkUserphoneListMassive"
+																	render=":crudForm:listUserphoneMassive"
+																	onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+															</h:selectBooleanCheckbox>
+
+															<h:outputLabel for="chkUserphoneListMassive"
+																value="(#{i18n['web.client.selectonemenu.All']})" />
+														</h:panelGroup></td>
+												</tr>
+												<tr>
+													<td><h:selectManyListbox id="listUserphoneMassive"
+															value="#{crudMetaDataEmployeeBean.selectedUserphoneList}"
+															converter="userphoneConverter" size="5"
+															style="width: auto;"
+															disabled="#{crudMetaDataEmployeeBean.validatedAllUserphones}">
+
+															<f:selectItems
+																value="#{crudMetaDataEmployeeBean.userphoneList}"
+																var="uLItem" itemValue="#{uLItem}"
+																itemLabel="#{dLItem.nameChr}" />
+														</h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['web.client.metadata.screen.button.Associate']}" styleClass="btn_std_small" id="btnAssociateFile" action="#{crudMetaDataEmployeeBean.saveAssociatePlusMember}">
+                                <f:ajax execute=":crudForm:associatePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.metadata.screen.button.Cancel']}" styleClass="btn_std_small" action="#{crudMetaDataEmployeeBean.cancelAssociate}">
+                                <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+                    
+                    
+                     <!-- ASSOCIATE HORARY SECTION -->
+                    <h:panelGroup id="associateHoraryPanelGroup" rendered="#{crudMetaDataEmployeeBean.reasignar}">
+                        <div class="tablebox">
+                            <div class="head">#{i18n['web.client.metadata.screen.title.AssociateHorary']}</div>
+                            <div class="body">
+                                <table width="100%">
+                                    <tr>
+										<th>#{i18n['web.metadata.title.horary']}</th>
+										<td>
+											<table>
+												
+												<tr>
+													<td><h:selectManyListbox id="listHoraryMassive"
+															value="#{crudMetaDataEmployeeBean.selectedHoraryList}"
+															converter="horaryMetaDataConverter" size="5"
+															style="width: auto;">
+
+															<f:selectItems
+																value="#{crudMetaDataEmployeeBean.horaryList}"
+																var="uLItem" itemValue="#{uLItem}"
+																itemLabel="#{uLItem.valueChr}" />
+														</h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['web.client.metadata.screen.button.Associate']}" styleClass="btn_std_small" id="btnAssociateHorary" action="#{crudMetaDataEmployeeBean.associateHorary}">
+                                <f:ajax execute=":crudForm:associateHoraryPanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.metadata.screen.button.Cancel']}" styleClass="btn_std_small" action="#{crudMetaDataEmployeeBean.cancelAssociateHorary}">
+                                <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+                    
+                     <p:dialog id="dialog" header="#{i18n['web.client.metadata.screen.header.resumen']}" widgetVar="dlg" resizable="true" modal="true" height="100">
+							<h:outputText id="salida" value="#{crudMetaDataEmployeeBean.messageUserphonesNotExist}" styleClass="metadataDialog" />
+					</p:dialog>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

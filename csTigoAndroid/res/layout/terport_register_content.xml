@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/terportOperatorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/terport_register_operator"
+        android:textAppearance="@style/textSize" />
+
+    <Spinner
+        android:id="@+id/terportRegisterOperatorSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/terportOperatorView"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp" >
+    </Spinner>
+
+    <TextView
+        android:id="@+id/terportMachineView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/terportRegisterOperatorSpinner"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/terport_register_machine"
+        android:textAppearance="@style/textSize" />
+
+    <Spinner
+        android:id="@+id/terportRegisterMachineSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/terportMachineView"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp" >
+    </Spinner>
+
+    <CheckBox
+        android:id="@+id/terportRegisterIsNewUbication"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/terportRegisterButton"
+        android:layout_below="@+id/terportRegisterMachineSpinner"
+        android:text="@string/terport_register_is_new_ubication" />
+
+    <TextView
+        android:id="@+id/terportRegisterDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/terportRegisterIsNewUbication"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/terport_register_container"
+        android:textAppearance="@style/textSize" />
+
+    <LinearLayout
+        android:id="@+id/terportRegisterContainerlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/terportRegisterDetail"
+        android:layout_alignRight="@+id/terportRegisterMachineSpinner"
+        android:layout_below="@+id/terportRegisterDetail"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/terportRegisterContainer1Edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_weight="0.10"
+            android:inputType="text"
+            android:maxLength="4" >
+        </EditText>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/terport_register_guion"
+            android:textAppearance="@style/textSize" />
+
+        <EditText
+            android:id="@+id/terportRegisterContainer2Edit"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_weight="0.70"
+            android:inputType="number"
+            android:maxLength="6" >
+        </EditText>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/terport_register_guion"
+            android:textAppearance="@style/textSize" />
+
+        <EditText
+            android:id="@+id/terportRegisterContainer3Edit"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_weight="0.10"
+            android:ems="10"
+            android:inputType="number"
+            android:maxLength="1" >
+        </EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/terportRegisterUbicationlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/terportRegisterContainerlayout"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/terportRegisterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignLeft="@+id/terportRegisterUbicationlayout"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/terportRegisterUbicationlayout"
+        android:background="@drawable/button_selector"
+        android:text="@string/order_register" />
+
+</RelativeLayout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/fileUploadDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.client.admin.ClientConfigurations']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="clientconfigurations" value="#{i18n['web.client.admin.ClientConfigurations']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="crudForm">
+                    <!-- EDITING SECTION -->
+                    <h:panelGroup id="editingPanelGroup">
+                        <div class="tablebox">
+                            <div class="head">#{i18n['web.client.screen.admin.configurations.title.DetailsOf']}</div>
+                            <div class="body">
+                                <table width="100%">
+                                    <tr>
+                                        <th>#{i18n['web.client.screen.configuration.field.OldLogo']}</th>
+                                        <td><h:outputText id="fileDataEditing" value="#{clientConfigurationBean.filenameChr}" /></td>
+                                        <td><h:commandButton value="#{i18n['web.client.screen.button.DeleteLogo']}" styleClass="btn_std_large" action="#{clientConfigurationBean.deleteEditing}" update="growl">
+                                                <f:ajax execute="@this" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton></td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.screen.configuration.field.NewLogo']}</th>
+<!--                                         <td><p:fileUpload id="fileUploader" fileUploadListener="#{clientConfigurationBean.handleFileUpload}" update=":crudForm:btnSaveEditing :crudForm:fileDataEditing" label="#{i18n['web.client.screen.admin.configuration.title.Explore']}" uploadLabel="#{i18n['web.client.screen.admin.configuration.title.Upload']}" cancelLabel="#{i18n['web.client.screen.admin.configuration.title.Cancel']}" invalidSizeMessage="#{i18n['web.client.screen.admin.configuration.message.InvalidSize']}" invalidFileMessage="#{i18n['web.client.screen.admin.configuration.message.InvalidType']}" sizeLimit="#{applicationBean.fileUploadMaxFileSize}" fileLimit="1" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" /></td> -->
+<!--                                         <td><h:commandButton value="#{i18n['web.client.screen.button.Save']}" styleClass="btn_std_small" id="btnSaveEditing" action="#{clientConfigurationBean.saveEditing}" disabled="#{clientConfigurationBean.clientFile eq null or (clientConfigurationBean.clientFile ne null and clientConfigurationBean.clientFile.clientFileCod ne null) }" update="growl"> -->
+<!--                                                 <f:ajax execute=":crudForm:editingPanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" /> -->
+<!--                                             </h:commandButton></td> -->
+											<td><p:fileUpload id="fileUploader" fileUploadListener="#{clientConfigurationBean.handleFileUpload}"  /></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <th>#{i18n['web.client.screen.configuration.field.DurationFormat']}</th>
+                                        <td><h:selectOneMenu id="listDurationFormat" value="#{clientConfigurationBean.selectedDurationFormat}">
+                                                <f:selectItem itemValue="#{null}" itemLabel="(#{i18n['web.client.selectonemenu.Select']})" />
+                                                <f:selectItem itemValue="#{i18n['web.client.screen.configuration.field.ExtendedDurationFormatValue']}" itemLabel="#{i18n['web.client.screen.configuration.field.ExtendedDurationFormatLabel']}" />
+                                                <f:selectItem itemValue="#{applicationBean.defaultDurationFormat}" itemLabel="#{applicationBean.defaultDurationFormat}" />
+                                            </h:selectOneMenu></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <h:panelGroup id="buttonDetailPanelGroup">
+                                <div class="buttons_bottom">
+                                    <h:commandButton value="#{i18n['web.client.screen.button.Save']}" styleClass="btn_std_small" id="btnSaveEditing" action="#{clientConfigurationBean.saveEditing}" update="growl">
+                                        <f:ajax execute=":crudForm:editingPanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandButton>
+                                </div>
+                            </h:panelGroup>
+                        </div>
+                    </h:panelGroup>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>
