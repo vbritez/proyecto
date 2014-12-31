@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/visit_end_motive"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/visitEndVisitMotive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView1"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:ems="10"
+        android:inputType="text" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/visitEndVisitMotive"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/visit_end_observation"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/visitEndVisitObservation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView2"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:ems="10"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/visitEndVisitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/visitEndVisitObservation"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button_selector"
+        android:text="@string/visit_end_endVisit" />
+
+</RelativeLayout>

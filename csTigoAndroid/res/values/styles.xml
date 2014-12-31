@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="cs_theme_color">#EFEFEF</color>
+    <color name="cs_header_title">#FFFFFF</color>
+    <color name="cs_red">#FF0000</color>
+    <color name="cs_footer_text">#F0c7c7c7</color>
+    <color name="cs_non_platform_service_background">#c7c7c7</color>
+    <color name="cs_services_item_text_color">#000000</color>
+    <color name="cs_link_text_color">#295ba0</color>
+
+    
+
+    <style name="CSTheme" parent="@android:Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">@color/cs_theme_color</item>
+        <item name="android:colorBackground">@color/cs_theme_color</item>
+    </style>
+
+    <style name="headerTitle">
+        <item name="android:typeface">sans</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:textColor">@color/cs_header_title</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="footerText">
+        <item name="android:typeface">sans</item>
+        <item name="android:textSize">8.5dp</item>
+        <item name="android:textColor">@color/cs_footer_text</item>
+    </style>
+    
+    <style name="servicesItemText">
+        <item name="android:typeface">sans</item>
+        <item name="android:textSize">13dp</item>
+        <item name="android:textColor">@color/cs_services_item_text_color</item>
+    </style>
+    
+    <style name="nonPlatformServicesItemText">
+        <item name="android:typeface">sans</item>
+        <item name="android:textSize">11dp</item>
+        <item name="android:textColor">@color/cs_services_item_text_color</item>
+    </style>
+
+    <style name="textSize">
+        <item name="android:textSize">15dp</item>
+    </style>
+    
+    <style name="trackingMessage">
+        <item name="android:typeface">sans</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="linkStyle">
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">@color/cs_link_text_color</item>
+    </style>
+    
+    <style name="redStyle">
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">@color/cs_red</item>
+    </style>
+
+</resources>

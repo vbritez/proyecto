@@ -1,0 +1,50 @@
+Descargar la version de nexus
+Descomprimir en una carpeta
+Nexus requiere java 1.7+
+En el archivo NEXUS_HOME/bin/jsw/conf/wrapper.conf
+en el paramatro wrapper.java.command apuntar al java 1.7
+EJ: wrapper.java.command=/opt/cstigo/sistemas/java/jdk1.7.0_71/bin/java
+Luego levantar el repositorio ejecutando el NEXUS_HOME/bin/nexus start
+Por defecto te levanta en localhost:8081/nexus para cambiar el puerto y contex root modificar el archivo NEXUS_HOME/conf/nexus.properties.
+El usuario y contraseña por defecto es admin/admin123
+Para configurar este repositorio en el maven se debe agregar en el archivo ./m2/settings.xml
+<settings>
+  <mirrors>
+    <mirror>
+      <!--This sends everything else to /public -->
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>http://10.32.0.76:8081/content/groups/public</url>
+    </mirror>
+  </mirrors>
+  <profiles>
+    <profile>
+      <id>nexus</id>
+      <!--Enable snapshots for the built in central repo to direct -->
+      <!--all requests to nexus via the mirror -->
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>t
+		  rue</enabled></snapshots>
+        </repository>
+      </repositories>
+     <pluginRepositories>
+        <pluginRepository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <!--make the profile active all the time -->
+    <activeProfile>nexus</activeProfile>
+  </activeProfiles>
+</settings>
+
+el log esta en la carpeta /usr/local/sonatype-work/nexus/logs/nexus.log

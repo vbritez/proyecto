@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry combineaccessrules="false" kind="src" path="/csTigoCommons"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/csTigoJPA"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/csTigoEJB"/>
+	<classpathentry excluding="**/.svn/" kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Commons-fileupload"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ApacheCommons"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Log4j-1.2.16"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Joda-Time"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Allot"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Primefaces-3.2"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/PrimefacesExtension-0.4.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/CSTIGO-Artifacts"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JCaptcha"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gson"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/csTigoBean"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/csTigoAPI"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JasperReport"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jersey"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Echache-2.7.4"/>
+	<classpathentry kind="con" path="oracle.eclipse.tools.glassfish.lib.system">
+		<attributes>
+			<attribute name="owner.project.facets" value="jst.web"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

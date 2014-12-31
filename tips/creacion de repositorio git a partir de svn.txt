@@ -1,0 +1,23 @@
+Instalar git en servidor red hat 5 con proxy habilitado
+descargar epel-release-5-4.noarch.rpm
+luego ejecutar rpm -ivh epel-release-5-4.noarch.rpm
+luego en el archivo /etc/yum.conf agregar la siguiente linea
+proxy=http://uxrepo.telecel.net.py:3128
+luego ejecutar yum install git
+
+para que funcione el comando git svn la version de git debe ser el 1.9
+desinstalar git con yum remove git
+descargar de https://www.kernel.org/pub/software/scm/git/git-1.9.4.tar.gz
+tar xzf git-1.9.4.tar.gz
+cd git-1.9.4
+make prefix=/usr/local/git all
+make prefix=/usr/local/git install
+echo "export PATH=$PATH:/usr/local/git/bin" >> /etc/bashrc
+echo "export PATH=$PATH:/usr/local/git/bin" >> ~/.bashrc
+source /etc/bashrc
+source .bashrc
+git --version
+yum install subversion-perl
+git svn clone -T branches/paraguay/corporate/bma/bma_8.5.1 http://10.3.20.99:18080/svn/sources
+clonar en repositorio limpio
+git clone --bare /home/cstigo/vivi/git/git-svn-migrate/sources /opt/lothar/sources/branches/paraguay/corporate/bma/bma_5.1.3

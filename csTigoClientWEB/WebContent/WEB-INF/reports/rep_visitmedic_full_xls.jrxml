@@ -1,0 +1,671 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_visitmedic_full" pageWidth="850" pageHeight="539" orientation="Landscape" columnWidth="850" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="LocaleBundle" isIgnorePagination="true">
+	<property name="ireport.zoom" value="1.5000000000000013"/>
+	<property name="ireport.x" value="35"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="TITLE" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[Report Title]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Reporte Completo de Pedidos (Servicio Visitas-Pedidos)"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="WHERE" class="java.lang.String">
+		<parameterDescription><![CDATA[SQL Criteria]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PARAMETERS_DESCRIPTION" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[Criteria Description]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LOGO" class="java.lang.Object" isForPrompting="false">
+		<parameterDescription><![CDATA[Logo Path]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CLIENT_LOGO" class="java.lang.Object" isForPrompting="false"/>
+	<parameter name="USER" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[Logguedin user]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ORDER_BY" class="java.lang.String">
+		<parameterDescription><![CDATA[Order Criteria]]></parameterDescription>
+		<defaultValueExpression><![CDATA["  "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SESSION_ID" class="java.lang.String">
+		<parameterDescription><![CDATA[Id de sesion del usuario logueado]]></parameterDescription>
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DURATION_FORMAT" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/cstigo/sistemas/glassfish3/glassfish/domains/domain1/applications/csTigoClient/csTigoClientWEB_war/WEB-INF/reports/"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select a.*,svd.column1_chr,svd.column2_chr,
+CASE WHEN mcPD.ENABLED_CHR = '1' THEN mdPD.value_chr ELSE null END product
+from  (
+select
+product.SERVICEVALUE_COD product_cod,
+    u.CELLPHONE_NUM as nromovil,
+    u.COD_CLIENT,
+    u.NAME_CHR as nombre_usermobile,
+    u.userphone_cod,
+    me.DATEIN_DAT as fecha,
+    --1ER CORTE
+    clinic.COLUMN2_CHR as clinic_cod,
+
+    --det clinic
+    medic.COLUMN2_CHR as medic_cod,
+    coalesce(cd_ent.column2_chr,cd_entsal.column2_chr) km_inicial,
+    coalesce(cd_sal.column3_chr,cd_entsal.column3_chr) duracion_clinic,
+    to_number(nvl(coalesce(cd_sal.column3_chr ,cd_entsal.column3_chr),'0'))  DURACION_MILIS_clinic,
+    coalesce(cd_ent.column4_chr,cd_sal.column4_chr,cd_entsal.column4_chr) obs_clinic,
+
+    --det medico
+    coalesce(md_sal.column2_chr,md_entsal.column2_chr ) cod_motive,
+    coalesce(md_ent.column6_chr ,md_sal.column6_chr,md_entsal.column6_chr ) obs_medic,
+    to_number(nvl(coalesce(md_sal.column7_chr,md_entsal.column7_chr ),'0'))  DURACION_MILIS_medic,
+    CASE WHEN mc.ENABLED_CHR = '1' THEN md.value_chr ELSE null END clinic,
+    CASE WHEN (mcmo.ENABLED_CHR = '1' AND mdMOSAL.value_chr IS NOT NULL) THEN mdMOSAL.value_chr ELSE null END MOTIVOSAL,
+    CASE WHEN mc2.ENABLED_CHR = '1' THEN md2.value_chr ELSE null END medic,
+    CASE WHEN mc2.ENABLED_CHR = '1' THEN md3.value_chr ELSE null END titulo,
+    CASE WHEN mc2.ENABLED_CHR = '1' THEN md4.value_chr ELSE null END especialidad
+
+    --md.COLUMN2_CHR motive_cod,
+
+    --pd.COLUMN1_CHR
+
+from service_value sv
+INNER JOIN USERPHONE u ON (sv.COD_USERPHONE = u.USERPHONE_COD)
+INNER JOIN SERVICE_VALUE clinic ON (clinic.COLUMN1_CHR = to_char(sv.SERVICEVALUE_COD) AND clinic.column3_chr = 'CL' and clinic.ENABLED_CHR = '1')
+left JOIN SERVICE_VALUE_DETAIL cd_ent ON (clinic.SERVICEVALUE_COD = cd_ent.COD_SERVICEVALUE and cd_ent.column1_chr = 'ENT' and cd_ent.ENABLED_CHR = '1')
+left JOIN SERVICE_VALUE_DETAIL cd_sal ON (clinic.SERVICEVALUE_COD = cd_sal.COD_SERVICEVALUE and cd_sal.column1_chr = 'SAL' and cd_sal.ENABLED_CHR = '1')
+left  JOIN SERVICE_VALUE_DETAIL cd_entsal ON (clinic.SERVICEVALUE_COD = cd_entsal.COD_SERVICEVALUE and cd_entsal.column1_chr = 'ENTSAL' and cd_entsal.ENABLED_CHR = '1')
+INNER JOIN SERVICE_VALUE medic ON (medic.COLUMN1_CHR = to_char(clinic.SERVICEVALUE_COD) AND medic.column3_chr = 'ME' and medic.ENABLED_CHR = '1')
+INNER JOIN MESSAGE me ON (me.MESSAGE_COD = medic.COD_MESSAGE)
+left JOIN SERVICE_VALUE_DETAIL md_ent ON (medic.SERVICEVALUE_COD = md_ent.COD_SERVICEVALUE and md_ent.column1_chr = 'ENT' and md_ent.ENABLED_CHR = '1')
+left JOIN SERVICE_VALUE_DETAIL md_sal ON (medic.SERVICEVALUE_COD = md_sal.COD_SERVICEVALUE and md_sal.column1_chr = 'SAL' and md_sal.ENABLED_CHR = '1')
+left  JOIN SERVICE_VALUE_DETAIL md_entsal ON (medic.SERVICEVALUE_COD = md_entsal.COD_SERVICEVALUE and md_entsal.column1_chr = 'ENTSAL' and md_entsal.ENABLED_CHR = '1')
+left JOIN SERVICE_VALUE product ON (product.COLUMN1_CHR = to_char(medic.SERVICEVALUE_COD) AND product.column3_chr = 'PR' and product.ENABLED_CHR = '1')
+
+     --CLINIC
+     LEFT JOIN META_DATA md ON (md.cod_client = u.COD_CLIENT AND md.cod_meta = 14 AND md.cod_member = 1 AND md.CODE_CHR = clinic.COLUMN2_CHR)
+     LEFT JOIN META_CLIENT mc ON (mc.cod_client = u.COD_CLIENT AND mc.COD_META = 14)
+     --MEDIC
+     LEFT JOIN META_DATA md2 ON (md2.cod_client = u.COD_CLIENT AND md2.cod_meta = 15 AND md2.cod_member = 1 AND md2.CODE_CHR = medic.COLUMN2_CHR)
+     LEFT JOIN META_DATA md3 ON (md3.cod_client = u.COD_CLIENT AND md3.cod_meta = 15 AND md3.cod_member = 2 AND md3.CODE_CHR = medic.COLUMN2_CHR)
+     LEFT JOIN META_DATA md4 ON (md4.cod_client = u.COD_CLIENT AND md4.cod_meta = 15 AND md4.cod_member = 3 AND md4.CODE_CHR = medic.COLUMN2_CHR)
+     LEFT JOIN META_CLIENT mc2 ON (mc2.cod_client = u.COD_CLIENT AND mc2.COD_META = 15)
+     --MOTIVE
+     LEFT JOIN META_CLIENT mcMO ON (mcMO.cod_client = u.COD_CLIENT AND mcMO.COD_META = 3)
+     LEFT JOIN META_DATA mdMOSAL ON (mdMOSAL.cod_client = u.COD_CLIENT AND mdMOSAL.cod_meta = 3 AND mdMOSAL.cod_member = 1 AND mdMOSAL.CODE_CHR = coalesce(md_sal.column2_chr,md_entsal.column2_chr ))
+WHERE 1 = 1
+and sv.COD_SERVICE = 17 $P!{WHERE}
+$P!{ORDER_BY} ) a
+left join SERVICE_VALUE_DETAIL svd on a.product_cod = svd.COD_SERVICEVALUE
+--MOTIVE
+     LEFT JOIN META_CLIENT mcPD ON (mcPD.cod_client = a.COD_CLIENT AND mcPD.COD_META = 2)
+     LEFT JOIN META_DATA mdPD ON (mdPD.cod_client = a.COD_CLIENT AND mdPD.cod_meta = 2 AND mdPD.cod_member = 1 AND mdPD.CODE_CHR = svd.column1_chr)]]>
+	</queryString>
+	<field name="PRODUCT_COD" class="java.math.BigDecimal"/>
+	<field name="NROMOVIL" class="java.math.BigDecimal"/>
+	<field name="COD_CLIENT" class="java.math.BigDecimal"/>
+	<field name="NOMBRE_USERMOBILE" class="java.lang.String"/>
+	<field name="USERPHONE_COD" class="java.math.BigDecimal"/>
+	<field name="FECHA" class="java.sql.Timestamp"/>
+	<field name="CLINIC_COD" class="java.lang.String"/>
+	<field name="MEDIC_COD" class="java.lang.String"/>
+	<field name="KM_INICIAL" class="java.lang.String"/>
+	<field name="DURACION_CLINIC" class="java.lang.String"/>
+	<field name="DURACION_MILIS_CLINIC" class="java.lang.Long"/>
+	<field name="OBS_CLINIC" class="java.lang.String"/>
+	<field name="COD_MOTIVE" class="java.lang.String"/>
+	<field name="OBS_MEDIC" class="java.lang.String"/>
+	<field name="DURACION_MILIS_MEDIC" class="java.lang.Long"/>
+	<field name="CLINIC" class="java.lang.String"/>
+	<field name="MOTIVOSAL" class="java.lang.String"/>
+	<field name="MEDIC" class="java.lang.String"/>
+	<field name="TITULO" class="java.lang.String"/>
+	<field name="ESPECIALIDAD" class="java.lang.String"/>
+	<field name="COLUMN1_CHR" class="java.lang.String"/>
+	<field name="COLUMN2_CHR" class="java.lang.String"/>
+	<field name="PRODUCT" class="java.lang.String"/>
+	<variable name="DURACION_TOTAL_MEDIC" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{DURACION_MILIS_MEDIC} == null ? 0L : $F{DURACION_MILIS_MEDIC}]]></variableExpression>
+		<initialValueExpression><![CDATA[0L]]></initialValueExpression>
+	</variable>
+	<variable name="DURACION_TOTAL_CLINIC" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{DURACION_MILIS_CLINIC} == null ? 0L : $F{DURACION_MILIS_CLINIC}]]></variableExpression>
+		<initialValueExpression><![CDATA[0L]]></initialValueExpression>
+	</variable>
+	<group name="groupVisitaPedido">
+		<groupExpression><![CDATA[]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+	</group>
+	<group name="groupVisitaPedidoDet">
+		<groupExpression><![CDATA[]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="83" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="90" y="39" width="670" height="16"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.report.full.Title}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame" onErrorType="Blank">
+				<reportElement x="0" y="0" width="90" height="68"/>
+				<imageExpression class="java.awt.Image"><![CDATA[$P{LOGO}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="90" y="0" width="670" height="39"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{report.client.commons.CSTigoName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="68" width="90" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isItalic="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{report.client.commons.ReportParameters}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="90" y="68" width="447" height="15">
+					<printWhenExpression><![CDATA[!$P{PARAMETERS_DESCRIPTION}.isEmpty()]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[":"+$P{PARAMETERS_DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame" onErrorType="Blank">
+				<reportElement x="760" y="0" width="90" height="68"/>
+				<imageExpression class="java.awt.Image"><![CDATA[$P{CLIENT_LOGO}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="15">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="0" width="40" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.MobileNumber}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="90" y="0" width="38" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.ClinicCode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="174" y="0" width="47" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.MedicCode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="736" y="0" width="38" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.ObsClinic}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="359" y="0" width="71" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.MotiveCode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="774" y="0" width="30" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box leftPadding="2" rightPadding="2">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.ObsMedic}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="430" y="0" width="50" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box leftPadding="2" rightPadding="2">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.MotiveSal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="221" y="0" width="58" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box leftPadding="2" rightPadding="2">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.Medic}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="480" y="0" width="57" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box leftPadding="2" rightPadding="2">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.ProductCode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="605" y="0" width="35" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box leftPadding="2" rightPadding="2">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.Quantity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="640" y="0" width="30" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.KmInicial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="670" y="0" width="35" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.DurationClinic}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="804" y="0" width="46" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.VisitMedicDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="128" y="0" width="46" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box leftPadding="2" rightPadding="2">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.Clinic}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="537" y="0" width="68" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box leftPadding="2" rightPadding="2">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.Product}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="40" y="0" width="50" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.ClientName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="705" y="0" width="31" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.DurationMedic}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="279" y="0" width="40" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box leftPadding="2" rightPadding="2">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.Degree}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="319" y="0" width="40" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box leftPadding="2" rightPadding="2">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.Specialty}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="40" height="15" backcolor="#FFFFFF"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{NROMOVIL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="40" y="0" width="50" height="15" backcolor="#FFFFFF"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMBRE_USERMOBILE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="90" y="0" width="38" height="15" backcolor="#FFFFFF"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CLINIC_COD}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="174" y="0" width="47" height="15" backcolor="#FFFFFF"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{MEDIC_COD}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="736" y="0" width="38" height="15" backcolor="#FFFFFF"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{OBS_CLINIC}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="359" y="0" width="71" height="15" backcolor="#FFFFFF"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COD_MOTIVE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="774" y="0" width="30" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{OBS_MEDIC}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="430" y="0" width="50" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{MOTIVOSAL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="221" y="0" width="58" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{MEDIC}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="480" y="0" width="57" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COLUMN1_CHR}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="605" y="0" width="35" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COLUMN2_CHR}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="640" y="0" width="30" height="15" backcolor="#FFFFFF"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{KM_INICIAL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="670" y="0" width="35" height="15" backcolor="#FFFFFF"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[com.tigo.cs.commons.util.DateUtil.getPeriodWithFormat($P{DURATION_FORMAT},0L,$V{DURACION_TOTAL_CLINIC})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="804" y="0" width="46" height="15" backcolor="#FFFFFF"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{FECHA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="128" y="0" width="46" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CLINIC}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="537" y="0" width="68" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PRODUCT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="705" y="0" width="31" height="15" backcolor="#FFFFFF"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[com.tigo.cs.commons.util.DateUtil.getPeriodWithFormat($P{DURATION_FORMAT},0L,$V{DURACION_TOTAL_MEDIC})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="279" y="0" width="40" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TITULO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="319" y="0" width="40" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ESPECIALIDAD}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/terportUsernameView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/terport_username"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/terportUsernameEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/terportUsernameView"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:ems="10"
+        android:inputType="text" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/terportPasswordView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/terportUsernameEdit"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/terport_password"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/terportPasswordEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/terportPasswordView"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:ems="10"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/terportLoginButton"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/terportPasswordEdit"
+        android:background="@drawable/button_selector"
+        android:text="@string/terport_login" />
+
+</RelativeLayout>

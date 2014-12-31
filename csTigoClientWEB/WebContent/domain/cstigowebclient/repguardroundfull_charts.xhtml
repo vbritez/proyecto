@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/chartDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.client.report.GuardRoundReport']}</ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <h:panelGroup rendered="#{reportGuardRoundFullBean.chartType == 'pie'}">
+            <p:pieChart id="sample" value="#{reportGuardRoundFullBean.chartModel}" legendPosition="w" title="#{reportGuardRoundFullBean.title}" 
+                        style="width:800px;height:600px;" />
+        </h:panelGroup>
+        <h:panelGroup rendered="#{reportGuardRoundFullBean.chartType == 'bar'}">
+            <p:barChart id="horizontal" value="#{reportGuardRoundFullBean.chartModel}" legendPosition="ne" style="height:300px" yaxisLabel="#{i18n['web.client.label.yaxisLabel']}"
+                        title="#{reportGuardRoundFullBean.title}" min="0" max="#{reportGuardRoundFullBean.maxValue}" xaxisLabel="#{reportGuardRoundFullBean.chartReportOptionLabel}" xaxisAngle="20"/>
+        </h:panelGroup>
+
+    </ui:define>
+</ui:composition>
+</html>

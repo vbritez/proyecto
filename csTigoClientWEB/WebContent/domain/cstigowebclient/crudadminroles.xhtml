@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:csui="http://java.sun.com/jsf/composite/uicomponents"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<ui:composition
+	template="/resources/templates/screenDefaultClient.xhtml">
+	<!-- TITLE -->
+	<ui:define name="title">#{i18n['web.client.admin.roleclient']}</ui:define>
+	<!-- STATUS LOCATION -->
+	<ui:define name="status">
+		<h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="crudadminroles"
+			value="#{i18n['web.client.admin.roleclient']}" />
+	</ui:define>
+	<!-- PRINCIPAL CONTAINER -->
+	<ui:define name="container">
+		<div id="page_col">
+			<div id="cent_full">
+				<h:form id="crudForm">
+					<div class="tablebox">
+						<div class="head">#{i18n['web.client.adminroleclient.screen.title.ListOf']}</div>
+						<!-- SEARCH BOX -->
+						<h:panelGroup id="searchBoxGroupPanel">
+							<p:focus for="crudForm:listSearchOption" />
+							<div class="headcontainer">
+								<table class="tablesearch">
+									<tr>
+										<th>#{i18n['web.client.search.field.FindBy']}</th>
+										<td><h:selectOneMenu id="listSearchOption"
+												value="#{crudAdminRolesBean.filterSelectedField}"
+												onchange="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');"
+												onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');"
+												disabled="#{crudAdminRolesBean.entity ne null}">
+												<f:selectItem
+													itemLabel="(#{i18n['web.client.search.field.OptionSelect']})"
+													itemValue="-1" />
+												<f:selectItems value="#{crudAdminRolesBean.filterFields}" />
+											</h:selectOneMenu></td>
+										<th>#{i18n['web.client.search.field.Criteria']}</th>
+										<td><h:inputText id="textSearchCriteria"
+												value="#{crudAdminRolesBean.filterCriteria}"
+												onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');"
+												disabled="#{crudAdminRolesBean.entity ne null}" /></td>
+										<td><h:commandButton id="btnSearch"
+												styleClass="btn_std_small"
+												value="#{i18n['web.client.search.field.Find']}"
+												action="#{crudAdminRolesBean.applyFilter}"
+												disabled="#{crudAdminRolesBean.entity ne null}">
+												<f:ajax execute=":crudForm:searchBoxGroupPanel"
+													render=":crudForm:listTablePanelGroup :crudForm:btnClean"
+													onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+											</h:commandButton> <h:commandButton id="btnClean" styleClass="btn_std_small"
+												value="#{i18n['web.client.search.field.Clean']}"
+												action="#{crudAdminRolesBean.cleanFilter}"
+												disabled="#{crudAdminRolesBean.filterCriteria eq '' or crudAdminRolesBean.entity ne null}">
+												<f:ajax execute="@this"
+													render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup"
+													onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+											</h:commandButton></td>
+										<th>#{i18n['web.client.search.field.Show']}</th>
+										<td class="thin"><h:selectOneMenu id="listRowQuant"
+												value="#{crudAdminRolesBean.rowQuantSelected}"
+												disabled="#{crudAdminRolesBean.entity ne null}"
+												valueChangeListener="#{crudAdminRolesBean.applyQuantity}">
+												<f:selectItems value="#{crudAdminRolesBean.rowQuantList}" />
+												<f:ajax event="change" execute="@this"
+													render=":crudForm:listTablePanelGroup"
+													onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+											</h:selectOneMenu></td>
+									</tr>
+								</table>
+							</div>
+							<!-- SCRIPTS -->
+							<script type="text/javascript" charset="UTF-8">
+								if (document
+										.getElementById('crudForm:listSearchOption').disabled == false) {
+									searchFieldOnchange(
+											'crudForm:listSearchOption',
+											'crudForm:textSearchCriteria',
+											'crudForm:btnSearch');
+								}
+							</script>
+						</h:panelGroup>
+
+						<h:panelGroup id="listTablePanelGroup">
+							<!-- LIST TABLE -->
+							<div class="body">
+								<h:dataTable id="crudListTable"
+									value="#{crudAdminRolesBean.dataModel}" var="item"
+									rendered="#{crudAdminRolesBean.dataModel.rowCount gt 0}"
+									rowClasses="odd_row,even_row" columnClasses="thin">
+									<h:column id="column1">
+										<f:facet name="header">
+											<h:selectBooleanCheckbox id="chkBoxSelectedAll"
+												title="#{i18n['web.client.table.check.SelectAndDeselect']}"
+												disabled="#{crudAdminRolesBean.entity ne null}"
+												onclick="checkUncheckAllInForm(this, this.checked);" />
+										</f:facet>
+										<h:selectBooleanCheckbox id="chkBoxSelected"
+											value="#{crudAdminRolesBean.selectedItems[item.roleClientCod]}"
+											disabled="#{crudAdminRolesBean.entity ne null}" />
+									</h:column>
+									<h:column id="column2">
+										<f:facet name="header">
+											<span> <h:commandLink
+													value="#{i18n['web.client.screen.roleclient.field.RoleCod']}"
+													action="#{crudAdminRolesBean.applySort}"
+													title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.roleclient.field.RoleCod']}"
+													disabled="#{crudAdminRolesBean.entity ne null}">
+													<f:setPropertyActionListener
+														value="#{not crudAdminRolesBean.sortHelper.ascending}"
+														target="#{crudAdminRolesBean.sortHelper.ascending}" />
+													<f:setPropertyActionListener value="roleClientCod"
+														target="#{crudAdminRolesBean.sortHelper.field}" />
+													<f:ajax execute="@this"
+														render=":crudForm:listTablePanelGroup"
+														onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandLink> <h:outputText
+													value="#{crudAdminRolesBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}"
+													rendered="#{crudAdminRolesBean.sortHelper.field eq 'roleClientCod'}" />
+											</span>
+										</f:facet>
+										<h:outputText value="#{item.roleClientCod}">
+											<f:convertNumber groupingUsed="true" integerOnly="true" />
+										</h:outputText>
+									</h:column>
+									<h:column id="column3">
+										<f:facet name="header">
+											<span> <h:commandLink
+													value="#{i18n['web.client.screen.roleclient.field.Description']}"
+													action="#{crudAdminRolesBean.applySort}"
+													title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.screen.roleclient.field.Description']}"
+													disabled="#{crudAdminRolesBean.entity ne null}">
+													<f:setPropertyActionListener
+														value="#{not crudAdminRolesBean.sortHelper.ascending}"
+														target="#{crudAdminRolesBean.sortHelper.ascending}" />
+													<f:setPropertyActionListener value="description"
+														target="#{crudAdminRolesBean.sortHelper.field}" />
+													<f:ajax execute="@this"
+														render=":crudForm:listTablePanelGroup"
+														onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandLink> <h:outputText
+													value="#{crudAdminRolesBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}"
+													rendered="#{crudAdminRolesBean.sortHelper.field eq 'description'}" />
+											</span>
+										</f:facet>
+
+										<csui:columnWidthChar value="#{item.description}"  header="#{i18n['web.client.screen.roleclient.field.Description']}"/>
+										
+									</h:column>
+									<h:column id="column4">
+										<f:facet name="header">
+											<h:outputText
+												value="#{i18n['web.client.screen.admin.roleclient.field.Enabled']}" />
+										</f:facet>
+										<csui:columnWidthChar value="#{i18n['web.client.screen.field.Yes']}"
+											rendered="#{item.enabled}" header="#{i18n['web.client.screen.admin.roleclient.field.Enabled']}"/>
+										<csui:columnWidthChar value="#{i18n['web.client.screen.field.No']}"
+											rendered="#{not item.enabled}"  header="#{i18n['web.client.screen.admin.roleclient.field.Enabled']}" />
+									</h:column>
+								</h:dataTable>
+						
+							</div>
+							<!-- PAGINATION -->
+							<div class="foot">
+								<h:panelGroup
+									rendered="#{crudAdminRolesBean.dataModel.rowCount gt 0}">
+									<h:commandLink
+										value="&#9668;#{i18n['web.client.table.row.Previus']}"
+										action="#{crudAdminRolesBean.previousPage}"
+										disabled="#{not crudAdminRolesBean.paginationHelper.hasPreviousPage or crudAdminRolesBean.entity ne null}">
+										<f:ajax execute="@this" render=":crudForm:listTablePanelGroup"
+											onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+									</h:commandLink>
+                                        &#160;|&#160;<h:outputText
+										value="#{crudAdminRolesBean.paginationHelper.pageFirstItem + 1}..#{crudAdminRolesBean.paginationHelper.pageLastItem + 1} / #{crudAdminRolesBean.paginationHelper.itemsCount}" />&#160;|&#160;
+                                        <h:commandLink
+										value="#{i18n['web.client.table.row.Next']}&#9658;"
+										action="#{crudAdminRolesBean.nextPage}"
+										disabled="#{not crudAdminRolesBean.paginationHelper.hasNextPage or crudAdminRolesBean.entity ne null}">
+										<f:ajax execute="@this" render=":crudForm:listTablePanelGroup"
+											onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+									</h:commandLink>
+								</h:panelGroup>
+								<h:panelGroup
+									rendered="#{crudAdminRolesBean.dataModel.rowCount le 0}">
+									<div style="text-align: center; font-weight: bold;">
+										<h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+									</div>
+								</h:panelGroup>
+							</div>
+						</h:panelGroup>
+					</div>
+					<!-- BUTTONS -->
+					<div class="buttons_bottom">
+						&#160;&#160;
+						<h:commandButton value="#{i18n['web.client.screen.button.New']}"
+							styleClass="btn_std_small"
+							action="#{crudAdminRolesBean.newEntity}"
+							disabled="#{crudAdminRolesBean.entity ne null}">
+							<f:ajax execute="@this" render="@form" onevent="manageAjaxEvents"
+								onerror="manageAjaxErrors" />
+						</h:commandButton>
+						<h:commandButton value="#{i18n['web.client.screen.button.Edit']}"
+							styleClass="btn_std_small"
+							action="#{crudAdminRolesBean.editEntity}"
+							disabled="#{crudAdminRolesBean.entity ne null}">
+							<f:ajax execute=":crudForm:listTablePanelGroup" render="@form"
+								onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+						</h:commandButton>
+						<h:commandButton
+							value="#{i18n['web.client.screen.button.Delete']}"
+							styleClass="btn_std_small"
+							action="#{crudAdminRolesBean.deleteEntities}"
+							disabled="#{crudAdminRolesBean.entity ne null}"
+							onclick="return showStdSonfirmDeleteRegistryCollection(this);">
+							<f:ajax execute=":crudForm:listTablePanelGroup"
+								render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup"
+								onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+						</h:commandButton>
+					</div>
+					<!-- EDITING SECTION -->
+					<h:panelGroup id="editingPanelGroup"
+						rendered="#{crudAdminRolesBean.entity ne null}">
+						<p:focus for="crudForm:descriptionEdit" />
+						<div class="tablebox">
+							<div class="head">#{i18n['web.client.screen.admin.title.DetailsOf']}</div>
+							<div class="body">
+								<table width="100%">
+									<tr>
+										<th>#{i18n['web.client.screen.roles.field.RoleClientCode']}</th>
+										<td><h:inputText id="codRoleClienteEdit"
+												value="#{crudAdminRolesBean.entity.roleClientCod}"
+												maxlength="200" size="40" disabled="true" /></td>
+									</tr>
+									<tr>
+										<th>#{i18n['web.client.screen.roles.field.RoleClientDescription']}</th>
+										<td><h:inputText id="descriptionEdit"
+												value="#{crudAdminRolesBean.entity.description}"
+												maxlength="200" size="40" disabled="false" /></td>
+									</tr>
+									<tr>
+										<th>#{i18n['web.client.screen.admin.field.Enabled']}</th>
+										<td><h:selectBooleanCheckbox id="chkBoxEnabledEdit"
+												value="#{crudAdminRolesBean.entity.enabled}"
+												disabled="false" /></td>
+									</tr>
+									<tr>
+										<th></th>
+										<td><p:tabView>
+												<p:tab
+													title="#{i18n['web.client.screen.roles.title.ClientScreens']}">
+													<h:panelGrid columns="2" cellpadding="10">
+
+														<!-- <h:panelGroup id="screenPanelGroupEdit">-->
+														<table class="listmultiplecheckbox">
+															<tr style="border-bottom: 1px dotted #D2E2F4;">
+																<td id="screenRow" style="vertical-align: top;"><p:selectManyCheckbox
+																		value="#{crudAdminRolesBean.selectedScreenclientList}" converter="screenclientConverter"
+																		layout="pageDirection" styleClass="listmultiplecheckbox" disabled="false">
+																		<f:selectItems value="#{crudAdminRolesBean.screenclientList}" var="sLItem" itemValue="#{sLItem}"
+																			itemLabel="#{i18n[sLItem.codModuleclient.descriptionChr]} - #{i18n[sLItem.descriptionChr]}" />
+																	</p:selectManyCheckbox></td>
+															</tr>
+														</table>
+													</h:panelGrid>
+												</p:tab>
+
+
+												<p:tab
+													title="#{i18n['web.client.screen.roles.title.ServiceFuntionality']}">
+													<h:panelGrid columns="2" cellpadding="10">
+
+														<!--<h:panelGroup id="serviceGroupEdit">-->
+														<table class="listmultiplecheckbox">
+															<tr style="border-bottom: 1px dotted #D2E2F4;">
+																<td id="functionalityServiceRow"
+																	style="vertical-align: top;"><p:selectManyCheckbox
+																		id="chkGrpServiceEdit"
+																		value="#{crudAdminRolesBean.selectedServiceFuntionalityList}"
+																		converter="serviceFunctionalityConverter"
+																		layout="pageDirection"
+																		styleClass="listmultiplecheckbox" disabled="false">
+																		<f:selectItems
+																			value="#{crudAdminRolesBean.serviceFunctionalityList}"
+																			var="sLItem" itemValue="#{sLItem}"
+																			itemLabel="#{sLItem.service.descriptionChr} - #{sLItem.functionality.descriptionChr}" />
+																	</p:selectManyCheckbox></td>
+															</tr>
+														</table>
+														<!--</h:panelGroup>-->
+
+													</h:panelGrid>
+												</p:tab>
+											</p:tabView></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div class="buttons_bottom">
+							<h:commandButton value="#{i18n['web.client.screen.button.Save']}"
+								styleClass="btn_std_small"
+								action="#{crudAdminRolesBean.saveEditing}">
+								<f:ajax execute=":crudForm:editingPanelGroup" render="@all"
+									onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+							</h:commandButton>
+							<h:commandButton
+								value="#{i18n['web.client.screen.button.Delete']}"
+								styleClass="btn_std_small"
+								action="#{crudAdminRolesBean.deleteEntities}"
+								disabled="#{crudAdminRolesBean.entity.roleClientCod eq null}"
+								onclick="return showStdConfirmDeleteRegistryMessage(this);">
+								<f:ajax execute="@this" render="@form"
+									onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+							</h:commandButton>
+							<h:commandButton
+								value="#{i18n['web.client.screen.button.Cancel']}"
+								styleClass="btn_std_small"
+								action="#{crudAdminRolesBean.cancelEditing}">
+								<f:ajax execute="@this" render="@form"
+									onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+								<pe:resetEditableValues for="crudForm:editingPanelGroup" />
+							</h:commandButton>
+						</div>
+					</h:panelGroup>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
+</html>

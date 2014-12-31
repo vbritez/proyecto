@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporderdetail" pageWidth="595" pageHeight="842" columnWidth="539" leftMargin="28" rightMargin="28" topMargin="28" bottomMargin="28" resourceBundle="ReportLocaleBundle">
+	<property name="ireport.zoom" value="1.6500000000000123"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="TITLE" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[Report Title]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Reporte Completo de Pedidos (Servicio Visitas-Pedidos)"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="WHERE" class="java.lang.String">
+		<parameterDescription><![CDATA[SQL Criteria]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PARAMETERS_DESCRIPTION" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[Criteria Description]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LOGO" class="java.lang.Object" isForPrompting="false">
+		<parameterDescription><![CDATA[Logo Path]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CLIENT_LOGO" class="java.lang.Object" isForPrompting="false"/>
+	<parameter name="USER" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[Logguedin user]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ORDER_BY" class="java.lang.String">
+		<parameterDescription><![CDATA[Order Criteria]]></parameterDescription>
+		<defaultValueExpression><![CDATA[" order by sv.servicevalue_cod, vpdet.SERVICEVALUEDETAIL_COD, ped.SERVICEVALUEDETAIL_COD ASC "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SESSION_ID" class="java.lang.String">
+		<parameterDescription><![CDATA[Id de sesion del usuario logueado]]></parameterDescription>
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select sv.SERVICEVALUE_COD as visitapedido_cod,
+    u.CELLPHONE_NUM as nromovil,
+    u.NAME_CHR as nombre_usermobile,
+    sv.RECORDDATE_DAT as fecha,
+    --1ER CORTE
+    vpdet.SERVICEVALUEDETAIL_COD AS visitapedidodet_cod,
+    vpdet.COLUMN2_CHR as cliente_cod,
+
+    --ENTRADA
+    CASE WHEN mc.ENABLED_CHR = '1' THEN md.value_chr ELSE t.DATA_C END CLIENTE,
+    vpdet.RECORDDATE_DAT as fechahora,
+    vpdet.COLUMN4_CHR as comentario,
+    --SALIDA
+    vpdetSAL.COLUMN3_CHR COD_MOTIVOSAL,
+    vpdetSAL.RECORDDATE_DAT AS fechahoraSAL,
+    vpdetSAL.COLUMN4_CHR AS comentarioSAL,
+    vpdetSAL.COLUMN6_CHR AS total_pedido,
+    vpdetSAL.COLUMN7_CHR AS DURACION,
+    CASE WHEN (mcmo.ENABLED_CHR = '1' AND mdMOSAL.value_chr IS NOT NULL) THEN mdMOSAL.value_chr ELSE tMS.DATA_C END MOTIVOSAL,
+    --DETALLE PEDIDO
+    ped.SERVICEVALUEDETAIL_COD as pedido_cod,
+    ped.COLUMN1_CHR as producto_cod,
+    CASE WHEN mc2.ENABLED_CHR = '1' THEN md2.value_chr ELSE t2.DATA_C END PRODUCTO,
+    ped.COLUMN2_CHR as cantidad,
+    ped.COLUMN3_CHR as descuento,
+    ped.COLUMN4_CHR as pu,
+    ped.COLUMN5_CHR as total_producto
+
+from service_value sv INNER JOIN CSTIGO.USERPHONE u ON (sv.COD_USERPHONE = u.USERPHONE_COD)
+                      INNER JOIN CSTIGO.SERVICE_VALUE_DETAIL vpdet ON (vpdet.COD_SERVICEVALUE = sv.SERVICEVALUE_COD)
+                      LEFT JOIN CSTIGO.SERVICE_VALUE auxvis ON (auxvis.COLUMN5_CHR = TO_CHAR (vpdet.SERVICEVALUEDETAIL_COD))
+                      LEFT JOIN CSTIGO.SERVICE_VALUE_DETAIL ped ON (ped.COD_SERVICEVALUE = auxvis.SERVICEVALUE_COD)
+
+     LEFT OUTER JOIN CSTIGO.SERVICE_VALUE_DETAIL vpdetSAL ON (TO_CHAR (vpdet.SERVICEVALUEDETAIL_COD) = vpdetSAL.COLUMN5_CHR)
+     LEFT OUTER JOIN TMP_WSRESULT t ON (TRIM(t.DATA_ID) = TRIM(vpdet.COLUMN2_CHR) AND t.DATA_TYPE = 'C' AND t.SESSION_ID = '$P!{SESSION_ID}')
+     LEFT OUTER JOIN TMP_WSRESULT tMS ON (TRIM(tMS.DATA_ID) = TRIM(vpdetSAL.COLUMN3_CHR) AND tMS.DATA_TYPE = 'M' AND tMS.SESSION_ID = '$P!{SESSION_ID}')
+     LEFT OUTER JOIN TMP_WSRESULT t2 ON (TRIM(t2.DATA_ID) = TRIM(ped.COLUMN1_CHR) AND t2.DATA_TYPE = 'P' AND t2.SESSION_ID = '$P!{SESSION_ID}')
+     --CLIENTE
+     LEFT JOIN META_DATA md ON (md.cod_client = u.COD_CLIENT AND md.cod_meta = 1 AND md.cod_member = 1 AND md.CODE_CHR = vpdet.COLUMN2_CHR)
+     LEFT JOIN META_CLIENT mc ON (mc.cod_client = u.COD_CLIENT AND mc.COD_META = 1)
+     --PRODUCTO
+     LEFT JOIN META_DATA md2 ON (md2.cod_client = u.COD_CLIENT AND md2.cod_meta = 2 AND md2.cod_member = 1 AND md2.CODE_CHR = ped.COLUMN1_CHR)
+     LEFT JOIN META_CLIENT mc2 ON (mc2.cod_client = u.COD_CLIENT AND mc2.COD_META = 2)
+     --MOTIVO
+     LEFT JOIN META_CLIENT mcMO ON (mcMO.cod_client = u.COD_CLIENT AND mcMO.COD_META = 3)
+     LEFT JOIN META_DATA mdMOSAL ON (mdMOSAL.cod_client = u.COD_CLIENT AND mdMOSAL.cod_meta = 3 AND mdMOSAL.cod_member = 1 AND mdMOSAL.CODE_CHR = vpdetSAL.COLUMN3_CHR)
+WHERE 1 = 1 $P!{WHERE}
+$P!{ORDER_BY}]]>
+	</queryString>
+	<field name="VISITAPEDIDO_COD" class="java.math.BigDecimal"/>
+	<field name="NROMOVIL" class="java.math.BigDecimal"/>
+	<field name="NOMBRE_USERMOBILE" class="java.lang.String"/>
+	<field name="FECHA" class="java.sql.Timestamp"/>
+	<field name="VISITAPEDIDODET_COD" class="java.math.BigDecimal"/>
+	<field name="CLIENTE_COD" class="java.lang.String"/>
+	<field name="CLIENTE" class="java.lang.String"/>
+	<field name="FECHAHORA" class="java.sql.Timestamp"/>
+	<field name="COMENTARIO" class="java.lang.String"/>
+	<field name="COD_MOTIVOSAL" class="java.lang.String"/>
+	<field name="FECHAHORASAL" class="java.sql.Timestamp"/>
+	<field name="COMENTARIOSAL" class="java.lang.String"/>
+	<field name="TOTAL_PEDIDO" class="java.lang.String"/>
+	<field name="DURACION" class="java.lang.String"/>
+	<field name="MOTIVOSAL" class="java.lang.String"/>
+	<field name="PEDIDO_COD" class="java.math.BigDecimal"/>
+	<field name="PRODUCTO_COD" class="java.lang.String"/>
+	<field name="PRODUCTO" class="java.lang.String"/>
+	<field name="CANTIDAD" class="java.lang.String"/>
+	<field name="DESCUENTO" class="java.lang.String"/>
+	<field name="PU" class="java.lang.String"/>
+	<field name="TOTAL_PRODUCTO" class="java.lang.String"/>
+	<group name="groupVisitaPedido">
+		<groupExpression><![CDATA[$F{VISITAPEDIDO_COD}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="54" y="0" width="235" height="15" backcolor="#74A0CC"/>
+					<box leftPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{NROMOVIL}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="0" width="54" height="15" backcolor="#74A0CC"/>
+					<box leftPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.field.MobileNumber}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="343" y="0" width="196" height="15" backcolor="#74A0CC"/>
+					<box leftPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMBRE_USERMOBILE}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="289" y="0" width="54" height="15" backcolor="#74A0CC"/>
+					<box leftPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.field.Name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="groupVisitaPedidoDet">
+		<groupExpression><![CDATA[$F{VISITAPEDIDODET_COD}]]></groupExpression>
+		<groupHeader>
+			<band height="90">
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="54" y="30" width="235" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2">
+						<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="7"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{FECHAHORA}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="344" y="60" width="195" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2">
+						<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{COMENTARIOSAL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="344" y="30" width="195" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2">
+						<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="7"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{FECHAHORASAL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="54" y="15" width="46" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2">
+						<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{CLIENTE_COD}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="344" y="15" width="47" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2">
+						<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{COD_MOTIVOSAL}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="344" y="45" width="195" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2">
+						<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[( com.tigo.cs.commons.util.NumberUtil.isNumber($F{TOTAL_PEDIDO}) ? com.tigo.cs.commons.util.NumberUtil.format($F{TOTAL_PEDIDO}) : $F{TOTAL_PEDIDO} )]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="0" width="54" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.field.Event}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="15" width="54" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.field.ClientCode}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="30" width="54" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.field.Hour}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="54" y="60" width="235" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2">
+						<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{COMENTARIO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="60" width="54" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.field.Comment}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="289" y="60" width="55" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.field.Comment}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="289" y="30" width="55" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.field.Hour}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="289" y="15" width="55" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.field.MotiveCode}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="289" y="45" width="55" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.field.TotalVisit}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="54" y="0" width="235" height="15" forecolor="#CCCCCC" backcolor="#578BBF"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.title.Entrance}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="75" width="90" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+					<box leftPadding="2" rightPadding="2">
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.field.ProductCode}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="208" y="75" width="81" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+					<box leftPadding="2" rightPadding="2">
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.field.Quantity}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="289" y="75" width="87" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+					<box leftPadding="2" rightPadding="2">
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.field.Discount}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="463" y="75" width="76" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+					<box leftPadding="2" rightPadding="2">
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.field.TotalProduct}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="376" y="75" width="87" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+					<box leftPadding="2" rightPadding="2">
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.field.UnitPrice}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="45" width="54" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.field.Duration}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="54" y="45" width="235" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2">
+						<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{DURACION}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="289" y="0" width="250" height="15" forecolor="#CCCCCC" backcolor="#578BBF"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.title.Exit}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="100" y="15" width="66" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.field.ClientName}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="166" y="15" width="123" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2">
+						<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{CLIENTE}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="90" y="75" width="118" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+					<box leftPadding="2" rightPadding="2">
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.field.ProductName}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="391" y="15" width="55" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.field.MotiveName}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="446" y="15" width="93" height="15" backcolor="#578BBF"/>
+					<box leftPadding="2">
+						<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{MOTIVOSAL}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="83" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="39" width="539" height="16"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.report.Title}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame" onErrorType="Blank">
+				<reportElement x="0" y="0" width="90" height="68"/>
+				<imageExpression class="java.awt.Image"><![CDATA[$P{LOGO}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="0" y="0" width="539" height="39"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{report.client.commons.CSTigoName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="68" width="100" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isItalic="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{report.client.commons.ReportParameters}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="100" y="68" width="439" height="15">
+					<printWhenExpression><![CDATA[!$P{PARAMETERS_DESCRIPTION}.isEmpty()]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[":"+$P{PARAMETERS_DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame" onErrorType="Blank">
+				<reportElement x="449" y="0" width="90" height="68"/>
+				<imageExpression class="java.awt.Image"><![CDATA[$P{CLIENT_LOGO}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="20" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="239" y="2" width="300" height="16"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitorder.report.Title}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="208" y="0" width="81" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[( com.tigo.cs.commons.util.NumberUtil.isNumber($F{CANTIDAD}) ? com.tigo.cs.commons.util.NumberUtil.format($F{CANTIDAD}) : $F{CANTIDAD} )]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="289" y="0" width="87" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[( com.tigo.cs.commons.util.NumberUtil.isNumber($F{DESCUENTO}) ? com.tigo.cs.commons.util.NumberUtil.format($F{DESCUENTO}) : $F{DESCUENTO} )]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="376" y="0" width="87" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[( com.tigo.cs.commons.util.NumberUtil.isNumber($F{PU}) ? com.tigo.cs.commons.util.NumberUtil.format($F{PU}) : $F{PU} )]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="90" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PRODUCTO_COD}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="463" y="0" width="76" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[( com.tigo.cs.commons.util.NumberUtil.isNumber($F{TOTAL_PRODUCTO}) ? com.tigo.cs.commons.util.NumberUtil.format($F{TOTAL_PRODUCTO}) : $F{TOTAL_PRODUCTO} )]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="90" y="0" width="118" height="15"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PRODUCTO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy HH:mm">
+				<reportElement x="219" y="4" width="100" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="477" y="5" width="18" height="16"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{report.client.commons.PageOf}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="40" y="4" width="168" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{USER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="495" y="5" width="40" height="16"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="4" width="40" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{report.client.commons.PrintedBy}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="456" y="5" width="21" height="16"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="409" y="5" width="45" height="16"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{report.client.commons.Page}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

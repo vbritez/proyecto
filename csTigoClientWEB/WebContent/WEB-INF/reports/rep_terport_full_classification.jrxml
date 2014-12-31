@@ -1,0 +1,625 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_terport_full_classification" pageWidth="795" pageHeight="595" orientation="Landscape" columnWidth="739" leftMargin="28" rightMargin="28" topMargin="28" bottomMargin="28" resourceBundle="ReportLocaleBundle">
+	<property name="ireport.zoom" value="1.2396694214876047"/>
+	<property name="ireport.x" value="169"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="TITLE" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[Report Title]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Reporte Completo de Asistencia (Servicio Asistencia)"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="WHERE" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[SQL Criteria]]></parameterDescription>
+		<defaultValueExpression><![CDATA[" and sv.cod_service = '11' "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PARAMETERS_DESCRIPTION" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[Criteria Description]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LOGO" class="java.lang.Object" isForPrompting="false">
+		<parameterDescription><![CDATA[Logo Path]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USER" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[Logguedin user]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ORDER_BY" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[Order Criteria]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SESSION_ID" class="java.lang.String">
+		<parameterDescription><![CDATA[Session id del usuario logueado]]></parameterDescription>
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\extmii\\Documents\\repositorios\\sources\\csTigoClient\\csTigoClient-war\\web\\WEB-INF\\reports\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CLIENT_LOGO" class="java.lang.Object" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[SELECT Q.DESCRIPTION_CHR,
+Q.CLASSIFICATION_COD,Q.NAME_CHR, Q.CELLPHONE_NUM, Q.COLUMN1_CHR COD_ENCARGADO,
+Q.COLUMN2_CHR COD_OPERADOR,
+Q.COLUMN3_CHR COD_MAQUINA,
+Q.FECHAHORA_DETALLE,
+Q.CONTENEDOR,
+Q.NVA_UBICACION,
+Q.NUM_CHAPA,
+Q.ENCARGADO,
+Q.OPERADOR,
+Q.MAQUINA
+FROM (
+SELECT cl.DESCRIPTION_CHR,
+cl.CLASSIFICATION_COD,U.NAME_CHR, U.CELLPHONE_NUM, SV.COLUMN1_CHR, SV.COLUMN2_CHR,SV.COLUMN3_CHR,
+SVD.RECORDDATE_DAT FECHAHORA_DETALLE,
+SVD.COLUMN1_CHR CONTENEDOR,SVD.COLUMN2_CHR NVA_UBICACION,SVD.COLUMN3_CHR NUM_CHAPA,
+CASE WHEN (mcE.ENABLED_CHR = '1') THEN mdE.VALUE_CHR ELSE '' END ENCARGADO,
+CASE WHEN (mcO.ENABLED_CHR = '1') THEN mdO.VALUE_CHR ELSE '' END OPERADOR,
+CASE WHEN (mcM.ENABLED_CHR = '1') THEN mdM.VALUE_CHR ELSE '' END MAQUINA
+
+FROM SERVICE_VALUE SV
+                INNER JOIN SERVICE_VALUE_DETAIL SVD ON (SV.SERVICEVALUE_COD = SVD.COD_SERVICEVALUE)
+                INNER JOIN USERPHONE U ON (U.USERPHONE_COD = SV.COD_USERPHONE)
+	INNER join USERPHONE_CLASSIFICATION uc on (u.USERPHONE_COD = uc.COD_USERPHONE)
+         	INNER join CLASSIFICATION cl on (uc.COD_CLASSIFICATION = cl.CLASSIFICATION_COD)
+--META ENCARGADO
+    LEFT JOIN META_DATA mdE ON (mdE.cod_client = u.COD_CLIENT
+                            AND mdE.cod_meta = 18
+                            AND mdE.cod_member = 1
+                            AND mdE.CODE_CHR = sv.COLUMN1_CHR)
+    LEFT JOIN META_CLIENT mcE ON (mcE.cod_client = u.COD_CLIENT
+                            AND mcE.COD_META = 18)
+
+                            --META MAQUINA
+    LEFT JOIN META_DATA mdM ON (mdM.cod_client = u.COD_CLIENT
+                            AND mdM.cod_meta = 19
+                            AND mdM.cod_member = 1
+                            AND mdM.CODE_CHR = sv.COLUMN3_CHR)
+    LEFT JOIN META_CLIENT mcM ON (mcM.cod_client = u.COD_CLIENT
+                            AND mcM.COD_META = 19)
+
+                            --META OPERADOR
+    LEFT JOIN META_DATA mdO ON (mdO.cod_client = u.COD_CLIENT
+                            AND mdO.cod_meta = 20
+                            AND mdO.cod_member = 1
+                            AND mdO.CODE_CHR = sv.COLUMN2_CHR)
+    LEFT JOIN META_CLIENT mcO ON (mcO.cod_client = u.COD_CLIENT
+                            AND mcO.COD_META = 20)
+
+ LEFT JOIN META_DATA mdEE ON (mdEE.cod_client = u.COD_CLIENT
+                            AND mdEE.cod_meta = 18
+                            AND mdEE.cod_member = 4
+                            AND mdEE.CODE_CHR = sv.COLUMN1_CHR)
+
+
+                            LEFT JOIN META_DATA mdME ON (mdME.cod_client = u.COD_CLIENT
+                            AND mdME.cod_meta = 19
+                            AND mdME.cod_member = 2
+                            AND mdME.CODE_CHR = sv.COLUMN3_CHR)
+
+                            LEFT JOIN META_DATA mdOE ON (mdOE.cod_client = u.COD_CLIENT
+                            AND mdOE.cod_meta = 20
+                            AND mdOE.cod_member = 2
+                            AND mdO.CODE_CHR = sv.COLUMN2_CHR)
+
+WHERE 1 = 1
+AND SV.COD_SERVICE = 24  AND lower(mdOE.value_chr) = 'si' AND lower(mdME.value_chr) = 'si' AND lower(mdEE.value_chr) = 'si'
+$P!{WHERE}
+) Q
+GROUP BY Q.CLASSIFICATION_COD,Q.DESCRIPTION_CHR,Q.COLUMN1_CHR,
+Q.COLUMN2_CHR,
+Q.COLUMN3_CHR,
+Q.NAME_CHR,
+Q.CELLPHONE_NUM,
+Q.ENCARGADO,
+Q.OPERADOR,
+Q.MAQUINA,
+Q.CONTENEDOR,
+Q.NVA_UBICACION,
+Q.NUM_CHAPA,
+Q.FECHAHORA_DETALLE
+$P!{ORDER_BY}]]>
+	</queryString>
+	<field name="DESCRIPTION_CHR" class="java.lang.String"/>
+	<field name="CLASSIFICATION_COD" class="java.math.BigDecimal"/>
+	<field name="NAME_CHR" class="java.lang.String"/>
+	<field name="CELLPHONE_NUM" class="java.math.BigDecimal"/>
+	<field name="COD_ENCARGADO" class="java.lang.String"/>
+	<field name="COD_OPERADOR" class="java.lang.String"/>
+	<field name="COD_MAQUINA" class="java.lang.String"/>
+	<field name="FECHAHORA_DETALLE" class="java.sql.Timestamp"/>
+	<field name="CONTENEDOR" class="java.lang.String"/>
+	<field name="NVA_UBICACION" class="java.lang.String"/>
+	<field name="NUM_CHAPA" class="java.lang.String"/>
+	<field name="ENCARGADO" class="java.lang.String"/>
+	<field name="OPERADOR" class="java.lang.String"/>
+	<field name="MAQUINA" class="java.lang.String"/>
+	<group name="CLASSIFICATION_GROUP">
+		<groupExpression><![CDATA[$F{CLASSIFICATION_COD}]]></groupExpression>
+		<groupHeader>
+			<band height="30">
+				<textField>
+					<reportElement mode="Opaque" x="118" y="15" width="60" height="15" forecolor="#000000" backcolor="#74A0CC"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{web.client.report.terport.userphone}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="178" y="15" width="60" height="15" forecolor="#000000" backcolor="#74A0CC"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{web.client.report.terport.cellphone}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="238" y="15" width="50" height="15" forecolor="#000000" backcolor="#74A0CC"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{web.client.report.terport.attendant.cod}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="288" y="15" width="60" height="15" forecolor="#000000" backcolor="#74A0CC"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{web.client.report.terport.attendant}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="348" y="15" width="50" height="15" forecolor="#000000" backcolor="#74A0CC"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{web.client.report.terport.operator.cod}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="398" y="15" width="60" height="15" forecolor="#000000" backcolor="#74A0CC"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{web.client.report.terport.operator}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="458" y="15" width="50" height="15" forecolor="#000000" backcolor="#74A0CC"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{web.client.report.terport.machine.cod}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="508" y="15" width="60" height="15" forecolor="#000000" backcolor="#74A0CC"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{web.client.report.terport.machine}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="568" y="15" width="60" height="15" forecolor="#000000" backcolor="#74A0CC"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{web.client.report.terport.container}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="628" y="15" width="61" height="15" forecolor="#000000" backcolor="#74A0CC"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{web.client.report.terport.newubication}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="15" width="59" height="15" forecolor="#000000" backcolor="#74A0CC"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{web.client.report.terport.date}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="59" y="15" width="59" height="15" forecolor="#000000" backcolor="#74A0CC"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{web.client.report.terport.hour}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="59" y="0" width="680" height="15" forecolor="#000000" backcolor="#74A0CC"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{DESCRIPTION_CHR}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="0" width="59" height="15" forecolor="#000000" backcolor="#74A0CC"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{clasification.label}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="689" y="15" width="50" height="15" forecolor="#000000" backcolor="#74A0CC"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{web.client.report.terport.numchapa}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="86" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="52" width="786" height="16"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{web.client.report.TerportReport}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame" onErrorType="Blank">
+				<reportElement x="0" y="0" width="90" height="68"/>
+				<imageExpression class="java.awt.Image"><![CDATA[$P{LOGO}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="0" y="15" width="739" height="37"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{report.client.commons.CSTigoName}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="100" y="68" width="439" height="15">
+					<printWhenExpression><![CDATA[!$P{PARAMETERS_DESCRIPTION}.isEmpty()]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[":"+$P{PARAMETERS_DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="68" width="100" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isItalic="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{report.client.commons.ReportParameters}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame" onErrorType="Blank">
+				<reportElement x="649" y="0" width="90" height="68"/>
+				<imageExpression class="java.awt.Image"><![CDATA[$P{CLIENT_LOGO}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="15" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:MM" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="118" y="0" width="60" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NAME_CHR}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="59" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{FECHAHORA_DETALLE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="178" y="0" width="60" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{CELLPHONE_NUM}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:MM" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="238" y="0" width="50" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COD_ENCARGADO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:MM" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="288" y="0" width="60" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ENCARGADO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:MM" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="348" y="0" width="50" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COD_OPERADOR}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:MM" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="398" y="0" width="60" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{OPERADOR}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:MM" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="458" y="0" width="50" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COD_MAQUINA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:MM" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="508" y="0" width="60" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{MAQUINA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:MM" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="568" y="0" width="60" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CONTENEDOR}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy HH:MM" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="628" y="0" width="61" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NVA_UBICACION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="HH:mm" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="59" y="0" width="59" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{FECHAHORA_DETALLE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="689" y="0" width="50" height="15" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NUM_CHAPA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy HH:mm">
+				<reportElement x="367" y="4" width="100" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="4" width="40" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{report.client.commons.PrintedBy}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="679" y="4" width="40" height="16"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="640" y="4" width="21" height="16"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="593" y="4" width="45" height="16"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{report.client.commons.Page}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="661" y="4" width="18" height="16"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{report.client.commons.PageOf}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="41" y="3" width="168" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{USER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

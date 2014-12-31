@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="csTigoClient">
+        <wb-resource deploy-path="/" source-path="/EarContent" tag="defaultRootSource"/>
+        <dependent-module archiveName="csTigoClientWEB.war" deploy-path="/" handle="module:/resource/csTigoClientWEB/csTigoClientWEB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="csTigoJPA.jar" deploy-path="/lib" handle="module:/resource/csTigoJPA/csTigoJPA">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="csTigoEJB.jar" deploy-path="/" handle="module:/resource/csTigoEJB/csTigoEJB">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="csTigoBean.jar" deploy-path="/lib" handle="module:/resource/csTigoBean/csTigoBean">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="csTigoAPI.jar" deploy-path="/lib" handle="module:/resource/csTigoAPI/csTigoAPI">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="csTigoCommons.jar" deploy-path="/lib" handle="module:/resource/csTigoCommons/csTigoCommons">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    </wb-module>
+</project-modules>

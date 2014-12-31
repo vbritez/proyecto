@@ -1,0 +1,16 @@
+package com.tigo.cs.android.util;
+
+public enum CSTigoServiceEvent {
+
+    SERVICE_ENABLING,
+    SERVICE_DELETABLE,
+    SERVICE_DELETABLE_RETRIEVE,
+    SERVICE_DELETE,
+    METADATA_READ,
+    METADATA_CREATE,
+    DEVICE_ENABLING,
+    LOCATE,
+    SERVICE_QUERY,
+    GENERAL_ERROR
+
+}

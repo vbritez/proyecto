@@ -1,0 +1,12 @@
+ssh 546b44c1e0b8cdab0d000036@test-bmapy.rhcloud.com
+
+cartidges son los componentes de una aplicacion OpenSHIFT que contiene el codigo de la aplicacion para proveer la funcionalidad requerida para ejecutar la aplicacion.
+
+
+rhc setup
+rhc logout
+rhc domain create <domain>
+rhc app create <App_Name> <Cart_Name> Ej rhc create racer php-5.4
+rhc deployments <app name>
+rhc activate-deployment -a <app name> <deployment id>
+rhc authorization add --scopes session --note My_Token

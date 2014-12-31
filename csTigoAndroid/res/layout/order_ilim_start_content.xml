@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/orderClientCodeView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/visit_start_clientCode"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/orderClientCodeEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/orderClientCodeView"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:ems="10"
+        android:inputType="text" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/orderPriceList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/orderClientCodeEdit"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/order_priceList"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/orderPriceListEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/orderPriceList"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:ems="10"
+        android:inputType="text" >
+    </EditText>
+
+     <TextView
+        android:id="@+id/orderSaleConditionView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/orderPriceListEdit"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/order_saleCondition"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/orderSaleConditionEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/orderSaleConditionView"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:ems="10"
+        android:inputType="text" />
+    
+    <TextView
+        android:id="@+id/orderObservationView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/orderSaleConditionEdit"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/order_observation"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/orderObservationCodeEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/orderObservationView"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:ems="10"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/orderRegisterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/orderObservationCodeEdit"
+        android:background="@drawable/button_selector"
+        android:text="@string/order_register" />
+
+</RelativeLayout>

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<ui:composition
+	template="/resources/templates/screenDefaultClient.xhtml">
+	<!-- TITLE -->
+	<ui:define name="title">#{i18n['web.client.report.GuardReport']}</ui:define>
+	<!-- STATUS LOCATION -->
+	<ui:define name="status">
+		<h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="repguardfull"
+			value="#{i18n['web.client.report.GuardReport']}" />
+	</ui:define>
+	<!-- PRINCIPAL CONTAINER -->
+	<ui:define name="container">
+		<div id="page_col">
+			<div id="cent_full">
+				<h:form id="repGuardFullForm">
+					<p:focus for="repGuardFullForm:textDateFrom" />
+					<div class="tablebox">
+						<div class="head">#{i18n['web.client.reportguard.screen.title.reportParameters']}</div>
+						<!-- PARAMETERS BOX -->
+						<div class="body">
+							<table class="tablesearch">
+								<tr>
+									<th>#{i18n['web.client.search.field.FromDate']}</th>
+									<td><p:calendar id="textDateFrom" locale="#{iBean.locale}"
+											value="#{reportGuardFullBean.dateFrom}"
+											timeZone="#{applicationBean.defaultTimeZoneID}"
+											pattern="#{applicationBean.defaultInputDateFormat}" /></td>
+								</tr>
+								<tr>
+									<th>#{i18n['web.client.search.field.ToDate']}</th>
+									<td><p:calendar id="textDateTo" locale="#{iBean.locale}"
+											value="#{reportGuardFullBean.dateTo}"
+											timeZone="#{applicationBean.defaultTimeZoneID}"
+											pattern="#{applicationBean.defaultInputDateFormat}" /></td>
+								</tr>
+								<tr>
+									<th>#{i18n['web.client.screen.admin.webUsers.field.Classification']}</th>
+
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkClassificationList"
+															value="#{reportGuardFullBean.validatedAllClassification}"
+															disabled="#{reportGuardFullBean.selectedUserphoneList.size() gt 0 or reportGuardFullBean.validatedAllUsers}">
+															<f:ajax event="change"
+																listener="#{reportGuardFullBean.selectAll}"
+																execute=":repGuardFullForm:chkClassificationList"
+																render=":repGuardFullForm:listClasification :repGuardFullForm:chkUserphoneList :repGuardFullForm:listUserphone"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkClassificationist"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listClasification"
+														value="#{reportGuardFullBean.selectedClassificationList}"
+														converter="classificationConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportGuardFullBean.validatedAllClassification or reportGuardFullBean.validatedAllUsers 
+														or reportGuardFullBean.selectedUserphoneList.size() gt 0}">
+														<f:selectItems
+															value="#{reportGuardFullBean.classificationList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.descriptionChr}" />
+														<f:ajax
+															execute=":repGuardFullForm:listClasification"
+															render=":repGuardFullForm:chkUserphoneList :repGuardFullForm:listUserphone"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+								<tr>
+									<th>#{i18n['web.client.search.field.User']}</th>
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkUserphoneList"
+															value="#{reportGuardFullBean.validatedAllUsers}"
+															disabled="#{reportGuardFullBean.selectedClassificationList.size() gt 0 or reportGuardFullBean.validatedAllClassification}">
+															<f:ajax event="change"
+																listener="#{reportGuardFullBean.selectAll}"
+																execute=":repGuardFullForm:chkUserphoneList"
+																render=":repGuardFullForm:listUserphone :repGuardFullForm:listClasification :repGuardFullForm:chkClassificationList"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkUserphoneList"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listUserphone"
+														value="#{reportGuardFullBean.selectedUserphoneList}"
+														converter="userphoneConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportGuardFullBean.validatedAllUsers or reportGuardFullBean.validatedAllClassification 
+														or reportGuardFullBean.selectedClassificationList.size() gt 0}">
+
+														<f:selectItems
+															value="#{reportGuardFullBean.userphoneList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.nameChr}" />
+
+														<f:ajax
+															
+															execute=":repGuardFullForm:listUserphone"
+															render=":repGuardFullForm:chkClassificationList :repGuardFullForm:listClasification"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<th>#{i18n['web.client.table.tip.OrderBy']}</th>
+									<td><h:selectOneMenu id="listOrderby"
+											value="#{reportGuardFullBean.selectedOrderby}">
+											<f:selectItems value="#{reportGuardFullBean.orderByList}" />
+										</h:selectOneMenu></td>
+								</tr>
+
+								<tr>
+									<th>#{i18n['web.client.label.ChartReportOption']}</th>
+									<td><h:selectOneRadio id="graphicReportOption"
+											value="#{reportGuardFullBean.chartReportOption}"
+											layout="pageDirection" style="width: auto; border: none;">
+											<f:selectItem itemValue="marking"
+												itemLabel="#{i18n['guard.chart.option.UserphoneSuccessfullyMarking']}" />
+											<f:selectItem itemValue="nomarking"
+												itemLabel="#{i18n['guard.chart.option.UserphoneNoMarking']}" />
+										</h:selectOneRadio></td>
+								</tr>
+								<tr>
+									<th>#{i18n['web.client.label.ChartType']}</th>
+									<td><h:selectOneRadio id="graphicReportType"
+											value="#{reportGuardFullBean.chartType}"
+											layout="pageDirection" style="width: auto; border: none;">
+											<f:selectItem itemValue="bar"
+												itemLabel="#{i18n['web.client.option.BarChart']}" />
+											<f:selectItem itemValue="pie"
+												itemLabel="#{i18n['web.client.option.PieChart']}" />
+										</h:selectOneRadio></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div class="buttons_bottom">
+						<h:commandButton id="btnGenerateChart"
+							value="#{i18n['web.client.report.title.ChartReport']}"
+							action="#{reportGuardFullBean.validateParametersChart}"
+							styleClass="btn_std_large">
+							<f:setPropertyActionListener value="chart"
+								target="#{reportGuardFullBean.reportType}" />
+							<f:ajax execute="@form" render="@form" onevent="manageAjaxEvents"
+								onerror="manageAjaxErrors" />
+						</h:commandButton>
+						<h:commandButton id="btnGeneratePDF"
+							value="#{i18n['web.client.report.title.PDFReport']}"
+							action="#{reportGuardFullBean.validateParameters}"
+							styleClass="btn_std_large">
+							<f:setPropertyActionListener value="pdf"
+								target="#{reportGuardFullBean.reportType}" />
+							<f:ajax execute="@form" render="@form" onevent="manageAjaxEvents"
+								onerror="manageAjaxErrors" />
+						</h:commandButton>
+						<h:commandButton id="btnGenerateXLS"
+							value="#{i18n['web.client.report.title.XLSReport']}"
+							action="#{reportGuardFullBean.validateParameters}"
+							styleClass="btn_std_large">
+							<f:setPropertyActionListener value="xls"
+								target="#{reportGuardFullBean.reportType}" />
+							<f:ajax execute="@form" render="@form" onevent="manageAjaxEvents"
+								onerror="manageAjaxErrors" />
+						</h:commandButton>
+						<h:commandButton id="btnGenerate"
+							action="#{reportGuardFullBean.generateReport}"
+							style="display: none;"
+							rendered="#{reportGuardFullBean.parametersValidated}" />
+						<h:commandButton id="btnGenerateChartReport"
+							action="#{reportGuardFullBean.generateReportChart}"
+							style="display: none;"
+							rendered="#{reportGuardFullBean.parametersValidatedChart}" />
+					</div>
+					<!-- SCRIPTS -->
+					<h:panelGroup rendered="#{reportGuardFullBean.parametersValidated}">
+						<script type="text/javascript" charset="UTF-8">
+							//         
+							function autoGenerateReport() {
+								document.getElementById('repGuardFullForm').target = '_blank';
+								document.getElementById(
+										'repGuardFullForm:btnGenerate').click();
+								document.getElementById('repGuardFullForm').target = '';
+							}
+
+							$(document).ready(function() {
+								setTimeout("autoGenerateReport()", 500);
+							});
+							//
+						</script>
+					</h:panelGroup>
+					<h:panelGroup
+						rendered="#{reportGuardFullBean.parametersValidatedChart}">
+						<script type="text/javascript" charset="UTF-8">
+							//         
+							function autoGenerateReportChart() {
+								document.getElementById('repGuardFullForm').target = '_blank';
+								document
+										.getElementById(
+												'repGuardFullForm:btnGenerateChartReport')
+										.click();
+								document.getElementById('repGuardFullForm').target = '';
+							}
+							$(document).ready(function() {
+								setTimeout("autoGenerateReportChart()", 500);
+							});
+
+							//
+						</script>
+					</h:panelGroup>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
+</html>

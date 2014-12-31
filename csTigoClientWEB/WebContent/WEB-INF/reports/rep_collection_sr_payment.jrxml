@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_collection_sr_payment" pageWidth="419" pageHeight="99" whenNoDataType="AllSectionsNoDetail" columnWidth="419" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true">
+	<property name="ireport.zoom" value="1.7715610000000013"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="COD_SERVICEVALUE" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[60L]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SESSION_ID" class="java.lang.String">
+		<parameterDescription><![CDATA[Session id del usuario logueado]]></parameterDescription>
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT SVD.SERVICEVALUEDETAIL_COD,
+        SVD.COLUMN1_CHR TIPO,
+        CASE WHEN svd.COLUMN2_CHR = '1' THEN 'report.asset.Cash' ELSE 'report.asset.Check' END TIPO_COBRANZA,
+        SVD.COLUMN3_CHR MONTO,
+        SVD.COLUMN4_CHR COD_BANCO,
+        CASE WHEN mcB.ENABLED_CHR = '1' THEN mdB.value_chr ELSE tB.DATA_C END BANCO,
+        SVD.COLUMN5_CHR NRO_CHEQUE,
+        SVD.COLUMN6_CHR FECHA_CHEQUE,
+        SVD.COLUMN7_CHR CHEQUE_VENC,
+        SVD.COLUMN8_CHR OBS
+FROM SERVICE_VALUE_DETAIL SVD INNER JOIN CSTIGO.SERVICE_VALUE SV ON (svd.COD_SERVICEVALUE = SV.SERVICEVALUE_COD)
+INNER JOIN USERPHONE U ON (SV.COD_USERPHONE = U.USERPHONE_COD)
+--META BANKS
+LEFT JOIN TMP_WSRESULT tB ON (TRIM(tB.DATA_ID) = TRIM(SVD.COLUMN4_CHR) AND tB.DATA_TYPE = 'B' AND tB.SESSION_ID = '$P!{SESSION_ID}')
+LEFT JOIN META_DATA mdB ON (mdB.cod_client = U.COD_CLIENT AND mdB.cod_meta = 9 AND mdB.cod_member = 1 AND mdB.CODE_CHR = svd.COLUMN4_CHR)
+LEFT JOIN META_CLIENT mcB ON (mcB.cod_client = U.COD_CLIENT AND mcB.COD_META = 9)
+
+WHERE SVD.COLUMN1_CHR = 'PAYMENT' AND SVD.COD_SERVICEVALUE = $P{COD_SERVICEVALUE}]]>
+	</queryString>
+	<field name="SERVICEVALUEDETAIL_COD" class="java.math.BigDecimal"/>
+	<field name="TIPO" class="java.lang.String"/>
+	<field name="TIPO_COBRANZA" class="java.lang.String"/>
+	<field name="MONTO" class="java.lang.String"/>
+	<field name="COD_BANCO" class="java.lang.String"/>
+	<field name="BANCO" class="java.lang.String"/>
+	<field name="NRO_CHEQUE" class="java.lang.String"/>
+	<field name="FECHA_CHEQUE" class="java.lang.String"/>
+	<field name="CHEQUE_VENC" class="java.lang.String"/>
+	<field name="OBS" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="15">
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="420" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{collection.subReport.paymentDetails.Title}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="40" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{collection.field.Type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="40" y="0" width="57" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{collection.field.Amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="97" y="0" width="43" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{collections.field.BankCode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="195" y="0" width="45" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{collections.field.CheckNumber}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="240" y="0" width="45" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{collection.field.Date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="285" y="0" width="45" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{collection.field.Expires}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="330" y="0" width="90" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{collections.field.Observation}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="140" y="0" width="55" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{collections.field.BankName}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="40" height="15" backcolor="#D6E5F6"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{REPORT_RESOURCE_BUNDLE}.getString( $F{TIPO_COBRANZA} )]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="40" y="0" width="57" height="15" backcolor="#D6E5F6"/>
+				<box rightPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[( com.tigo.cs.commons.util.NumberUtil.isNumber($F{MONTO}) ? com.tigo.cs.commons.util.NumberUtil.format($F{MONTO}) : $F{MONTO} )]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="97" y="0" width="43" height="15" backcolor="#D6E5F6"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COD_BANCO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="195" y="0" width="45" height="15" backcolor="#D6E5F6"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NRO_CHEQUE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="240" y="0" width="45" height="15" backcolor="#D6E5F6"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FECHA_CHEQUE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="285" y="0" width="45" height="15" backcolor="#D6E5F6"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CHEQUE_VENC}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="330" y="0" width="90" height="15" backcolor="#D6E5F6"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{OBS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="140" y="0" width="55" height="15" backcolor="#D6E5F6"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{BANCO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

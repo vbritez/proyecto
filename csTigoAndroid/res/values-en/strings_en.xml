@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Corporate Solutions</string>
+    <string name="soluciones_corporativas">Corporate Solutions</string>
+    <string name="sending_message">Sending message...</string>
+    <string name="message_sent">Message sent.</string>
+    <string name="lothar_copyrigth">Copyright (©) Lothar Systems Inc. All rights reserved.</string>
+    <string name="guard_mark">Mark</string>
+    <string name="guard_metadataquery">Inquiries guards</string>
+    <string name="guard_historic">MESSAGE HISTORY</string>
+    <string name="guard_mark_guardCode">Code of guard</string>
+    <string name="guard_mark_observation">Observation</string>
+    <string name="guard_mark_sendMark">Mark</string>
+    <string name="guard_mark_unknow">Unknown</string>
+    <string name="not_support_gps">The location via GPS not available</string>
+    <string name="not_support_network">The location via the network is not available</string>
+    <string name="database_insert_error">A problem occurred during the insertion of a record in the database.</string>
+    <string name="database_update_error">A problem occurred during the update of a record in the database.</string>
+    <string name="database_delete_error">There was a problem during the removal of a record in the database.</string>
+    <string name="database_decypt_error">A problem occurred during file decryption SQL.</string>
+    <string name="database_insert_success">Successful insertion.</string>
+    <string name="database_update_success">Update Success.</string>
+    <string name="database_delete_success">Elimination successful.</string>
+    <string name="cstigo_database">CSTIGO Database</string>
+    <string name="location_gps">Location through GPS device</string>
+    <string name="location_network">Location of the device through the Network</string>
+    <string name="location_cellid">Location of the device through the CELL-ID</string>
+    <string name="database_gps_success">Successful location via GPS.</string>
+    <string name="database_read_asset">There was a problem reading the sql file.</string>
+    <string name="database_statement_exec">There was a problem executing a sql.</string>
+    <string name="database_error_more_than_one">Was recovered more than a record of just one tabla.Se expected.</string>
+    <string name="database_exec_sql">Running SQL statement.</string>
+    <string name="guard_mark_code_not_empty">The "Guard Code" requires a value.</string>
+    <string name="no_location_title">GPS Off.</string>
+    <string name="no_location">The device could not be located.</string>
+    <string name="no_location_notif">Enable please.</string>
+    <string name="no_location_disabled_on_listening">They turn off while recovering the location.</string>
+    <string name="shiftguard_name">GUARD ROUNDS</string>
+    <string name="shiftguard">Guard</string>
+    <string name="message_history_no_message">There are no messages in the historic messages.</string>
+    <string name="platform_new_message">New message from the platform.</string>
+    <string name="visit_start">Start</string>
+    <string name="visit_end">End</string>
+    <string name="visit_quick_visit">Quick Visit</string>
+    <string name="visit_start_clientCode">Client Code</string>
+    <string name="visit_start_observation">Observation</string>
+    <string name="visit_start_startVisit">Start Visit</string>
+    <string name="visit_start_code_not_empty">The "Client Code" requires a value.</string>
+    <string name="visit_end_motive">Motive</string>
+    <string name="visit_end_observation">Observation</string>
+    <string name="visit_end_endVisit">Finish Visit</string>
+    <string name="visit_end_motive_not_empty">The "Motive" requires a value.</string>
+    <string name="visit_quick_clientCode">Client code</string>
+    <string name="visit_quick_motive">Motive</string>
+    <string name="visit_quick_observation">Observation</string>
+    <string name="visit_quick_endVisit">Mark</string>
+    <string name="visit_quick_code_not_empty">The "Client Code" requires a value.</string>
+    <string name="visit_quick_motive_not_empty">The "Motive" requires a value.</string>
+    <string name="platform_update">Updating the device</string>
+    <string name="updates">Updates</string>
+    <string name="platform_update_services">Update Services</string>
+    <string name="services">SERVICES</string>
+    <string name="messages">Messages</string>
+    <string name="options">Options</string>
+    <string name="user_data">User Data</string>
+    <string name="updated_application">Updating the device</string>
+    <string name="updated_application_desc">The services for the device have been updated</string>
+    <string name="platform_general_options">General Options</string>
+    <string name="platform_general_options_service_disabled">Display disabled services</string>
+    <string name="platform_vibrate">Enable vibration</string>
+    <string name="platform_sms_show_all">Show full message</string>
+    <string name="sms_no_messages">No recorded messages on the device platform</string>
+    <string name="no_enabled_device">The device is not authorized to perform this operation.</string>
+    <string name="platform_enable_device">Enable Device</string>
+    <string name="order_observation">Observation</string>
+    <string name="order_priceList">Price list</string>
+    <string name="order_saleCondition">Sales condition</string>
+    <string name="order_register">Register</string>
+    <string name="processing_detail">Your message is being processed by the platform</string>
+    <string name="order_product">Product</string>
+    <string name="order_product_code">Product Code</string>
+    <string name="order_quantity">Quantity</string>
+    <string name="order_discount">Discount</string>
+    <string name="order_unit_price">Unit Price</string>
+    <string name="order_client_code_not_empty">The "Client Code" requires a value.</string>
+    <string name="order_price_list_not_empty">The "Price list" requires a value.</string>
+    <string name="order_sale_condition_not_empty">The "Sales condition" requires a value.</string>
+    <string name="order_product_code_not_empty">The "Product Code" requires a value.</string>
+    <string name="order_quantity_not_empty">The "Quantity" requires a value.</string>
+    <string name="order_details_not_empty">The order must contain at least one detail.</string>
+    <string name="imagen">Image</string>
+    <string name="medical_visit_clinic_start">initiation Visit Local</string>
+    <string name="medical_visit_medic_start">Initiation Medical Visit</string>
+    <string name="medical_visit_product_register">Product Registration</string>
+    <string name="medical_visit_medic_end">Finish Medic Visit</string>
+    <string name="medical_visit_clinic_end">Finish Visit Local</string>
+    <string name="medic_visit_medic_end_clinic">Finish Visit</string>
+    <string name="medic_visit_notification_option">Notification Options</string>
+    <string name="medical_visit_quick_visit">Quick Visit Local</string>
+    <string name="medic_visit_name">medical Visitors </string>
+    <string name="medic_visit_clinic_start_initial_km">Mileage Present</string>
+    <string name="medic_visit_clinic_start_final_km">Mileage Finish</string>
+    <string name="medic_visit_clinic_end_clinic">Finish Visit</string>
+    <string name="medic_visit_medic_cod">Medical Cod</string>
+    <string name="medic_visit_clinic_start_visit">start Visit</string>
+    <string name="medic_visit_medic_start_visit">start Visit</string>
+    <string name="medic_visit_notification_date">Event Date</string>
+    <string name="medic_visit_notification_msg">Event message</string>
+    <string name="medic_visit_motive_cod">Motive Cod</string>
+    <string name="medic_visit">Medical Visitors</string>
+    <string name="no_notification">Not reported</string>
+    <string name="one_day_before">One day before</string>
+    <string name="three_hour_before">Three hours before</string>
+    <string name="one_hour_before">ONE hour before</string>
+    <string name="medic_clinic_code">Local Cod</string>
+    <string name="medic_clinic_code_not_empty">The "Local Code" requires a value.</string>
+    <string name="medic_clinic_motive_not_empty">The "Motive Cod" requires a value.</string>
+    <string name="medic_clinic_medic_not_empty">The "Medic Cod" requires a value.</string>
+    <string name="medic_notif_date_restiction">The event date can not be earlier than the current date.</string>
+    <string name="medic_visit_notification_msg_restriction">The "Event Message" requires a value.</string>
+    <string name="courier_delivered">Delivered</string>
+    <string name="courier_not_delivered">not Delivered</string>
+    <string name="courier">Courrier</string>
+    <string name="courier_recipient_name">Receiver Name</string>
+    <string name="courier_observation">Observation</string>
+    <string name="courier_cod_motive">Motive Code</string>
+    <string name="courier_register">Register</string>
+    <string name="courier_delivered_item">Items</string>
+    <string name="courier_item_code">Item Code</string>
+    <string name="courier_receipt_name_not_empty">The "Receiver Name" requires a value.</string>
+    <string name="courier_motive_code_not_empty">The "Motive Code" requires a value.</string>
+    <string name="courier_item_not_empty">The service log must contain at least one detail.</string>
+    <string name="service_order_simple">Order</string>
+    <string name="service_order_ilimit">Order Unlimited</string>
+    <string name="order_end">Finalize</string>
+    <string name="order_start">Start</string>
+    <string name="disabled_device">disabled Device</string>
+    <string name="disabled_device_desc">This device is disabled. Select the option actualziar in the settings screen.</string>
+    <string name="internet_option">Internet options</string>
+    <string name="service_option">Service Options</string>
+    <string name="order_alfanumeric">Price and Quantity Alphanumeric</string>
+    <string name="internet_enabled">Enable Internet</string>
+    <string name="internet_apn_change">Enabled change APN</string>
+    <string name="apn_name">APN</string>
+    <string name="save_internet">Save Changes</string>
+    <string name="warning">Attention</string>
+    <string name="apn_change_notification">Did not change APN</string>
+    
+    <!-- Inventory Service -->
+    <string name="inventory_deposit_code">Deposit Code</string>
+    <string name="inventory_product_code">Product Code</string>
+    <string name="inventory_quantity">Quantity</string>
+    <string name="inventory_register">Register</string>
+    <string name="inventory_deposit_code_not_empty">"Deposit Code" requires a value.</string>
+    <string name="inventory_product_code_not_empty">"Product Code" requires a value.</string>
+    <string name="inventory_quantity_not_empty">"Quantity" requires a value.</string>    
+    <!-- END Inventory Service -->
+    
+    <!-- Attendance Service -->
+    <string name="continue_attendance">Continue</string>
+    <string name="attendance_employee_code">Employee Code</string>
+    <string name="attendance_observation">Observation</string>
+    <string name="attendance_presence">Presence</string>
+    <string name="attendance_break">Break</string>
+    <string name="attendance_lunch">Lunch</string>
+    <string name="attendance_init">Start</string>
+    <string name="attendance_finish">End</string>
+    <string name="register_attendance">Register</string>
+    <string name="attendance_code_employee_not_empty">"Employee Code" requires a value.</string>
+   <string name="attendance_obervation_not_empty">"Observation" requires a value.</string>
+    
+    <!-- END Attendance Service -->
+    
+
+    <!-- SERVICE NAME -->
+
+
+    <!-- END SERVICE NAME -->
+
+
+    <!-- SERVICE OPERATION SECTION -->
+
+    <string name="service_operation">OPERATIONS</string>
+    <string name="service_operation_minus">Service Operations</string>
+    <string name="service_operation_delete">ELIMINATION</string>
+    <string name="service_operation_delete_minus">Removal Markings</string>
+    <string name="service_operation_delete_send">Remove</string>
+    <string name="service_operation_delete_must_select_service">You must select a service to recover their markings.</string>
+    <string name="service_operation_retrieve_send">Recover markings</string>
+    <string name="service_operation_delete_retrieved_records">Records recovered</string>
+    <string name="service_operation_delete_position">Select an registry to delete</string>
+    <string name="service_operation_delete_update">Update Services available</string>
+    <string name="service_operation_delete_updated_notif">Services updated</string>
+    <string name="service_operation_delete_retrieved_notif">recovered Records</string>
+
+    <!-- END SERVICE OPERATION SECTION -->
+    <string name="visit_name">VISITS</string>
+    <string name="visit">Visits</string>
+    <string name="order">Orders</string>
+    <string name="visit_order">Orders-Visits</string>
+    <string name="collection">Collection</string>
+    <string name="delivery">Delivery</string>
+    <string name="fleet">Fleet</string>
+    <string name="inventory">Inventory</string>
+    <string name="attendance">Attendance</string>
+    
+
+    <!-- METADATA SECTION -->
+
+    <string name="metadata">Client Data</string>
+    <string name="metadata_read_minus">Query</string>
+    <string name="metadata_create_minus">Create</string>
+    <string name="metadata_client">Clients</string>
+    <string name="metadata_product">Products</string>
+    <string name="metadata_motive">Motives</string>
+    <string name="metadata_guard">Guards</string>
+    <string name="metadata_deliverer">Dealers</string>
+    <string name="metadata_invoice_type">Invoices Type</string>
+    <string name="metadata_employee">Employee</string>
+    <string name="metadata_vehicle">Vehícles</string>
+    <string name="metadata_bank">Banks</string>
+    <string name="metadata_deposit">Deposits</string>
+    <string name="metadata_clinic">Locals</string>
+    <string name="metadata_medic">Medics</string>
+    <string name="metadata_contact">Contact</string>
+    <string name="metadata_manager">Manager</string>
+    <string name="metadata_machine">Machine</string>
+    <string name="metadata_operator">Operator</string>
+    <string name="metadata_select">Select the type of data to search</string>
+    <string name="metadata_read_code">By code</string>
+    <string name="metadata_read_name">By name</string>
+    <string name="metadata_read">DATA QUERY</string>
+    <string name="metadata_read_send">Consult</string>
+    <string name="metadata_create_send">Create</string>
+    <string name="metadata_create_code_empty">To self-generate code, send empty.</string>
+    <string name="metadata_create_autogenerate_code">Autogenerate code?</string>
+    <string name="metadata_create_code">Code</string>
+    <string name="metadata_create_value">Value</string>
+    <string name="metadata_read_select_option">Select the field for which to perform the search</string>
+    <string name="metadata_create_insert_value">Enter a value for the search</string>
+    <string name="metadata_create_insert_code">Enter a code for the creation</string>
+    <string name="metadata_read_insert_value">Enter a value for the search</string>
+    <string name="metadata_create">DATA CREATION</string>
+    <string name="metadata_update_read">Reload Data Query</string>
+    <string name="metadata_update_create">Data Creation update</string>
+
+    <!-- END METADATA SECTION -->
+
+</resources>

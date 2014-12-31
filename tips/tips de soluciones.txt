@@ -1,0 +1,38 @@
+Cuando en el jboss se cambia el endpoint verificar que la siguiente propiedad este false:
+
+cat $JBOSS_HOME/server/default/deployers/jbossws.deployer/META-INF/stack-agnostic-jboss-beans.xml | grep "modifySOAPAddress"
+
+
+Para habilitar el debug remoto en jboss descomentar lo siguiente del archivo run.conf
+# Sample JPDA settings for remote socket debuging
+JAVA_OPTS="$JAVA_OPTS -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n"
+
+
+verificar los MISS y HIT de las ultimas 1000 filas
+
+while true; do tail -n1000 /opt/jboss-6.1.0.Final/server/upsellingPortal0?/log/server.log | egrep "HIT|MISS" | cut -d\ -f12 | sort | uniq -c ; sleep 2 ; echo ""; done 
+
+
+Cuando NOOO TE LEVANTA LUEGO EL JBOSS POR NADA referencia en el este archivo el puerto en donde se levanta
+/opt/jboss/jboss-6.1.0.Final/server/stockonline/conf/bindingservice.beans/META-INF/bindings-jboss-beans.xml 
+
+AGREGAR LOS SIGUIENTE
+ <inject bean="Ports04Bindings"/>
+
+<!-- The ports-04 bindings are obtained by taking ports-default and adding 400 to each port value -->
+   <bean name="Ports04Bindings" class="org.jboss.services.binding.impl.ServiceBindingSet">
+      <constructor>
+         <!--  The name of the set -->
+         <parameter>ports-04</parameter>
+         <!-- Default host name -->
+         <parameter>${jboss.bind.address}</parameter>
+         <!-- The port offset -->
+         <parameter>400</parameter>
+         <!-- Set of bindings to which the "offset by X" approach can't be applied -->
+         <parameter><null/></parameter>
+      </constructor>
+   </bean>
+
+
+PARA CONECTARSE REMOTAMENTE A UN SERVIDOR JBOSS DESDE EL JVISUAL DEL JDK AGREGAR LOS SIGUIENTE EN EL RUN.CONF
+-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=1098

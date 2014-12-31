@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/chartDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.client.report.VisitOrderReport']}</ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <h:panelGroup rendered="#{reportFullBean.chartType == 'pie'}">
+            <p:pieChart id="sample" value="#{reportFullBean.chartModel}" legendPosition="w" title="#{reportFullBean.title}" 
+                        style="width:800px;height:600px;" />
+        </h:panelGroup>
+        <h:panelGroup rendered="#{reportFullBean.chartType == 'bar'}">
+            <h:panelGroup rendered="#{reportFullBean.chartReportOption == 'visitbymotive' or reportFullBean.chartReportOption == 'orderbyproduct'}">
+                <p:barChart id="barProduct" value="#{reportFullBean.chartModel}" legendPosition="ne" style="height:300px" 
+                            title="#{reportFullBean.title}" min="0" max="#{reportFullBean.maxValue}"
+                            stacked="true" barMargin="20" xaxisLabel="#{reportFullBean.chartReportOptionLabel}" xaxisAngle="20"
+                            yaxisLabel="#{i18n['web.client.label.yaxisLabel']}"/>
+            </h:panelGroup>
+            <h:panelGroup rendered="#{reportFullBean.chartReportOption == 'visitbyuserphone' or reportFullBean.chartReportOption == 'orderbyuserphone'}">
+                <p:barChart id="barUserphone" value="#{reportFullBean.chartModel}" legendPosition="ne" style="height:300px" yaxisLabel="#{i18n['web.client.label.yaxisLabel']}"
+                        title="#{reportFullBean.title}" min="0" max="#{reportFullBean.maxValue}" xaxisLabel="#{reportFullBean.chartReportOptionLabel}" xaxisAngle="20"/>
+            </h:panelGroup>            
+        </h:panelGroup>
+
+    </ui:define>
+</ui:composition>
+</html>

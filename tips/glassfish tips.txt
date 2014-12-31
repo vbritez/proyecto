@@ -1,0 +1,3 @@
+//Para deshabilitar el ejb portable
+./asadmin --host localhost --port 1148 set server.ejb-container.property.disable-nonportable-jndi-names="true"
+

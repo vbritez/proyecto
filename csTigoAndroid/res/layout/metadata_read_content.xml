@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+
+    <Button
+        android:id="@+id/metadataUpdateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/button_selector"
+        android:text="@string/metadata_update_read" >
+
+        <requestFocus />
+    </Button>
+
+    <Spinner
+        android:id="@+id/metaSelector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/metadataUpdateButton"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp" >
+    </Spinner>
+
+    <RadioGroup
+        android:id="@+id/metadataReadRadioGroup"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/metaSelector"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/metadataReadByName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/metadata_read_name" />
+
+        <RadioButton
+            android:id="@+id/metadataReadByCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/metadata_read_code" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/metadataReadValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/metadataReadRadioGroup"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:ems="10"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/metadataReadButton"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/metadataReadValue"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button_selector"
+        android:text="@string/metadata_read_minus" />
+
+</RelativeLayout>

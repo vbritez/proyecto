@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+        
+    <LinearLayout
+        android:id="@+id/collectionCheckDynamiclayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="vertical" >
+    </LinearLayout>   
+	    
+    <ImageView
+        android:id="@+id/paymentCheckAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/collectionCheckDynamiclayout"
+        android:contentDescription="@string/imagen"
+        android:src="@drawable/add" />  
+
+    <Button
+        android:id="@+id/collectionRegisterCheckButton"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/paymentCheckAdd"
+        android:background="@drawable/button_selector"
+        android:text="@string/collection_register" />
+
+</RelativeLayout>

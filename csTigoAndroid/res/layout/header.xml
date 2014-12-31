@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/repeat" >
+
+    <ImageView
+        android:id="@+id/tigoHeaderImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_header" 
+        android:contentDescription="@string/soluciones_corporativas"/>
+
+    <TextView
+        android:id="@+id/tigoHeaderTitle"
+        style="@style/headerTitle"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:text="@string/soluciones_corporativas"
+        android:textAppearance="@style/headerTitle" />
+    
+    <TextView
+        android:id="@+id/not_default_app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tigoHeaderTitle"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tigoHeaderImage"
+        android:text="@string/soluciones_corporativas" />
+
+</RelativeLayout>

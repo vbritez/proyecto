@@ -1,0 +1,3 @@
+Habiltar en la tabla USSD_APPLICATION_SERVER el que corresponde a prestaciones
+Verificar que en la tabla USSD_MENU_ENTRY para el ID 100 que corresponde al de Prestaciones su campo USSDAPPLICATION_ID sea el que habilitamos en la tabla USSD_APPLICATION_SERVER
+y en la tabla USSD_APPLICATION que la raiz de FEATURE y todas las encuestas configuradas su campo APPLICATIONSERVER_ID corresponda tambien al USSD_APPLICATION_SERVER id que habilitamos.

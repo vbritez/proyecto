@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/screenDefaultClient.xhtml">
+    <ui:define name="title">Home</ui:define>
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+    </ui:define>
+    <ui:define name="container">
+        <div id="page_col">
+            <div id="izq" style="width: 350px;">
+                <!-- SMS SENDER PANEL GROUP -->
+                <h:form id="smsSendForm">
+                    <div class="tablebox">
+                        <div class="head">#{i18n['web.client.home.screen.title.SendSMS']}</div>
+                        <!-- SMS DESTINATION -->
+                        <div class="headcontainer">
+                            <table>
+                                <tr>
+                                    <th>#{i18n['web.client.home.screen.title.SelectAddressee']}</th>
+                                </tr>
+                                <tr>
+                                    <td><h:selectManyListbox id="destinationList" value="#{smsSenderBean.selectedUserphoneList}" converter="userphoneConverter" size="5" style="width: 100%;">
+                                            <f:selectItems value="#{smsSenderBean.userphoneList}" var="dLItem" itemValue="#{dLItem}" itemLabel="#{dLItem.nameChr}" />
+                                        </h:selectManyListbox></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <!-- SMS CONTENT -->
+                        <div class="body">
+                            <h:inputTextarea id="smscontent" rows="6" style="width: 342px; overflow: hidden;" value="#{smsSenderBean.smsContent}" onkeyup="limitTextArea(this, 160);" onkeydown="limitTextArea(this, 160);" onkeypress="limitTextArea(this, 160);" />
+                        </div>
+                    </div>
+                    <!-- BUTTONS -->
+                    <div class="buttons_bottom">
+                        <h:inputText id="smscontentcount" value="160" style="width: 30px; float: left;" readonly="true" />
+                        <h:commandButton value="#{i18n['web.client.home.screen.button.SendButton']}" styleClass="btn_std_small" action="#{smsSenderBean.sendSMS}">
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton value="#{i18n['web.client.home.screen.button.ClearButton']}" styleClass="btn_std_small" action="#{smsSenderBean.cleanSMS}">
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                    </div>
+
+                    <div class="buttons_bottom">
+                        <div id="logo">
+                            <h:commandLink action="/domain/cstigowebclient/tigonews" style="border: 0px;">
+                                <h:graphicImage url="/resources/images/news.png" style="border: 0px;" title="Tigo News!" />
+                            </h:commandLink>
+                        </div>
+                    </div>
+                </h:form>
+            </div>
+            <!--             <h:form id="newsForm"> -->
+            <!--                 <div id="logo"> -->
+            <!--                                     <h:commandButton image="/resources/images/news6.png" style="border: 0px;" title="Tigo News!" action="/domain/cstigowebclient/tigonews"/> -->
+            <!--                     <h:commandLink action="/domain/cstigowebclient/tigonews" style="border: 0px;"> -->
+            <!--                         <h:graphicImage url="/resources/images/news.png" style="border: 0px;" title="Tigo News!" /> -->
+            <!--                     </h:commandLink> -->
+            <!--                 </div> -->
+            <!--             </h:form> -->
+        </div>
+
+        <p:button value="" style="visibility: hidden;" />
+    </ui:define>
+</ui:composition>
+</html>

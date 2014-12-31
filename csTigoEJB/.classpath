@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="**/.svn/" kind="src" path="ejbModule"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/csTigoBean"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/csTigoJPA"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/csTigoCommons"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/XStream"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Hibernate3.6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Log4j-1.2.16"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Joda-Time"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Commons-lang-3.1"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gson"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Commons-net-2.2"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/CSTIGO-Artifacts"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/MenuMovil-IPS"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/UssdDriverInterfaces"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/MTS"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ValidacionClienteBCCSNac"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/TigoMoney"/>
+	<classpathentry kind="con" path="oracle.eclipse.tools.glassfish.lib.system">
+		<attributes>
+			<attribute name="owner.project.facets" value="jst.ejb"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/csTigoAPI"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/GetClientBirthday"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/RetrievePoliceBaseInfo"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

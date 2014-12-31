@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+        
+    <EditText
+        android:id="@+id/collectionChequeAmountEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/collectionChequeNumEdit"
+        android:layout_alignParentRight="true"
+        android:ems="10"
+        android:inputType="numberDecimal" />
+    
+    <EditText
+        android:id="@+id/collectionChequeNumEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/collectionChequeBankCodEdit"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/collectionChequeAmountEdit"
+        android:ems="10"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/collectionChequeNumberLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/collectionChequeNumEdit"
+        android:layout_alignBottom="@+id/collectionChequeNumEdit"
+        android:layout_marginRight="7dp"
+        android:text="@string/collection_check_number"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/collectionChequeObsEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/collectionChequeNumEdit"
+        android:layout_marginTop="50dp"
+        android:layout_toRightOf="@+id/collectionChequeObsLabel"
+        android:ems="10"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/collectionChequeBankCodEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/collectionChequeNumEdit"
+        android:layout_toRightOf="@+id/collectionChequeObsLabel"
+        android:ems="10"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/collectionChequeAmountLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/collectionChequeAmountEdit"
+        android:layout_alignBottom="@+id/collectionChequeAmountEdit"
+        android:layout_marginRight="15dp"
+        android:text="@string/collection_amount"
+        android:textAppearance="@style/textSize" />
+
+    <TextView
+        android:id="@+id/collectionChequeBankLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/collectionChequeBankCodEdit"
+        android:layout_alignBottom="@+id/collectionChequeBankCodEdit"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="7dp"
+        android:text="@string/collection_bank_cod"
+        android:textAppearance="@style/textSize" />
+
+    <TextView
+        android:id="@+id/collectionChequeObsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/collectionChequeObsEdit"
+        android:layout_alignBottom="@+id/collectionChequeObsEdit"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="7dp"
+        android:text="@string/collection_observation"
+        android:textAppearance="@style/textSize" />
+
+
+</RelativeLayout>

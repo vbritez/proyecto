@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/screenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.client.report.AttendanceReport']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="repattendancefull" value="#{i18n['web.client.report.AttendanceReport']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="repAttendanceFullForm">
+                    <p:focus for="repAttendanceFullForm:textDateFrom" />
+                    <div class="tablebox">
+                        <div class="head">#{i18n['web.client.report.attendance.screen.title.reportParameters']}</div>
+                        <!-- PARAMETERS BOX -->
+                        <div class="body">
+                            <table class="tablesearch">
+                                <tr>
+                                    <th>#{i18n['web.client.search.field.FromDate']}</th>
+                                    <td>
+                                        <p:calendar id="textDateFrom" locale="#{iBean.locale}" value="#{reportAttendanceFullBean.dateFrom}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>#{i18n['web.client.search.field.ToDate']}</th>
+                                    <td>
+                                        <p:calendar id="textDateTo" locale="#{iBean.locale}" value="#{reportAttendanceFullBean.dateTo}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                    </td>
+                                </tr>
+                                  <tr>
+									<th>#{i18n['web.client.screen.admin.webUsers.field.Classification']}</th>
+
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkClassificationList"
+															value="#{reportAttendanceFullBean.validatedAllClassification}"
+															disabled="#{reportAttendanceFullBean.selectedUserphoneList.size() gt 0 or reportAttendanceFullBean.validatedAllUsers}">
+															<f:ajax event="change"
+																listener="#{reportAttendanceFullBean.selectAll}"
+																execute=":repAttendanceFullForm:chkClassificationList"
+																render=":repAttendanceFullForm:listClasification :repAttendanceFullForm:chkUserphoneList :repAttendanceFullForm:listUserphone"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkClassificationist"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listClasification"
+														value="#{reportAttendanceFullBean.selectedClassificationList}"
+														converter="classificationConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportAttendanceFullBean.validatedAllClassification or reportAttendanceFullBean.validatedAllUsers 
+														or reportAttendanceFullBean.selectedUserphoneList.size() gt 0}">
+														<f:selectItems
+															value="#{reportAttendanceFullBean.classificationList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.descriptionChr}" />
+														<f:ajax
+															execute=":repAttendanceFullForm:listClasification"
+															render=":repAttendanceFullForm:chkUserphoneList :repAttendanceFullForm:listUserphone"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+								<tr>
+									<th>#{i18n['web.client.search.field.User']}</th>
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkUserphoneList"
+															value="#{reportAttendanceFullBean.validatedAllUsers}"
+															disabled="#{reportAttendanceFullBean.selectedClassificationList.size() gt 0 or reportAttendanceFullBean.validatedAllClassification}">
+															<f:ajax event="change"
+																listener="#{reportAttendanceFullBean.selectAll}"
+																execute=":repAttendanceFullForm:chkUserphoneList"
+																render=":repAttendanceFullForm:listUserphone :repAttendanceFullForm:listClasification :repAttendanceFullForm:chkClassificationList"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkUserphoneList"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listUserphone"
+														value="#{reportAttendanceFullBean.selectedUserphoneList}"
+														converter="userphoneConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportAttendanceFullBean.validatedAllUsers or reportAttendanceFullBean.validatedAllClassification 
+														or reportAttendanceFullBean.selectedClassificationList.size() gt 0}">
+
+														<f:selectItems
+															value="#{reportAttendanceFullBean.userphoneList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.nameChr}" />
+
+														<f:ajax
+															
+															execute=":repAttendanceFullForm:listUserphone"
+															render=":repAttendanceFullForm:chkClassificationList :repAttendanceFullForm:listClasification"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+
+											</tr>
+										</table>
+									</td>
+								</tr>
+                                <tr>
+                                    <th>#{i18n['web.client.search.field.Employee']}</th>
+                                    <td>
+                                        <h:selectOneMenu id="listEmployee" value="#{reportAttendanceFullBean.selectedEmployeeMetadata}" converter="metadataConverter">
+                                            <f:selectItem itemValue="#{null}" itemLabel="(#{i18n['web.client.selectonemenu.All']})" />
+                                            <f:selectItems value="#{reportAttendanceFullBean.employeeMetadataList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.valueChr}" />
+                                        </h:selectOneMenu>
+                                    </td>
+                                     
+                                </tr>
+                                <tr>
+                                    <th>#{i18n['web.client.search.field.OrderBy']}</th>
+                                    <td>
+                                        <h:selectOneMenu id="listOrderby" value="#{reportAttendanceFullBean.selectedOrderby}">
+                                            <f:selectItems value="#{reportAttendanceFullBean.orderByList}" />
+                                        </h:selectOneMenu>
+                                    </td>
+                                </tr>
+
+                                 <tr>
+                                 <th>#{i18n['web.client.search.field.ReportOption']}</th>
+                                    <td>
+                                        <h:selectOneRadio id="reportOption2" value="#{reportAttendanceFullBean.reportOption}" layout="pageDirection" style="width: auto; border: none;">
+                                            <f:selectItem itemValue="grouped" itemLabel="#{i18n['web.client.reportOption.Grouped']}" />
+                                            <f:selectItem itemValue="grid" itemLabel="#{i18n['web.client.reportOption.Grid']}" />
+                                        </h:selectOneRadio>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="buttons_bottom">
+                        <h:commandButton id="btnGeneratePDF" value="#{i18n['web.client.report.title.PDFReport']}" action="#{reportAttendanceFullBean.validateParameters}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="pdf" target="#{reportAttendanceFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGenerateXLS" value="#{i18n['web.client.report.title.XLSReport']}" action="#{reportAttendanceFullBean.validateParameters}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="xls" target="#{reportAttendanceFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGenerate" action="#{reportAttendanceFullBean.generateReport}" style="display: none;" rendered="#{reportAttendanceFullBean.parametersValidated}" />
+                    </div>
+                    <!-- SCRIPTS -->
+                    <h:panelGroup rendered="#{reportAttendanceFullBean.parametersValidated}">
+                        <script type="text/javascript" charset="UTF-8">
+																									//         
+																									function autoGenerateReport() {
+																										document
+																												.getElementById('repAttendanceFullForm').target = '_blank';
+																										document
+																												.getElementById(
+																														'repAttendanceFullForm:btnGenerate')
+																												.click();
+																										document
+																												.getElementById('repAttendanceFullForm').target = '';
+																									}
+
+																									$(
+																											document)
+																											.ready(
+																													function() {
+																														setTimeout(
+																																"autoGenerateReport()",
+																																500);
+																													});
+																									//
+																								</script>
+                    </h:panelGroup>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

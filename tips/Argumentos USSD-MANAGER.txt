@@ -1,0 +1,2 @@
+PROGRAM ARGUMENTS: src/etc/ussdInterface.cfg src/etc/tigocash.keystore
+VM ARGUMENTS: -DlogFile=src/etc/logs/USSD-Manager.log

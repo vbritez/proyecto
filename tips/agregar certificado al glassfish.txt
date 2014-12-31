@@ -1,0 +1,5 @@
+/usr/java/jdk1.6.0_24/bin/keytool -importcert -keystore glassfish3/glassfish/domain/domain1/config/cacerts.jks -file /home/cstigo/certificado.cer
+
+certificado.cer tiene que ser exportado desde el navegador como binario X.509
+
+La contrasenha que te pide ingresar poner changeit

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/screenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.client.report.SMSViewerReport']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="repsmsviewerfull" value="#{i18n['web.client.report.SMSViewerReport']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="repSMSViewerFullForm">
+                    <p:focus for="repSMSViewerFullForm:textDateFrom" />
+                    <div class="tablebox">
+                        <div class="head">#{i18n['web.client.report.smsViewer.screen.title.reportParameters']}</div>
+                        <!-- PARAMETERS BOX -->
+                        <div class="body">
+                            <table class="tablesearch">
+                                <tr>
+                                    <th>#{i18n['web.client.search.field.FromDate']}</th>
+                                    <td>
+                                        <p:calendar id="textDateFrom" locale="#{iBean.locale}" value="#{reportSMSViewerFullBean.dateFrom}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>#{i18n['web.client.search.field.ToDate']}</th>
+                                    <td>
+                                        <p:calendar id="textDateTo" locale="#{iBean.locale}" value="#{reportSMSViewerFullBean.dateTo}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                    </td>
+                                </tr>
+                              <!--  <tr>
+									<th>#{i18n['web.client.screen.admin.webUsers.field.Classification']}</th>
+
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkClassificationList"
+															value="#{reportSMSViewerFullBean.validatedAllClassification}"
+															disabled="#{reportSMSViewerFullBean.selectedUserphoneList.size() gt 0 or reportSMSViewerFullBean.validatedAllUsers}">
+															<f:ajax event="change"
+																listener="#{reportSMSViewerFullBean.selectAll}"
+																execute=":repSMSViewerFullForm:chkClassificationList"
+																render=":repSMSViewerFullForm:listClasification :repSMSViewerFullForm:chkUserphoneList :repSMSViewerFullForm:listUserphone"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkClassificationist"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listClasification"
+														value="#{reportSMSViewerFullBean.selectedClassificationList}"
+														converter="classificationConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportSMSViewerFullBean.validatedAllClassification or reportSMSViewerFullBean.validatedAllUsers 
+														or reportSMSViewerFullBean.selectedUserphoneList.size() gt 0}">
+														<f:selectItems
+															value="#{reportSMSViewerFullBean.classificationList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.descriptionChr}" />
+														<f:ajax
+															execute=":repSMSViewerFullForm:listClasification"
+															render=":repSMSViewerFullForm:chkUserphoneList :repSMSViewerFullForm:listUserphone"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox></td>
+											</tr>
+										</table>
+									</td>
+								</tr> -->
+
+								<tr>
+									<th>#{i18n['web.client.search.field.User']}</th>
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkUserphoneList"
+															value="#{reportSMSViewerFullBean.validatedAllUsers}"
+															disabled="#{reportSMSViewerFullBean.selectedClassificationList.size() gt 0 or reportSMSViewerFullBean.validatedAllClassification}">
+															<!-- <f:ajax event="change"
+																listener="#{reportSMSViewerFullBean.selectAll}"
+																execute=":repSMSViewerFullForm:chkUserphoneList"
+																render=":repSMSViewerFullForm:listUserphone :repSMSViewerFullForm:listClasification :repSMSViewerFullForm:chkClassificationList"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />-->
+																<f:ajax event="change"
+																listener="#{reportSMSViewerFullBean.selectAll}"
+																execute=":repSMSViewerFullForm:chkUserphoneList"
+																render=":repSMSViewerFullForm:listUserphone"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkUserphoneList"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listUserphone"
+														value="#{reportSMSViewerFullBean.selectedUserphoneList}"
+														converter="userphoneConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportSMSViewerFullBean.validatedAllUsers or reportSMSViewerFullBean.validatedAllClassification 
+														or reportSMSViewerFullBean.selectedClassificationList.size() gt 0}">
+
+														<f:selectItems
+															value="#{reportSMSViewerFullBean.userphoneList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.nameChr}" />
+
+														<!-- <f:ajax
+															
+															execute=":repSMSViewerFullForm:listUserphone"
+															render=":repSMSViewerFullForm:chkClassificationList :repSMSViewerFullForm:listClasification"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" /> -->
+															<f:ajax
+															
+															execute=":repSMSViewerFullForm:listUserphone"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+
+											</tr>
+										</table>
+									</td>
+								</tr>
+                                <tr>
+                                    <th>#{i18n['web.client.search.field.Service']}</th>
+                                    <td>
+                                        <h:selectOneMenu id="listService" value="#{reportSMSViewerFullBean.selectedService}" converter="serviceConverter">
+                                            <f:selectItem itemValue="#{null}" itemLabel="(#{i18n['web.client.selectonemenu.All']})" />
+                                            <f:selectItems value="#{reportSMSViewerFullBean.serviceList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.descriptionChr}" />
+                                        </h:selectOneMenu>
+                                    </td>
+                                </tr>
+                                <tr>
+                                 <th>#{i18n['web.client.search.field.ReportOption']}</th>
+                                    <td>
+                                        <h:selectOneRadio id="reportOption2" value="#{reportSMSViewerFullBean.reportOption}" layout="pageDirection" style="width: auto; border: none;">
+                                            <f:selectItem itemValue="success" itemLabel="#{i18n['web.client.reportOption.Success']}" />
+                                            <f:selectItem itemValue="notSuccess" itemLabel="#{i18n['web.client.reportOption.NotSuccess']}" />
+                                        </h:selectOneRadio>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>#{i18n['web.client.table.tip.OrderBy']}</th>
+                                    <td>
+                                        <h:selectOneMenu id="listOrderby" value="#{reportSMSViewerFullBean.selectedOrderby}">
+                                            <f:selectItems value="#{reportSMSViewerFullBean.orderByList}" />
+                                        </h:selectOneMenu>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="buttons_bottom">
+                        <h:commandButton id="btnGeneratePDF" value="#{i18n['web.client.report.title.PDFReport']}" action="#{reportSMSViewerFullBean.validateParameters}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="pdf" target="#{reportSMSViewerFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGenerateXLS" value="#{i18n['web.client.report.title.XLSReport']}" action="#{reportSMSViewerFullBean.validateParameters}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="xls" target="#{reportSMSViewerFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGenerate" action="#{reportSMSViewerFullBean.generateReport}" style="display: none;" rendered="#{reportSMSViewerFullBean.parametersValidated}" />
+                    </div>
+                    <!-- SCRIPTS -->
+                    <h:panelGroup rendered="#{reportSMSViewerFullBean.parametersValidated}">
+                        <script type="text/javascript" charset="UTF-8">
+																									//         
+																									function autoGenerateReport() {
+																										document
+																												.getElementById('repSMSViewerFullForm').target = '_blank';
+																										document
+																												.getElementById(
+																														'repSMSViewerFullForm:btnGenerate')
+																												.click();
+																										document
+																												.getElementById('repSMSViewerFullForm').target = '';
+																									}
+
+																									$(
+																											document)
+																											.ready(
+																													function() {
+																														setTimeout(
+																																"autoGenerateReport()",
+																																500);
+																													});
+																									//
+																								</script>
+                    </h:panelGroup>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

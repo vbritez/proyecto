@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_group_client_goal_sr2" pageWidth="539" pageHeight="99" whenNoDataType="AllSectionsNoDetail" columnWidth="539" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true">
+	<property name="ireport.zoom" value="2.143588810000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="FECHA_INI" class="java.util.Date"/>
+	<parameter name="FECHA_FIN" class="java.util.Date"/>
+	<parameter name="WHERE" class="java.lang.String">
+		<parameterDescription><![CDATA[SQL Criteria]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COD_META" class="java.lang.Long" isForPrompting="false">
+		<defaultValueExpression><![CDATA[10L]]></defaultValueExpression>
+	</parameter>
+	<parameter name="GOAL_NUM" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USERPHONE_LIST" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NOMBRE_META" class="java.lang.String">
+		<parameterDescription><![CDATA[""]]></parameterDescription>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\dev\\soluciones\\productos\\soluciones_corporativas\\03.implementacion\\csTigoClientWEB\\WebContent\\WEB-INF\\reports\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select u.USERPHONE_COD, u.NAME_CHR, u.CELLPHONE_NUM
+from USERPHONE u
+join CLIENT_GOAL_USERPHONE cu on (u.USERPHONE_COD = cu.COD_USERPHONE)
+join CLIENT_GOAL cg on (cu.COD_CLIENT_GOAL = cg.CLIENT_GOAL_COD)
+where cu.COD_CLIENT_GOAL = $P{COD_META}
+$P!{USERPHONE_LIST}]]>
+	</queryString>
+	<field name="USERPHONE_COD" class="java.math.BigDecimal"/>
+	<field name="NAME_CHR" class="java.lang.String"/>
+	<field name="CELLPHONE_NUM" class="java.math.BigDecimal"/>
+	<variable name="CLIENT_GOAL_COD_1" class="java.lang.Integer" resetType="Group" resetGroup="USERPHONE_GROUP" calculation="Count">
+		<variableExpression><![CDATA[$F{USERPHONE_COD}]]></variableExpression>
+	</variable>
+	<variable name="PORCENTAJE" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[new java.math.BigDecimal($V{CLIENT_GOAL_COD_1}).divide(new java.math.BigDecimal($P{GOAL_NUM}),new Integer("3"),RoundingMode.HALF_UP).multiply(new java.math.BigDecimal(100))]]></variableExpression>
+	</variable>
+	<group name="GROUP_BY">
+		<groupExpression><![CDATA[]]></groupExpression>
+	</group>
+	<group name="USERPHONE_GROUP">
+		<groupExpression><![CDATA[$F{USERPHONE_COD}]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<textField evaluationTime="Group" evaluationGroup="USERPHONE_GROUP">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="326" y="0" width="86" height="15"/>
+					<box leftPadding="0" rightPadding="2">
+						<pen lineColor="#CCCCCC"/>
+						<topPen lineWidth="0.0" lineColor="#CCCCCC"/>
+						<leftPen lineWidth="0.25" lineColor="#CCCCCC"/>
+						<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
+						<rightPen lineWidth="0.25" lineColor="#CCCCCC"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$P{GOAL_NUM}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="276" y="0" width="50" height="15" backcolor="#FFFFFF"/>
+					<box leftPadding="2">
+						<pen lineColor="#CCCCCC"/>
+						<topPen lineWidth="0.0" lineColor="#CCCCCC"/>
+						<leftPen lineWidth="0.25" lineColor="#CCCCCC"/>
+						<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
+						<rightPen lineWidth="0.25" lineColor="#CCCCCC"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="7"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{CELLPHONE_NUM}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="186" y="0" width="90" height="15" backcolor="#FFFFFF"/>
+					<box leftPadding="2">
+						<pen lineColor="#CCCCCC"/>
+						<topPen lineWidth="0.0" lineColor="#CCCCCC"/>
+						<leftPen lineWidth="0.25" lineColor="#CCCCCC"/>
+						<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
+						<rightPen lineWidth="0.25" lineColor="#CCCCCC"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{NAME_CHR}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="86" height="15"/>
+					<box leftPadding="2">
+						<pen lineColor="#CCCCCC"/>
+						<topPen lineWidth="0.0" lineColor="#CCCCCC"/>
+						<leftPen lineWidth="0.25" lineColor="#CCCCCC"/>
+						<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
+						<rightPen lineWidth="0.25" lineColor="#CCCCCC"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{NOMBRE_META}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="136" y="0" width="50" height="15" backcolor="#FFFFFF"/>
+					<box leftPadding="2">
+						<pen lineColor="#CCCCCC"/>
+						<topPen lineWidth="0.0" lineColor="#CCCCCC"/>
+						<leftPen lineWidth="0.25" lineColor="#CCCCCC"/>
+						<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
+						<rightPen lineWidth="0.25" lineColor="#CCCCCC"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA[$P{FECHA_FIN}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="86" y="0" width="50" height="15" backcolor="#FFFFFF"/>
+					<box leftPadding="2">
+						<pen lineColor="#CCCCCC"/>
+						<topPen lineWidth="0.0" lineColor="#CCCCCC"/>
+						<leftPen lineWidth="0.25" lineColor="#CCCCCC"/>
+						<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
+						<rightPen lineWidth="0.25" lineColor="#CCCCCC"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA[$P{FECHA_INI}]]></textFieldExpression>
+				</textField>
+				<subreport>
+					<reportElement x="412" y="0" width="127" height="15"/>
+					<subreportParameter name="SUBREPORT_DIR">
+						<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="REPORT_LOCALE">
+						<subreportParameterExpression><![CDATA[$P{REPORT_LOCALE}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="WHERE">
+						<subreportParameterExpression><![CDATA[$P{WHERE}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="GOAL_NUM">
+						<subreportParameterExpression><![CDATA[$P{GOAL_NUM}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="USERPHONE_COD">
+						<subreportParameterExpression><![CDATA[$F{USERPHONE_COD}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="COD_META">
+						<subreportParameterExpression><![CDATA[$P{COD_META}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="FECHA_INI">
+						<subreportParameterExpression><![CDATA[$P{FECHA_INI}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="REPORT_RESOURCE_BUNDLE">
+						<subreportParameterExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="FECHA_FIN">
+						<subreportParameterExpression><![CDATA[$P{FECHA_FIN}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "rep_group_client_goal_sr3.jasper"]]></subreportExpression>
+				</subreport>
+				<line>
+					<reportElement x="0" y="15" width="539" height="1" forecolor="#999999"/>
+					<graphicElement>
+						<pen lineColor="#CCCCCC"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<pageFooter>
+		<band/>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

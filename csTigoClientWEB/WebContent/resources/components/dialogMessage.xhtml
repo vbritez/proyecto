@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui">
+<ui:component id="dialogMessage">
+    <p:growl id="growl" showDetail="true" sticky="false" widgetVar="growlVar" autoUpdate="true" rendered="#{sessionBean.summaryEqualsToDetail}"/>
+    <h:form id="dialogMessageForm">
+        <div id="dialogMessageComponent">
+            <p:confirmDialog id="confirmDialog" severity="alert" widgetVar="confirmation">
+                <f:facet name="message">
+                    <h:outputText id="message" value="#{i18n['web.client.screen.message.recordDelete']}" />
+                </f:facet>
+                <p:commandButton id="confirm" value="#{i18n['web.client.screen.field.Yes']}" oncomplete="confirmation.hide()" onclick="confirmYesButtonClick()" />
+                <p:commandButton id="decline" value="#{i18n['web.client.screen.field.No']}" oncomplete="confirmation.hide()" onclick="confirmNoButtonClick()" />
+            </p:confirmDialog>
+        </div>
+    </h:form>
+</ui:component>
+</html>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+xmlns:ui="http://java.sun.com/jsf/facelets" 
+xmlns:h="http://java.sun.com/jsf/html" 
+xmlns:f="http://java.sun.com/jsf/core" 
+template="/resources/sp/templates/spDefault.xhtml">
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="content">
+        <h:panelGroup id="generalPanel">
+            <div id="content">
+                <div class="text-bloque" style="padding-top: 80px">                
+                    <span class="blue-tigo">
+                    <h:outputText id="title" value="#{loginWebuserBean.titleMessage}" />
+                    </span><br />
+                    <p><h:outputText style="margin-bottom: 80px; margin-top: 12px" id="message" value="#{loginWebuserBean.messageWelcome}" /></p>
+                </div>
+            </div>
+        </h:panelGroup>
+    </ui:define>
+</ui:composition>

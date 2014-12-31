@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:csui="http://java.sun.com/jsf/composite/uicomponents" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/mapScreenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.servicename.ARP']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="arp" value="#{i18n['web.servicename.ARP']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <!-- GOOGLE MAPS API -->
+<!--         <script src="https://maps.google.com/maps/api/js?client=#{applicationBean.appKey}&amp;sensor=false" type="text/javascript" /> -->
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="fastReportForm" target="_blank">
+                    <h:panelGroup rendered="#{arpBean.dataModelDetail eq null}">
+                        <div class="buttons_top">
+                            <h:commandButton styleClass="btn_xls" title="#{i18n['web.client.report.tip.XLSReport']}" action="#{arpBean.viewXLSCabDetail}" />
+                            <h:commandButton styleClass="btn_pdf" title="#{i18n['web.client.report.tip.PDFReport']}" action="#{arpBean.viewPDFCabDetail}" />
+                        </div>
+                    </h:panelGroup>
+                </h:form>
+                <h:form id="serviceForm">
+                    <p:focus for="serviceForm:listSearchOption" />
+                    <h:panelGroup id="cabPanelGroup" rendered="#{arpBean.dataModelDetail eq null}">
+                        <div class="tablebox">
+                            <div class="head">#{i18n['ARP.title.ListOf']}</div>
+                            <!-- SEARCH BOX -->
+                            <h:panelGroup id="searchBoxGroupPanel">
+                                <div class="headcontainer">
+                                    <table class="tablesearch">
+                                        <tr>
+                                            <th>#{i18n['web.client.search.field.Mobile']}</th>
+                                            <td>
+                                                <csui:cellphoneInputText id="celularSearch" value="#{arpBean.mobilePhoneNumber}" tabindex="1" />
+                                            </td>
+                                            <th>#{i18n['web.client.search.field.Show']}</th>
+                                            <td class="thin">
+                                                <h:selectOneMenu id="listRowQuant" value="#{arpBean.rowQuantSelected}" disabled="#{arpBean.serviceValue ne null}" valueChangeListener="#{arpBean.applyQuantity}" tabindex="2">
+                                                    <f:selectItems value="#{arpBean.rowQuantList}" />
+                                                    <f:ajax event="change" execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:selectOneMenu>
+                                            </td>
+                                            <td rowspan="3" style="text-align: center;">
+                                                <h:commandButton id="btnSearch" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Find']}" action="#{arpBean.applyFilter}" disabled="#{arpBean.serviceValue ne null}" tabindex="5">
+                                                    <f:ajax execute=":serviceForm:searchBoxGroupPanel" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandButton>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>#{i18n['web.client.search.field.User']}</th>
+                                            <td>
+                                                <h:selectOneMenu id="listSearchOption" value="#{arpBean.selectedUserphone}" converter="userphoneConverter">
+                                                    <f:selectItem itemLabel="(#{i18n['web.client.selectonemenu.All']})" itemValue="#{null}" />
+                                                    <f:selectItems value="#{arpBean.userphoneList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.nameChr}" />
+                                                </h:selectOneMenu>
+                                            </td>
+                                            <th>#{i18n['web.client.search.field.UserName']}</th>
+                                            <td>
+                                                <h:inputText id="textNameCriteria" value="#{arpBean.usermobileName}" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>#{i18n['web.client.search.field.FromDate']}</th>
+                                            <td>
+                                                <p:calendar id="textDateFrom" locale="#{iBean.locale}" value="#{arpBean.dateFrom}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                            </td>
+                                            <th>#{i18n['web.client.search.field.ToDate']}</th>
+                                            <td>
+                                                <p:calendar id="textDateTo" locale="#{iBean.locale}" value="#{arpBean.dateTo}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </h:panelGroup>
+                            <h:panelGroup id="listTablePanelGroup">
+                                <!-- LIST TABLE -->
+                                <div class="body">
+                                    <h:dataTable id="serviceListTable" value="#{arpBean.dataModelHeader}" var="item" rendered="#{arpBean.dataModelHeader.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <h:selectBooleanCheckbox id="chkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{arpBean.serviceValue ne null}" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                            </f:facet>
+                                            <h:selectBooleanCheckbox id="chkBoxSelected" value="#{arpBean.selectedItems[item.servicevalueCod]}" disabled="#{arpBean.serviceValue ne null}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:commandLink value="#{i18n['ARP.field.MobileNumber']}" action="#{arpBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['ARP.field.MobileNumber']}" disabled="#{arpBean.serviceValue ne null}">
+                                                        <f:setPropertyActionListener value="#{not arpBean.sortHelper.ascending}" target="#{arpBean.sortHelper.ascending}" />
+                                                        <f:setPropertyActionListener value="userphone.cellphoneNum" target="#{arpBean.sortHelper.field}" />
+                                                        <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandLink>
+                                                    <h:outputText value="#{arpBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{arpBean.sortHelper.field eq 'userphone.cellphoneNum'}" />
+                                                </span>
+                                            </f:facet>
+                                            <h:outputText value="#{item.userphone.cellphoneNum}" converter="cellphoneConverter" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:commandLink value="#{i18n['ARP.field.Names']}" action="#{arpBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['ARP.field.Names']}" disabled="#{arpBean.serviceValue ne null}">
+                                                        <f:setPropertyActionListener value="#{not arpBean.sortHelper.ascending}" target="#{arpBean.sortHelper.ascending}" />
+                                                        <f:setPropertyActionListener value="userphone.nameChr" target="#{arpBean.sortHelper.field}" />
+                                                        <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandLink>
+                                                    <h:outputText value="#{arpBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{arpBean.sortHelper.field eq 'userphone.nameChr'}" />
+                                                </span>
+                                            </f:facet>
+                                            <csui:columnWidthChar value="#{item.userphone.nameChr}" header="#{i18n['ARP.field.Names']}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:commandLink value="#{i18n[arpBean.columnsData['column1'].descriptionChr]}" action="#{arpBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n[arpBean.columnsData['column1'].descriptionChr]}" disabled="#{arpBean.serviceValue ne null}">
+                                                        <f:setPropertyActionListener value="#{not arpBean.sortHelper.ascending}" target="#{arpBean.sortHelper.ascending}" />
+                                                        <f:setPropertyActionListener value="column1Chr" target="#{arpBean.sortHelper.field}" />
+                                                        <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandLink>
+                                                    <h:outputText value="#{arpBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{arpBean.sortHelper.field eq 'column1Chr'}" />
+                                                </span>
+                                            </f:facet>
+                                            <csui:columnWidthChar value="#{item.column1Chr}" header="#{i18n[arpBean.columnsData['column1'].descriptionChr]}"/>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:commandLink value="#{i18n[arpBean.columnsData['column2'].descriptionChr]}" action="#{arpBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n[arpBean.columnsData['column2'].descriptionChr]}" disabled="#{arpBean.serviceValue ne null}">
+                                                        <f:setPropertyActionListener value="#{not arpBean.sortHelper.ascending}" target="#{arpBean.sortHelper.ascending}" />
+                                                        <f:setPropertyActionListener value="column2Chr" target="#{arpBean.sortHelper.field}" />
+                                                        <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandLink>
+                                                    <h:outputText value="#{arpBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{arpBean.sortHelper.field eq 'column2Chr'}" />
+                                                </span>
+                                            </f:facet>
+                                            <csui:columnWidthChar value="#{item.column2Chr}" header="#{i18n[arpBean.columnsData['column2'].descriptionChr]}"/>
+                                        </h:column>
+
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:outputText value="#{i18n['ARP.field.InvoiceType']}" title="#{i18n['ARP.field.InvoiceType']}" />
+                                                </span>
+                                            </f:facet>
+                                            <csui:columnWidthChar value="#{arpBean.mapTipoFactura[item.column2Chr]}" rendered="#{arpBean.mapTipoFactura[item.column2Chr] ne null}" header="#{i18n['ARP.field.InvoiceType']}"/>
+                                        </h:column>
+
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:commandLink value="#{i18n[arpBean.columnsData['column3'].descriptionChr]}" action="#{arpBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n[arpBean.columnsData['column3'].descriptionChr]}" disabled="#{arpBean.serviceValue ne null}">
+                                                        <f:setPropertyActionListener value="#{not arpBean.sortHelper.ascending}" target="#{arpBean.sortHelper.ascending}" />
+                                                        <f:setPropertyActionListener value="column3Chr" target="#{arpBean.sortHelper.field}" />
+                                                        <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandLink>
+                                                    <h:outputText value="#{arpBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{arpBean.sortHelper.field eq 'column3Chr'}" />
+                                                </span>
+                                            </f:facet>
+                                            <csui:columnWidthChar value="#{item.column3Chr}" header="#{i18n[arpBean.columnsData['column3'].descriptionChr]}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:commandLink value="#{i18n['ARP.field.Date']}" action="#{arpBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['ARP.field.Date']}" disabled="#{arpBean.serviceValue ne null}">
+                                                        <f:setPropertyActionListener value="#{not arpBean.sortHelper.ascending}" target="#{arpBean.sortHelper.ascending}" />
+                                                        <f:setPropertyActionListener value="servicevalueCod" target="#{arpBean.sortHelper.field}" />
+                                                        <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandLink>
+                                                    <h:outputText value="#{arpBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{arpBean.sortHelper.field eq 'servicevalueCod'}" />
+                                                </span>
+                                            </f:facet>
+                                            <h:outputText value="#{item.message.dateinDat}">
+                                                <f:convertDateTime pattern="#{applicationBean.defaultOutputTimeFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" type="time" />
+                                            </h:outputText>
+                                        </h:column>
+                                    </h:dataTable>
+                                </div>
+                                <!-- PAGINATION -->
+                                <div class="foot">
+                                    <h:panelGroup rendered="#{arpBean.dataModelHeader.rowCount gt 0}">
+                                        <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{arpBean.previousHeaderPage}" disabled="#{not arpBean.paginationHelper.hasPreviousPage or arpBean.serviceValue ne null}">
+                                            <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandLink>
+                                            &#160;|&#160;<h:outputText value="#{arpBean.paginationHelper.pageFirstItem + 1}..#{arpBean.paginationHelper.pageLastItem + 1} / #{arpBean.paginationHelper.itemsCount}" />&#160;|&#160;
+                                            <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{arpBean.nextHeaderPage}" disabled="#{not arpBean.paginationHelper.hasNextPage or arpBean.serviceValue ne null}">
+                                            <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandLink>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{arpBean.dataModelHeader.rowCount le 0}">
+                                        <div style="text-align: center; font-weight: bold;">
+                                            <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                        </div>
+                                    </h:panelGroup>
+                                </div>
+                            </h:panelGroup>
+                        </div>
+                        <!-- BUTTONS -->
+                        <h:panelGroup id="buttonsPanelGroup">
+                            <div class="buttons_bottom">
+                                <h:commandButton value="#{i18n['web.client.screen.button.Localize']}" styleClass="btn_std_small" action="#{arpBean.showHeaderMap}" rendered="#{arpBean.geolocalizationAllowed and arpBean.showMapOnHeader and arpBean.dataModelHeader ne null and arpBean.dataModelHeader.rowCount gt 0}">
+                                    <f:ajax execute=":serviceForm:listTablePanelGroup" render=":serviceForm:map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                                <h:commandButton value="#{i18n['web.client.screen.button.Details']}" styleClass="btn_std_small" action="#{arpBean.viewDetails}" disabled="#{arpBean.serviceValue ne null}" rendered="#{arpBean.dataModelHeader ne null and arpBean.dataModelHeader.rowCount gt 0}">
+                                    <f:ajax execute=":serviceForm:listTablePanelGroup" render="@form :fastReportForm" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                            </div>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                    <!-- DETAIL SECTION -->
+                    <h:panelGroup id="detailTablePanelGroup" rendered="#{arpBean.dataModelDetail ne null}">
+                        <div class="buttons_top">
+                            <h:commandButton styleClass="btn_xls" title="#{i18n['web.client.report.tip.XLSReport']}" action="#{arpBean.viewXLSDetail}" onclick="return reportPrint('serviceForm');" />
+                            <h:commandButton styleClass="btn_pdf" title="#{i18n['web.client.report.tip.PDFReport']}" action="#{arpBean.viewPDFDetail}" onclick="return reportPrint('serviceForm');" />
+                        </div>
+                        <div class="tablebox">
+                            <div class="head">
+                                #{i18n['ARP.title.DetailOf']} #{arpBean.serviceValue.userphone.nameChr} (
+                                <h:outputText value="#{arpBean.serviceValue.userphone.cellphoneNum}" converter="cellphoneConverter" />
+                                )
+                            </div>
+                            <!-- LIST TABLE -->
+                            <div class="body">
+                                <h:dataTable id="detailListTable" value="#{arpBean.dataModelDetail}" var="itemDetail" rendered="#{arpBean.dataModelDetail.rowCount gt 0}" rowClasses="odd_row,even_row">
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n[arpBean.columnsDataDetail['column2'].descriptionChr]}" action="#{arpBean.applySortDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n[arpBean.columnsDataDetail['column2'].descriptionChr]}" disabled="#{arpBean.serviceValueDetail ne null}">
+                                                    <f:setPropertyActionListener value="#{not arpBean.sortHelperDetail.ascending}" target="#{arpBean.sortHelperDetail.ascending}" />
+                                                    <f:setPropertyActionListener value="column2Chr" target="#{arpBean.sortHelperDetail.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:detailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{arpBean.sortHelperDetail.ascending ? '&#9650;' : '&#9660;'}" rendered="#{arpBean.sortHelperDetail.field eq 'column2Chr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{itemDetail.column2Chr}" header="#{i18n[arpBean.columnsDataDetail['column2'].descriptionChr]}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n[arpBean.columnsDataDetail['column3'].descriptionChr]}" action="#{arpBean.applySortDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n[arpBean.columnsDataDetail['column3'].descriptionChr]}" disabled="#{arpBean.serviceValueDetail ne null}">
+                                                    <f:setPropertyActionListener value="#{not arpBean.sortHelperDetail.ascending}" target="#{arpBean.sortHelperDetail.ascending}" />
+                                                    <f:setPropertyActionListener value="column3Chr" target="#{arpBean.sortHelperDetail.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:detailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{arpBean.sortHelperDetail.ascending ? '&#9650;' : '&#9660;'}" rendered="#{arpBean.sortHelperDetail.field eq 'column3Chr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar  value="#{itemDetail.column3Chr}" header="#{i18n[arpBean.columnsDataDetail['column3'].descriptionChr]}"/>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n[arpBean.columnsDataDetail['column4'].descriptionChr]}" action="#{arpBean.applySortDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n[arpBean.columnsDataDetail['column4'].descriptionChr]}" disabled="#{arpBean.serviceValueDetail ne null}">
+                                                    <f:setPropertyActionListener value="#{not arpBean.sortHelperDetail.ascending}" target="#{arpBean.sortHelperDetail.ascending}" />
+                                                    <f:setPropertyActionListener value="column4Chr" target="#{arpBean.sortHelperDetail.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:detailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{arpBean.sortHelperDetail.ascending ? '&#9650;' : '&#9660;'}" rendered="#{arpBean.sortHelperDetail.field eq 'column4Chr'}" />
+                                            </span>
+                                        </f:facet>
+                                         <csui:columnWidthChar value="#{itemDetail.column4Chr}" header="#{i18n[arpBean.columnsDataDetail['column4'].descriptionChr]}"/>
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+                            <!-- PAGINATION -->
+                            <div class="foot">
+                                <h:panelGroup rendered="#{arpBean.dataModelDetail.rowCount gt 0}">
+                                    <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{arpBean.previousDetailPage}" disabled="#{not arpBean.paginationHelperDetail.hasPreviousPage or arpBean.serviceValueDetail ne null}">
+                                        <f:ajax execute="@this" render=":serviceForm:detailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                        &#160;|&#160;<h:outputText value="#{arpBean.paginationHelperDetail.pageFirstItem + 1}..#{arpBean.paginationHelperDetail.pageLastItem + 1} / #{arpBean.paginationHelperDetail.itemsCount}" />&#160;|&#160;
+                                        <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{arpBean.nextDetailPage}" disabled="#{not arpBean.paginationHelperDetail.hasNextPage or arpBean.serviceValueDetail ne null}">
+                                        <f:ajax execute="@this" render=":serviceForm:detailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{arpBean.dataModelDetail.rowCount le 0}">
+                                    <div style="text-align: center; font-weight: bold;">
+                                        <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                    <!-- SUBDETAIL SECTION -->
+                    <h:panelGroup id="subDetailTablePanelGroup" rendered="#{arpBean.dataModelSubDetail ne null}">
+                        <div class="tablebox">
+                            <div class="head">
+                                #{i18n['web.client.ARP.screen.title.SubdetailOf']} #{arpBean.serviceValue.userphone.nameChr} (
+                                <h:outputText value="#{arpBean.serviceValue.userphone.cellphoneNum}" converter="cellphoneConverter" />
+                                )
+                            </div>
+                            <!-- LIST TABLE -->
+                            <div class="body">
+                                <h:dataTable id="subDetailListTable" value="#{arpBean.dataModelSubDetail}" var="itemSubDetail" rendered="#{arpBean.dataModelSubDetail.rowCount gt 0}" rowClasses="odd_row,even_row">
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n[arpBean.columnsDataSubDetail['column2'].descriptionChr]}" action="#{arpBean.applySortSubDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n[arpBean.columnsDataSubDetail['column2'].descriptionChr]}">
+                                                    <f:setPropertyActionListener value="#{not arpBean.sortHelperSubDetail.ascending}" target="#{arpBean.sortHelperSubDetail.ascending}" />
+                                                    <f:setPropertyActionListener value="column2Chr" target="#{arpBean.sortHelperSubDetail.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:subDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{arpBean.sortHelperSubDetail.ascending ? '&#9650;' : '&#9660;'}" rendered="#{arpBean.sortHelperSubDetail.field eq 'column2Chr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{itemSubDetail.column2Chr}" header="#{i18n[arpBean.columnsDataSubDetail['column2'].descriptionChr]}"/>
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+                            <!-- PAGINATION -->
+                            <div class="foot">
+                                <h:panelGroup rendered="#{arpBean.dataModelSubDetail.rowCount gt 0}">
+                                    <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{arpBean.previousSubDetailPage}" disabled="#{not arpBean.paginationHelperSubDetail.hasPreviousPage}">
+                                        <f:ajax execute="@this" render=":serviceForm:subDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                        &#160;|&#160;<h:outputText value="#{arpBean.paginationHelperSubDetail.pageFirstItem + 1}..#{arpBean.paginationHelperSubDetail.pageLastItem + 1} / #{arpBean.paginationHelperSubDetail.itemsCount}" />&#160;|&#160;
+                                        <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{arpBean.nextSubDetailPage}" disabled="#{not arpBean.paginationHelperSubDetail.hasNextPage}">
+                                        <f:ajax execute="@this" render=":serviceForm:subDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{arpBean.dataModelSubDetail.rowCount le 0}">
+                                    <div style="text-align: center; font-weight: bold;">
+                                        <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                    <!-- BUTTONS -->
+                    <h:panelGroup id="localizationButtonsPanelGroup" rendered="#{arpBean.dataModelDetail ne null and arpBean.dataModelDetail.rowCount gt 0}">
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['web.client.screen.button.Localize']}" styleClass="btn_std_small" action="#{arpBean.showDetailMap}" rendered="#{arpBean.geolocalizationAllowed and arpBean.showMapOnDetail and arpBean.dataModelDetail ne null and arpBean.dataModelDetail.rowCount gt 0}">
+                                <f:ajax execute=":serviceForm:detailTablePanelGroup" render=":serviceForm:map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.screen.button.ReturnToList']}" styleClass="btn_std_large" action="#{arpBean.cancelDetail}">
+                                <f:ajax execute="@this" render="@form :fastReportForm" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+                    <f:view contentType="text/html">
+                        <!-- GOOGLE MAP -->
+                        <h:panelGroup id="mapGroup" rendered="#{arpBean.geolocalizationAllowed and ((arpBean.dataModelHeader ne null and arpBean.dataModelHeader.rowCount gt 0 and arpBean.showMapOnHeader) or (arpBean.dataModelDetail ne null and arpBean.dataModelDetail.rowCount gt 0 and arpBean.showMapOnDetail))}">
+                            <div class="tablebox">
+                                <div class="head">#{i18n['web.client.screen.subtitle.LocalizationMap']}</div>
+                                <h:panelGroup id="map">
+                                    <div class="body" style="padding-left: 1px; padding-top: 2px;">
+                                        <p:gmap center="#{arpBean.mapCenterStr}" zoom="#{arpBean.mapZoom}" type="#{arpBean.mapType}" style="width:979px;height:600px" model="#{arpBean.mapModel}">
+                                            <p:ajax event="overlaySelect" listener="#{arpBean.onMarkerSelect}" update="textbox" />
+                                            <p:ajax event="stateChange" listener="#{arpBean.onMapStateChange}" />
+                                            <p:ajax event="pointSelect" listener="#{arpBean.onPointSelect}" update="map" />
+                                            <p:gmapInfoWindow maxWidth="4">
+                                                <p:outputPanel id="textbox">
+                                                    <h:outputText value="#{arpBean.selectedMarker.data}" rendered="#{not arpBean.clientMarker}" escape="false" />
+                                                    <h:panelGroup style="width:320px;height:150px" id="clientMark" rendered="#{arpBean.clientMarker}">
+                                                        <table style="width: 300px; height: 120px">
+                                                            <tr>
+                                                                <td>
+                                                                    <h:outputText id="descriptionClientMarkerOut" value="#{i18n['web.client.abstractServiceBean.map.Title']}" />
+                                                                </td>
+                                                                <td>
+                                                                    <h:inputText id="descriptionClientMarker" value="#{arpBean.selectedMarker.title}" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <h:outputText id="titleClientMarkerOut" value="#{i18n['web.client.abstractServiceBean.map.Description']}" />
+                                                                </td>
+                                                                <td>
+                                                                    <h:inputText id="titleClientMarker" value="#{arpBean.selectedMarker.data}" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2" style="text-align: right;">
+                                                                    <h:commandButton id="btnSaveMark" styleClass="btn_std_small" value="#{i18n['web.client.abstractServiceBean.map.button.SaveMark']}" action="#{arpBean.saveClientMarker}">
+                                                                        <f:ajax execute=":serviceForm:mapGroup" render="map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                                    </h:commandButton>
+                                                                    <h:commandButton id="DeleteMark" styleClass="btn_std_small" value="#{i18n['web.client.abstractServiceBean.map.button.DeleteMark']}" action="#{arpBean.deleteClientMarker}">
+                                                                        <f:ajax execute=":serviceForm:mapGroup" render="map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                                    </h:commandButton>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </h:panelGroup>
+                                                </p:outputPanel>
+                                            </p:gmapInfoWindow>
+                                        </p:gmap>
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </h:panelGroup>
+                    </f:view>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

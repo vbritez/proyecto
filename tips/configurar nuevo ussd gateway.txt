@@ -1,0 +1,7 @@
+para configurar un nuevo USSD GW
+se debe agregar en la tabla USSD_APPLICATION_SERVER el nuevo server
+luego configurar los nuevos GW en el USSD_GW_USSD
+luego para cada GW configurar su parametros en USSD_SERVER_PARAM
+luego buscar la raiz en la tabla USSD_MENU_ENTRY y apuntar el campo USSDAPPLICATION_ID al USSD_APPLICATION_SERVER creado. (para identificar la raiz
+se debe buscar rootmenu = 1)
+y en la tabla USSD_APPLICATION apuntar el campo APPLICATIONSERVER_ID al USSD_APPLICATION_SERVER creado 

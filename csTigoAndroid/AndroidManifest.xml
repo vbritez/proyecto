@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tigo.cs.android"
+    android:versionCode="46"
+    android:versionName="8.5.1" >
+
+    <permission
+        android:name="info.androidhive.googlemapsv2.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="info.androidhive.googlemapsv2.permission.MAPS_RECEIVE" />
+
+    <uses-sdk android:minSdkVersion="10" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
+    <application
+        android:name=".CsTigoApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher_tigo"
+        android:label="@string/app_name"
+        android:theme="@style/CSTheme" >
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyCyXM-0KotrcMwvoU9je90tVDdjHpgC05I" />
+
+        <!-- <meta-data -->
+        <!-- android:name="com.google.android.maps.v2.API_KEY" -->
+        <!-- android:value="AIzaSyAy1Eiqmyu_mJkhtJQJlHf-k_qdxW0Owig" /> -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <service android:name=".service.LocationService" />
+        <service android:name=".service.MessageSenderService" />
+
+        <activity
+            android:name="com.tigo.cs.android.activity.MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.InternetOptionActivity" />
+        <activity android:name=".activity.PlatformUpdateActivity" />
+        <activity android:name=".activity.UserDataActivity" />
+        <activity android:name=".activity.courrier.CourierActivity" />
+        <activity android:name=".activity.courrier.CourierDeliveredActivity" />
+        <activity android:name=".activity.courrier.CourierNotDeliveredActivity" />
+        <activity android:name=".activity.shiftguard.GuardMarkActivity" />
+        <activity android:name=".activity.shiftguard.ShiftguardActivity" />
+        <activity android:name=".activity.visitmedic.MedicVisitActivity" />
+        <activity android:name=".activity.visitmedic.MedicVisitClinicStartActivity" />
+        <activity android:name=".activity.visitmedic.MedicVisitClinicEndActivity" />
+        <activity android:name=".activity.visitmedic.MedicVisitMedicStartActivity" />
+        <activity android:name=".activity.visitmedic.MedicVisitMedicEndActivity" />
+        <activity android:name=".activity.visitmedic.MedicVisitClinicQuickActivity" />
+        <activity android:name=".activity.visitmedic.MedicVisitProductRegisterActivity" />
+        <activity android:name=".activity.messagehistory.MessageHistoryActivity" />
+        <activity android:name=".activity.messagehistory.MessageViewerActivity" />
+        <activity android:name=".activity.meta.MetadataActivity" />
+        <activity android:name=".activity.meta.MetadataCreateActivity" />
+        <activity android:name=".activity.meta.MetadataReadActivity" />
+        <activity android:name=".activity.order.OrderActivity" />
+        <activity android:name=".activity.order.OrderIlimActivity" />
+        <activity android:name=".activity.order.OrderIlimFinishActivity" />
+        <activity android:name=".activity.order.OrderIlimRegisterActivity" />
+        <activity android:name=".activity.order.OrderIlimStartActivity" />
+        <activity android:name=".activity.order.OrderVersionActivity" />
+        <activity android:name=".activity.serviceoperation.ServiceOperationActivity" />
+        <activity android:name=".activity.serviceoperation.ServiceOperationDeleteActivity" />
+        <activity android:name=".activity.serviceoperation.ServiceOperationDeleteConfirmActivity" />
+        <activity android:name=".activity.serviceoperation.ServiceOperationDeleteRetrieveActivity" />
+        <activity android:name=".activity.serviceoperation.ServiceOptionActivity" />
+        <activity android:name=".activity.visit.VisitActivity" />
+        <activity android:name=".activity.visit.VisitEndVisitActivity" />
+        <activity android:name=".activity.visit.VisitQuickVisitActivity" />
+        <activity android:name=".activity.visit.VisitStartVisitActivity" />
+        <activity android:name=".activity.inventory.InventoryActivity" />
+        <activity android:name=".activity.attendance.AttendanceActivity" />
+        <activity android:name=".activity.attendance.AttendanceMenuActivity" />
+        <activity android:name=".activity.attendance.AttendanceEventActivity" />
+        <activity android:name=".activity.attendance.AttendanceObservationActivity" />
+        <activity android:name=".activity.terport.TerportActivity" />
+        <activity android:name=".activity.terport.TerportLoginActivity" />
+        <activity android:name=".activity.terport.TerportRegisterActivity" />
+        <activity android:name=".activity.collection.CollectionRegisterInvoiceActivity" />
+        <activity android:name=".activity.collection.CollectionActivity" />
+        <activity android:name=".activity.collection.CollectionVersionActivity" />
+        <activity android:name=".activity.collection.CollectionStartActivity" />
+        <activity android:name=".activity.collection.CollectionRegisterPaymentCashActivity" />
+        <activity android:name=".activity.collection.CollectionRegisterPaymentCheckActivity" />
+        <activity android:name=".activity.collection.CollectionEndActivity" />
+        <activity android:name=".activity.collection.AverageCollectionActivity" />
+        <activity android:name=".activity.interfisa.InterfisaActivity" />
+        <activity android:name=".activity.interfisa.InterfisaInformconfActivity" />
+        <activity android:name=".activity.dynamicform.DynamicFormActivity" />
+        <activity android:name=".activity.dynamicform.DynamicFormSelectionActivity" />
+        <activity android:name=".activity.dynamicform.DynamicFormRegisterActivity" />
+        <activity android:name=".activity.supervisor.SupervisorActivity" />
+        <activity android:name=".activity.supervisor.MapActivity" />
+        <activity android:name=".activity.visit.VisitGeolocalizeActivity" />
+        <activity android:name=".activity.visit.VisitNormalActivity" />
+        <activity android:name=".activity.tigomoney.TigoMoneyActivity" />
+        <activity android:name=".activity.tigomoney.TigoMoneySessionActivity" />
+        <activity android:name=".activity.tigomoney.TigoMoneyConsultIdActivity" />
+        <activity android:name=".activity.tigomoney.TigoMoneyRegisterActivity" />
+        <activity android:name=".activity.tigomoney.TigoMoneyTakePictureAndRegisterActivity" />
+
+        <receiver
+            android:name=".receiver.SMSReceiver"
+            android:enabled="true" >
+            <intent-filter android:priority="999" >
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".receiver.BootCompletedReceiver" >
+            <intent-filter android:priority="999" >
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.AlarmReceiver"
+            android:priority="999" />
+         <receiver
+            android:name=".receiver.LocatorReceiver"
+            android:priority="999" />
+        <receiver
+            android:name=".receiver.UpdateConfigurationReceiver"
+            android:priority="999" />
+        <receiver
+            android:name=".receiver.ResendSmsReceiver"
+            android:priority="999" />
+        <receiver android:name=".receiver.NetworkChangeReceiver" >
+            <intent-filter android:priority="999" >
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+</manifest>

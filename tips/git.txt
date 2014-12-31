@@ -1,0 +1,54 @@
+﻿The Git directory is where Git stores the metadata and object database for your project. This is the most important part of Git, and it is what is copied when you clone a repository from another computer.
+
+The working directory is a single checkout of one version of the project. These files are pulled out of the compressed database in the Git directory and placed on disk for you to use or modify.
+
+The staging area is a file, generally contained in your Git directory, that stores information about what will go into your next commit. It’s sometimes referred to as the “index”, but it’s also common to refer to it as the staging area.
+
+If a particular version of a file is in the Git directory, it’s considered committed. If it’s modified but has been added to the staging area, it is staged. And if it was changed since it was checked out but has not been staged, it is modified. 
+
+
+ If you’re familiar with other VCS systems such as Subversion, you’ll notice that the command is “clone” and not “checkout”. This is an important distinction – instead of getting just a working copy, Git receives a full copy of nearly all data that the server has. Every version of every file for the history of the project is pulled down by default when you run git clone. In fact, if your server disk gets corrupted, you can often use nearly any of the clones on any client to set the server back to the state it was in when it was cloned 
+ 
+ 
+ 
+ git init --> inicializa el repositorio git
+ git status --> te muestra los archivos tracked-modified y los archivos untracked
+ git checkout -- <nombre_archivo> --> para descartar cambios realizados a un archivo, similar al revert de subversion
+ git diff --> muestra los cambios que todavia no fueron staged
+ git add --> pone el archivo al estado staged, listo para hacer commit
+ git commit -a -m 'comentario' --> pone todos los archivos a estado stages y hace commit de los mismos
+ git rm README --> Borra el archivo README del staged area, luego se debe realizar commit para que borre del repositorio
+ git rm --cached README --> Borra el archivo README del control de version GIT, no del disco duro.
+ git mv file_from file_to --> Renombra el archivo y lo pone en estado staged, listo para hacer commit.
+ git reset HEAD <archivo> ---> quita el archivo del estado de staged
+ git remote --> listar los servidores clonados
+ git remote -v --> listar los servidores clonados con sus URL
+ git remote add  <URL> vs git clone <URL>
+ git remote add <shortName> <URL> --> agrega un nuevo repositorio con el nombre especificado en shortname en la URL especificada
+ git clone <URL> --> crea un nuevo repositorio git a partir de otro especificado en la URL. Agrega el repositorio remoto bajo el nombre de "origin"
+|git fetch [remote-name] --> Obtener datos de tu proyecto remoto. El comando va a proyecto remoto y hace un pull de todos los datos que todavia no tengas.
+El comando fetch no hace ni trata de hacer merge, esto se debe hacer manualmente.
+git pull --> comando que hace fetch automaticamente y luego merge el branch remoto con el branch actual
+git push [remote-name] [branch-name] --> Envia los cambios de tu branch al branch remoto.
+git remote rename pb paul --> Renombra el proyecto remoto pb a paul
+git remote rm paul --> Elimina el proyecto remoto paul
+git tag -a <nombre del tag> -m '<comentario>' --> crea un tag de la ultima version comiteada. 
+git checkout -b <branch name> <tag name> --> Creas un branch a partir del tag
+git push <remote-branch> <tag name> --> hacer un push del tag al branch remoto
+git branch -m <oldname> <newname> --> renonmbra el branch local
+git checkout -b <nombre del branch> --> crea un nuevo branch y salta a ella
+git checkout <nombre branch> --> te cambias al branch
+Para hacer merge hay que situarse en el branch master o branch que se desee:
+git checkout master y luego hacer git merge <branch name> aqui se especifica el nombre del branch con el que se desea hacer el merge
+git branch -d <nombre del branch> ---> borra el branch especificado
+ 
+ Para crear un repositorio
+ intalar git-core --> apt-get install git-core
+ crear la carpeta donde va a estar tu repositorio --> mkdir repository
+ dentro de la carpeta ejecutar el comando --> git init --bare
+
+
+
+
+
+

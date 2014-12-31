@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:csui="http://java.sun.com/jsf/composite/uicomponents" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/screenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.client.guardroundconf.screenname']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="guardroundconf" value="#{i18n['web.client.guardroundconf.screenname']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="crudForm">
+
+                    <div class="tablebox">
+                        <div class="head">#{i18n['web.client.metadataguard.screen.title.ListOf']}</div>
+                        <!-- SEARCH BOX -->
+                        <h:panelGroup id="searchBoxGroupPanel">
+                            <p:focus for="crudForm:listSearchOption" />
+                            <div class="headcontainer">
+                                <table class="tablesearch">
+                                    <tr>
+                                        <th>#{i18n['web.client.search.field.FindBy']}</th>
+                                        <td>
+                                            <h:selectOneMenu id="listSearchOption" value="#{guardroundconfBean.filterSelectedField}" onchange="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{guardroundconfBean.entity ne null}">
+                                                <f:selectItem itemLabel="(#{i18n['web.client.search.field.OptionSelect']})" itemValue="-1" />
+                                                <f:selectItems value="#{guardroundconfBean.filterFields}" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                        <th>#{i18n['web.client.search.field.Criteria']}</th>
+                                        <td>
+                                            <h:inputText id="textSearchCriteria" value="#{guardroundconfBean.filterCriteria}" onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');" disabled="#{guardroundconfBean.entity ne null}" />
+                                        </td>
+                                        <td>
+                                            <h:commandButton id="btnSearch" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Find']}" action="#{guardroundconfBean.applyFilter}" disabled="#{guardroundconfBean.entity ne null}">
+                                                <f:ajax execute=":crudForm:searchBoxGroupPanel" render=":crudForm:listTablePanelGroup :crudForm:btnClean" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton>
+                                            <h:commandButton id="btnClean" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Clear']}" action="#{guardroundconfBean.cleanFilter}" disabled="#{guardroundconfBean.filterCriteria eq '' or guardroundconfBean.entity ne null}">
+                                                <f:ajax execute="@this" render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:commandButton>
+                                        </td>
+                                        <th>#{i18n['web.client.search.field.Show']}</th>
+                                        <td class="thin">
+                                            <h:selectOneMenu id="listRowQuant" value="#{guardroundconfBean.rowQuantSelected}" disabled="#{guardroundconfBean.entity ne null}" valueChangeListener="#{guardroundconfBean.applyQuantity}">
+                                                <f:selectItems value="#{guardroundconfBean.rowQuantList}" />
+                                                <f:ajax event="change" execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                            </h:selectOneMenu>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <!-- SCRIPTS -->
+                            <script type="text/javascript" charset="UTF-8">
+								if (document.getElementById('crudForm:listSearchOption').disabled == false) {
+									searchFieldOnchange(
+											'crudForm:listSearchOption',
+											'crudForm:textSearchCriteria',
+											'crudForm:btnSearch');
+								}
+								//
+																													
+								//METODO QUE SE EJECUTA ANTES DE GUARDAR
+                                function showProcessExecutingMessage(callerObject) {
+                                    var dateFromStr = document.getElementById('crudForm:textDateFrom_input').value;
+                                    var dateFrom = new Date();
+                                    var dt1   = parseInt(dateFromStr.substring(0,2), 10); 
+                                    var mon1  = parseInt(dateFromStr.substring(3,5), 10);
+                                    var yr1   = parseInt(dateFromStr.substring(6,10),10);
+                                                                        
+                                    dateFrom.setDate(dt1);
+                                    dateFrom.setMonth(mon1-1); // January = 0
+                                    dateFrom.setFullYear(yr1);                                  
+                                    
+                                    var oldDateFromStr = document.getElementById('crudForm:oldTextDateFrom').value;
+                                    var oldDate = new Date();
+                                    var dt2   = parseInt(oldDateFromStr.substring(0,2), 10); 
+                                    var mon2  = parseInt(oldDateFromStr.substring(3,5), 10);
+                                    var yr2   = parseInt(oldDateFromStr.substring(6,10), 10);
+                                
+                                    oldDate.setDate(dt2);
+                                    oldDate.setMonth(mon2-1); // January = 0
+                                    oldDate.setFullYear(yr2);
+                                
+                                    var dateToStr = document.getElementById('crudForm:textDateTo_input').value;                                 
+                                    var oldDateToStr = document.getElementById('crudForm:oldTextDateTo').value;
+                                    var oldDateTo = new Date();
+                                    var dt3   = parseInt(oldDateToStr.substring(0,2), 10); 
+                                    var mon3  = parseInt(oldDateToStr.substring(3,5), 10);
+                                    var yr3   = parseInt(oldDateToStr.substring(6,10), 10);
+                                
+                                    oldDateTo.setDate(dt3);
+                                    oldDateTo.setMonth(mon3-1); // January = 0
+                                    oldDateTo.setFullYear(yr3);
+                                
+                                    //alert(oldDateTo);
+                                    //alert(dateToStr);
+                                    var message = "La configuración ya se encuentra en ejecución o está por ser ejecutado.Esta seguro que desea modificarla?";
+                                
+                                    if(document.getElementById('crudForm:isEditing').value){
+                                         if (dateFromStr != oldDateFromStr){
+                                             if (new Date() >= oldDate)
+                                                 if (oldDateTo >= new Date() )
+                                                    return showConfirmMessage(message, callerObject);
+                                                    
+                                         }
+                                         if (dateToStr != oldDateToStr){
+                                             if (oldDateTo >= new Date())
+                                                 if (new Date() >= oldDate)
+                                                    return showConfirmMessage(message, callerObject);
+                                         }
+                                    }                                   
+                                    return true;                                        
+                                }
+
+								function showStdConfirmDeleteShiftPeriodMessage(callerObject) {
+								    return showConfirmMessage(shiftPeriodDelete, callerObject);                                    
+								}
+
+								function yesButton(callerObject) {
+								    return true;
+								}
+
+								function noButton(callerObject) {
+								    return false;
+								}
+
+								function validateHourPattern(inputObj, e) {								    
+								    reg = /\d\d:\d\d/;
+								    var value = inputObj.value; 
+								    alert(value);
+								    if (!reg.test(value))
+								    	inputObj.value = "00:00";
+                                        //alert("no macheo");
+                                    else
+                                    	alert("no macheo");  
+								}
+
+						</script>
+                        </h:panelGroup>
+                        <h:panelGroup id="listTablePanelGroup">
+                            <!-- LIST TABLE -->
+                            <div class="body">
+                                <h:dataTable id="crudListTable" value="#{guardroundconfBean.dataModel}" var="item" rendered="#{guardroundconfBean.dataModel.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <h:selectBooleanCheckbox id="chkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{guardroundconfBean.entity ne null}" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                        </f:facet>
+                                        <h:selectBooleanCheckbox id="chkBoxSelected" value="#{guardroundconfBean.selectedItems[item.metaDataPK]}" disabled="#{guardroundconfBean.entity ne null}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.metadataguard.screen.field.GuardCode']}" action="#{guardroundconfBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.metadataguard.screen.field.GuardCode']}" disabled="#{guardroundconfBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not guardroundconfBean.sortHelper.ascending}" target="#{guardroundconfBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="metaDataPK.codeChr" target="#{guardroundconfBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{guardroundconfBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{guardroundconfBean.sortHelper.field eq 'metaDataPK.codeChr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{item.metaDataPK.codeChr}">
+                                            <f:convertNumber groupingUsed="true" integerOnly="true" />
+                                        </h:outputText>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['web.client.metadataguard.screen.field.Guard']}" action="#{guardroundconfBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.metadataguard.screen.field.Guard']}" disabled="#{guardroundconfBean.entity ne null}">
+                                                    <f:setPropertyActionListener value="#{not guardroundconfBean.sortHelper.ascending}" target="#{guardroundconfBean.sortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="valueChr" target="#{guardroundconfBean.sortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{guardroundconfBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{guardroundconfBean.sortHelper.field eq 'valueChr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{item.valueChr}" header="#{i18n['web.client.metadataguard.screen.field.Guard']}"/>
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+                            <!-- PAGINATION -->
+                            <div class="foot">
+                                <h:panelGroup rendered="#{guardroundconfBean.dataModel.rowCount gt 0}">
+                                    <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{guardroundconfBean.previousPage}" disabled="#{not guardroundconfBean.paginationHelper.hasPreviousPage or guardroundconfBean.entity ne null}">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                        &#160;|&#160;<h:outputText value="#{guardroundconfBean.paginationHelper.pageFirstItem + 1}..#{guardroundconfBean.paginationHelper.pageLastItem + 1} / #{guardroundconfBean.paginationHelper.itemsCount}" />&#160;|&#160;
+                                        <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{guardroundconfBean.nextPage}" disabled="#{not guardroundconfBean.paginationHelper.hasNextPage or guardroundconfBean.entity ne null}">
+                                        <f:ajax execute="@this" render=":crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{guardroundconfBean.dataModel.rowCount le 0}">
+                                    <div style="text-align: center; font-weight: bold;">
+                                        <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                    <!-- BUTTONS -->
+                    <h:panelGroup id="buttonPanelGroup">
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['web.client.guardroundconf.button.AssignPhoneNumber']}" styleClass="btn_std_large" action="#{guardroundconfBean.assignPhoneNumber}" disabled="#{guardroundconfBean.entity ne null}">
+                                <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:userphonePanelGroup :crudForm:buttonPanelGroup :crudForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton> 
+                            <h:commandButton value="#{i18n['web.client.guardroundconf.button.AssignPeriodsMassively']}" styleClass="btn_std_large" action="#{guardroundconfBean.assignPeriodsMassively}" disabled="#{guardroundconfBean.entity ne null}">
+                                <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.guardroundconf.button.AssignPeriods']}" styleClass="btn_std_large" action="#{guardroundconfBean.assignPeriods}" disabled="#{guardroundconfBean.entity ne null}">
+                                <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.guardroundconf.button.Details']}" styleClass="btn_std_large" action="#{guardroundconfBean.editEntity}" disabled="#{guardroundconfBean.entity ne null}">
+                                <f:ajax execute=":crudForm:listTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+                    <!-- DETAIL SECTION -->
+                    <div class="tablebox">
+                        <h:panelGroup id="confTablePanelGroup">
+                            <h:panelGroup rendered="#{guardroundconfBean.entity ne null}">
+                                <div class="head">#{guardroundconfBean.tableDetailsTitle}</div>
+                                <div class="body">
+                                    <h:dataTable id="detailListTable" value="#{guardroundconfBean.dataModelDetail}" var="itemDetail" rendered="#{guardroundconfBean.dataModelDetail.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <h:selectBooleanCheckbox id="chkBoxSelectedDetailAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{guardroundconfBean.entityDetail ne null}" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                            </f:facet>
+                                            <h:selectBooleanCheckbox id="chkBoxSelectedDetail" value="#{guardroundconfBean.selectedItemsDetail[itemDetail.shiftPeriodCod]}" disabled="#{guardroundconfBean.entityDetail ne null}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:outputText value="#{i18n['web.client.guardroundconf.service.field.Period']}" />
+                                                </span>
+                                            </f:facet>
+                                            <csui:columnWidthChar value="#{itemDetail.description}" header="#{i18n['web.client.guardroundconf.service.field.Period']}"/>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:outputText value="#{i18n['web.client.guardroundconf.service.field.BeginningOfPeriod']}" />
+                                                </span>
+                                            </f:facet>
+                                            <h:outputText value="#{itemDetail.dateFrom}">
+                                                <f:convertDateTime pattern="#{applicationBean.defaultOutputDateFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                            </h:outputText>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:outputText value="#{i18n['web.client.guardroundconf.service.field.EndOfPeriod']}" />
+                                                </span>
+                                            </f:facet>
+                                            <h:outputText value="#{itemDetail.dateTo}">
+                                                <f:convertDateTime pattern="#{applicationBean.defaultOutputDateFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                            </h:outputText>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:outputText value="#{i18n['web.client.guardroundconf.service.field.ActiveStatus']}" />
+                                                </span>
+                                            </f:facet>
+                                            <csui:columnWidthChar value="#{i18n['web.admin.screen.field.Yes']}" rendered="#{itemDetail.status}" header="#{i18n['web.client.guardroundconf.service.field.ActiveStatus']}"/>
+                                            <csui:columnWidthChar value="#{i18n['web.admin.screen.field.No']}" rendered="#{not itemDetail.status}" header="#{i18n['web.client.guardroundconf.service.field.ActiveStatus']}"/>
+                                        </h:column>
+                                    </h:dataTable>
+                                </div>
+                                <!-- PAGINATION -->
+                                <div class="foot">
+                                    <h:panelGroup rendered="#{guardroundconfBean.dataModelDetail.rowCount gt 0}">
+                                        <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{guardroundconfBean.previousPageDetail}" disabled="#{not guardroundconfBean.paginationHelperDetail.hasPreviousPage or guardroundconfBean.entityDetail ne null }">
+                                            <f:ajax execute="@this" render=":crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandLink>
+                                    &#160;|&#160;
+                                    <h:outputText value="#{guardroundconfBean.paginationHelperDetail.pageFirstItem + 1}..#{guardroundconfBean.paginationHelperDetail.pageLastItem + 1} / #{guardroundconfBean.paginationHelperDetail.itemsCount}" />&#160;|&#160;
+                                    <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{guardroundconfBean.nextPageDetail}" disabled="#{not guardroundconfBean.paginationHelperDetail.hasNextPage or guardroundconfBean.entityDetail ne null }">
+                                            <f:ajax execute="@this" render=":crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandLink>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{guardroundconfBean.dataModelDetail.rowCount le 0}">
+                                        <div style="text-align: center; font-weight: bold;">
+                                            <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                        </div>
+                                    </h:panelGroup>
+                                </div>
+                                <!-- BUTTONS -->
+                                <h:panelGroup id="buttonDetailPanelGroup">
+                                    <div class="buttons_bottom">
+                                        <h:commandButton value="#{i18n['web.admin.screen.button.Delete']}" styleClass="btn_std_small" disabled="#{guardroundconfBean.entityDetail ne null}" rendered="#{not guardroundconfBean.assignConfigurations and not guardroundconfBean.assignConfigurationsMassively}" onclick="return showStdConfirmDeleteShiftPeriodMessage(this);" action="#{guardroundconfBean.deleteEditingDetail}">
+                                            <f:ajax execute=":crudForm:confTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup :crudForm:searchBoxGroupPanel" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandButton>
+                                        <h:commandButton value="#{i18n['web.client.guardroundconf.button.RemovePeriods']}" styleClass="btn_std_large" action="#{guardroundconfBean.removePeriods}" disabled="#{guardroundconfBean.entityDetail ne null}" rendered="#{not guardroundconfBean.assignConfigurations and not guardroundconfBean.assignConfigurationsMassively}">
+                                            <f:ajax execute=":crudForm:confTablePanelGroup" render=":crudForm:editingPanelGroup :crudForm:buttonDetailPanelGroup :crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandButton>
+                                        <h:commandButton value="#{i18n['web.admin.screen.button.Save']}" styleClass="btn_std_small" action="#{guardroundconfBean.saveAssignPeriods}" disabled="#{guardroundconfBean.entityDetail ne null}" rendered="#{guardroundconfBean.assignConfigurations or guardroundconfBean.assignConfigurationsMassively}">
+                                            <f:ajax execute=":crudForm:confTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup :crudForm:searchBoxGroupPanel" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandButton>
+                                        <h:commandButton value="#{i18n['web.admin.screen.button.New']}" styleClass="btn_std_small" action="#{guardroundconfBean.newEntityDetail}" disabled="#{guardroundconfBean.entityDetail ne null}" rendered="#{not guardroundconfBean.assignConfigurations and not guardroundconfBean.assignConfigurationsMassively}">
+                                            <f:ajax execute=":crudForm:confTablePanelGroup" render=":crudForm:editingPanelGroup :crudForm:buttonDetailPanelGroup :crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandButton>
+                                        <h:commandButton value="#{i18n['web.admin.screen.button.Edit']}" styleClass="btn_std_small" action="#{guardroundconfBean.editEntityDetail}" disabled="#{guardroundconfBean.entityDetail ne null}" rendered="#{not guardroundconfBean.assignConfigurations and not guardroundconfBean.assignConfigurationsMassively}">
+                                            <f:ajax execute=":crudForm:confTablePanelGroup" render=":crudForm:editingPanelGroup :crudForm:buttonDetailPanelGroup :crudForm:confTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandButton>
+                                        <h:commandButton value="#{i18n['web.admin.screen.button.Cancel']}" styleClass="btn_std_small" action="#{guardroundconfBean.cancelEditing}" disabled="#{guardroundconfBean.entityDetail ne null}">
+                                            <f:ajax execute=":crudForm:confTablePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:confTablePanelGroup :crudForm:searchBoxGroupPanel" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandButton>
+                                    </div>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </h:panelGroup>
+                    </div>
+                    <!-- EDIT SECTION -->
+                    <h:panelGroup id="editingPanelGroup">
+                        <h:panelGroup rendered="#{guardroundconfBean.entityDetail ne null}">
+                            <p:focus for="crudForm:descriptionEdit" />
+                            <div class="tablebox">
+                                <div class="body">
+                                    <div class="head">#{i18n['web.client.guardroundconf.screen.title.RoundsConfDetails']}</div>
+                                    <table width="100%">
+                                        <tr>
+                                            <th>#{i18n['web.client.guardroundconf.service.field.Description']}</th>
+                                            <td colspan="5">
+                                                <h:inputText id="descriptionEdit" value="#{guardroundconfBean.entityDetail.description}" maxlength="100" size="40" tabindex="10" />
+                                                <h:inputHidden id="isEditing" value="#{guardroundconfBean.isEditing}" />
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th>#{i18n['web.client.guardroundconf.screen.field.PeriodOfValidity']}</th>
+                                            <td colspan="2">
+                                                <h:outputText value="#{i18n['web.client.guardroundconf.screen.field.FromDate']} " />
+                                                <p:calendar id="textDateFrom" locale="#{iBean.locale}" value="#{guardroundconfBean.entityDetail.dateFrom}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                                <h:inputHidden id="oldTextDateFrom" value="#{guardroundconfBean.oldDateFrom}">
+                                                    <f:convertDateTime pattern="#{applicationBean.defaultInputDateFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                                </h:inputHidden>
+                                            </td>
+                                            <td colspan="3">
+                                                <h:outputText value="#{i18n['web.client.search.field.ToDate']} " />
+                                                <p:calendar id="textDateTo" locale="#{iBean.locale}" value="#{guardroundconfBean.entityDetail.dateTo}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                                <h:inputHidden id="oldTextDateTo" value="#{guardroundconfBean.oldDateTo}">
+                                                    <f:convertDateTime pattern="#{applicationBean.defaultInputDateFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                                </h:inputHidden>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>#{i18n['web.client.guardroundconf.screen.field.DaysOfWeek']}</th>
+                                            <td colspan="5">
+                                                <h:selectOneMenu id="daysOption" value="#{guardroundconfBean.daysOption}" tabindex="40">
+                                                    <f:selectItem itemLabel="(#{i18n['web.client.guardroundconf.service.label.SelectOneOption']})" itemValue="-1" />
+                                                    <f:selectItem itemLabel="#{i18n['web.client.guardroundconf.screen.option.EveryDay']}" itemValue="1" />
+                                                    <f:selectItem itemLabel="#{i18n['web.client.guardroundconf.screen.option.SpecifyDays']}" itemValue="2" />
+                                                    <f:ajax event="valueChange" execute=":crudForm:editingPanelGroup" render=":crudForm:editingPanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:selectOneMenu>
+                                            </td>
+                                        </tr>
+                                        <h:panelGroup id="everydayPanelGroup" rendered="#{guardroundconfBean.daysOption == 1}">
+                                            <tr>
+                                                <th></th>
+                                                <td>
+                                                    <h:outputText value="#{i18n['web.client.guardroundconf.screen.field.StartTime']} " />
+                                                    <p:calendar value="#{guardroundconfBean.everyDayConf.startTime}" pattern="HH:mm" timeOnly="true" locale="#{iBean.locale}" />
+                                                </td>
+                                                <td>
+                                                    <h:outputText value="#{i18n['web.client.guardroundconf.service.label.Duration']} " />
+                                                    <p:calendar value="#{guardroundconfBean.everyDayConf.duration}" pattern="HH:mm" timeOnly="true" locale="#{iBean.locale}" />
+                                                </td>
+                                                <td>
+                                                    <h:outputText value="#{i18n['web.client.guardroundconf.service.label.Interval']} " />
+                                                    <p:spinner id="spinnerInterval" value="#{guardroundconfBean.everyDayConf.interval}" stepFactor="#{guardroundconfBean.stepFactorInterval}" min="0" required="true" />
+                                                </td>
+                                                <td>
+                                                    <h:outputText value="#{i18n['web.client.guardroundconf.service.label.Tolerance']} " />
+                                                    <p:spinner id="spinnerTolerance" value="#{guardroundconfBean.everyDayConf.tolerance}" stepFactor="#{guardroundconfBean.stepFactorTolerance}" min="0" required="true" />
+                                                </td>
+                                            </tr>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="specificDaysPanelGroup" rendered="#{guardroundconfBean.daysOption == 2}">
+                                            <tr>
+                                                <th></th>
+                                                <td>
+                                                    <h:outputText value="#{i18n['web.client.guardroundconf.screen.field.DaysOfWeek']}" />
+                                                </td>
+                                                <td>
+                                                    <h:outputText value="#{i18n['web.client.guardroundconf.screen.field.StartTime']}" />
+                                                </td>
+                                                <td>
+                                                    <h:outputText value="#{i18n['web.client.guardroundconf.service.label.Duration']}" />
+                                                </td>
+                                                <td>
+                                                    <h:outputText value="#{i18n['web.client.guardroundconf.service.label.Interval']}" />
+                                                </td>
+                                                <td>
+                                                    <h:outputText value="#{i18n['web.client.guardroundconf.service.label.Tolerance']}" />
+                                                </td>
+                                            </tr>
+                                            <ui:repeat value="#{guardroundconfBean.confList}" var="conf">
+                                                <tr>
+                                                    <th></th>
+                                                    <td>
+                                                        <h:selectBooleanCheckbox id="monday" value="#{conf.checked}" />
+                                                        <h:outputText value=" " />
+                                                        <h:outputText value="#{conf.dayOfWeekString} " />
+                                                    </td>
+                                                    <td>
+                                                        <h:inputText value="#{conf.startTime}" styleClass="timepicker" onkeypress="return blockNonNumbersHour(this, event, true);">
+                                                            <f:convertDateTime pattern="HH:mm" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                                        </h:inputText>
+                                                    </td>
+                                                    <td>
+                                                        <h:inputText value="#{conf.duration}" styleClass="timepicker">
+                                                            <f:convertDateTime pattern="HH:mm" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                                        </h:inputText>
+                                                    </td>
+                                                    <td>
+                                                        <p:spinner id="spinnerIntervalMonday" value="#{conf.interval}" stepFactor="#{guardroundconfBean.stepFactorInterval}" min="0" />
+                                                    </td>
+                                                    <td>
+                                                        <p:spinner id="spinnerToleranceMonday" value="#{conf.tolerance}" stepFactor="#{guardroundconfBean.stepFactorTolerance}" min="0" />
+                                                    </td>
+                                                </tr>
+
+                                            </ui:repeat>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="supervisorNumberPanelGroup">
+                                            <tr>
+                                                <th>#{i18n['web.client.guardroundconf.service.field.SupervisorMobileNum']}</th>
+                                                <td colspan="5">
+                                                    <csui:cellphoneInputText id="cellText" value="#{guardroundconfBean.newSupNumber}" />
+                                                    <h:commandButton styleClass="btn_std_small" value="#{i18n['web.client.guardroundconf.button.AddToList']}" action="#{guardroundconfBean.addToList}">
+                                                        <f:ajax execute=":crudForm:editingPanelGroup" render=":crudForm:editingPanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandButton>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <td colspan="5">
+                                                    <h:selectOneListbox value="#{guardroundconfBean.selectedSupNumber}">
+                                                        <f:selectItems value="#{guardroundconfBean.supNumberList}" />
+                                                    </h:selectOneListbox>
+                                                    <h:commandButton styleClass="btn_std_small" value="#{i18n['web.client.guardroundconf.button.RemoveFromList']}" action="#{guardroundconfBean.removeFromList}">
+                                                        <f:ajax execute=":crudForm:editingPanelGroup" render=":crudForm:editingPanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandButton>
+                                                </td>
+                                            </tr>
+                                        </h:panelGroup>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="buttons_bottom">
+                                <h:commandButton value="#{i18n['web.admin.screen.button.Save']}" styleClass="btn_std_small" action="#{guardroundconfBean.saveEditingDetail}" onclick="return showProcessExecutingMessage(this);">
+                                    <f:ajax execute=":crudForm:editingPanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                                <h:commandButton value="#{i18n['web.admin.screen.button.Delete']}" styleClass="btn_std_small" action="#{guardroundconfBean.deleteEditingDetail}" disabled="#{guardroundconfBean.entityDetail.shiftPeriodCod eq null}" onclick="return showStdConfirmDeleteShiftPeriodMessage(this);">
+                                    <f:ajax execute=":crudForm:confTablePanelGroup" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                                <h:commandButton value="#{i18n['web.admin.screen.button.Cancel']}" styleClass="btn_std_small" action="#{guardroundconfBean.cancelEditingDetail}">
+                                    <f:ajax execute=":crudForm:editingPanelGroup" render=":crudForm:confTablePanelGroup :crudForm:editingPanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                            </div>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                    <!-- ASIGNAR NUMERO TELEFONICO AL GUARDIA /> -->
+                    <h:panelGroup id="userphonePanelGroup">
+                        <h:panelGroup rendered="#{guardroundconfBean.userphoneMeta ne null}">
+                            <p:focus for="crudForm:listUserphone" />
+                            <div class="tablebox">
+                                <div class="body">
+                                    <div class="head">#{guardroundconfBean.assignPhoneNumberTitle}</div>
+                                    <table width="100%">
+                                        <tr>
+                                            <th>#{i18n['web.client.guardroundconf.screen.field.PhoneNumber']}</th>
+                                            <td colspan="5">
+                                                <h:selectOneMenu id="listUserphone" value="#{guardroundconfBean.selectedUserphone}" converter="userphoneConverter">
+                                                    <f:selectItem itemValue="#{null}" itemLabel="(#{i18n['web.client.selectonemenu.Select']})" />
+                                                    <f:selectItems value="#{guardroundconfBean.userphoneList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.nameChr} - #{uLItem.cellphoneNum}" />
+                                                </h:selectOneMenu>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="buttons_bottom">
+                                <h:commandButton value="#{i18n['web.admin.screen.button.Save']}" styleClass="btn_std_small" action="#{guardroundconfBean.savePhoneNumber}">
+                                    <f:ajax execute=":crudForm:userphonePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:searchBoxGroupPanel :crudForm:userphonePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                                <h:commandButton value="#{i18n['web.admin.screen.button.Cancel']}" styleClass="btn_std_small" action="#{guardroundconfBean.cancelEditingPhoneNumber}">
+                                    <f:ajax execute=":crudForm:userphonePanelGroup" render=":crudForm:buttonPanelGroup :crudForm:listTablePanelGroup :crudForm:searchBoxGroupPanel :crudForm:userphonePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                            </div>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

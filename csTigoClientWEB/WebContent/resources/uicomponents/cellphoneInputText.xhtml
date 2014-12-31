@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:composite="http://java.sun.com/jsf/composite">
+<!-- INTERFACE -->
+<composite:interface>
+    <composite:attribute
+        name="value"
+        default="595 9" />
+    <composite:attribute name="id" />
+    <composite:attribute name="disabled" />
+    <composite:attribute name="readonly" />
+    <composite:attribute name="rendered" />
+    <composite:attribute name="style" />
+    <composite:attribute name="styleClass" />
+    <composite:attribute name="size" />
+    <composite:attribute name="tabindex" />
+</composite:interface>
+<!-- IMPLEMENTATION -->
+<composite:implementation>
+    <h:inputText
+        id="#{cc.attrs.id}"
+        value="#{cc.attrs.value}"
+        tabindex="#{cc.attrs.tabindex}"
+        maxlength="14"
+        converter="cellphoneConverter"
+        onkeydown="return cellPhoneTextValidateDeleting(this, event);"
+        onkeypress="return cellPhoneTextValidateInput(this, event);"
+        onkeyup="cellPhoneTextValidateSpaces(this);"
+        disabled="#{cc.attrs.disabled}"
+        readonly="#{cc.attrs.readonly}"
+        rendered="#{cc.attrs.rendered}"
+        style="#{cc.attrs.style}"
+        styleClass="#{cc.attrs.styleClass}"
+        size="#{cc.attrs.size}" />
+</composite:implementation>
+</html>

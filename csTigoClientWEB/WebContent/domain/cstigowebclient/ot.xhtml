@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:csui="http://java.sun.com/jsf/composite/uicomponents" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions">
+<ui:composition template="/resources/templates/mapScreenDefaultClient.xhtml">
+
+	<!-- TITLE -->
+	<ui:define name="title">#{i18n['web.servicename.Ot']}</ui:define>
+
+	<!-- STATUS LOCATION -->
+	<ui:define name="status">
+
+		<h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="ot" value="#{i18n['web.servicename.Ot']}" />
+	</ui:define>
+
+	<!-- PRINCIPAL CONTAINER -->
+	<ui:define name="container">
+		<!-- GOOGLE MAPS API -->
+		<!--         <script src="https://maps.google.com/maps/api/js?client=#{applicationBean.appKey}&amp;sensor=false" type="text/javascript" /> -->
+
+		<div id="page_col">
+			<div id="cent_full">
+				<h:form id="fastReportForm" target="_blank">
+					<h:panelGroup rendered="#{otBean.dataModel ne null}">
+						<div class="buttons_top">
+							<h:commandButton styleClass="btn_xls" title="#{i18n['web.client.report.tip.XLSReport']}" action="#{otBean.viewXLS}" />
+							<h:commandButton styleClass="btn_pdf" title="#{i18n['web.client.report.tip.PDFReport']}" action="#{otBean.viewPDF}" />
+						</div>
+					</h:panelGroup>
+				</h:form>
+
+				<h:form id="serviceForm">
+					<br />
+					<div class="tablebox">
+						<div class="head">
+							#{i18n['ot.title.ListOf']}
+							<h:outputText value="#{i18n['web.client.screen.admin.phoneUsers.title.OfClient']} #{otBean.client.nameChr}" rendered="#{otBean.client ne null}" />
+						</div>
+						<h:panelGroup id="searchBoxGroupPanel">
+							<div class="headcontainer">
+								<table>
+									<tr>
+										<th><h:outputText value="#{i18n['ot.label.OTState']}" /></th>
+										<td><h:selectOneMenu id="listStatus" value="#{otBean.selectedDataStatus}" converter="datastatusConverter" disabled="#{otBean.entity ne null }">
+												<f:selectItems value="#{otBean.statusList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem}" />
+											</h:selectOneMenu></td>
+										<th><h:outputText value="#{i18n['ot.label.WorkingGroup']}" /></th>
+										<td><h:selectOneMenu value="#{otBean.selectedUserphoneSearch}" converter="userphoneConverter" disabled="#{otBean.entity ne null }">
+												<f:selectItem itemValue="#{null}" itemLabel="(#{i18n['web.client.selectonemenu.All']})" />
+												<f:selectItems value="#{otBean.userphoneListSearch}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.nameChr}" />
+											</h:selectOneMenu></td>
+										<td></td>
+									</tr>
+									<tr>
+										<th><h:outputText value="#{i18n['ot.label.FromDate']}" /></th>
+										<td><p:calendar pattern="#{applicationBean.defaultInputDateFormat}" value="#{otBean.dateFrom}" id="dateFrom" locale="#{iBean.locale}" timeZone="#{applicationBean.defaultTimeZoneID}" disabled="#{otBean.entity ne null }" /></td>
+										<th><h:outputText value="#{i18n['ot.label.ToDate']}" /></th>
+										<td><p:calendar pattern="#{applicationBean.defaultInputDateFormat}" value="#{otBean.dateTo}" id="dateTo" locale="#{iBean.locale}" timeZone="#{applicationBean.defaultTimeZoneID}" disabled="#{otBean.entity ne null }" /></td>
+										<td rowspan="2" style="text-align: center;">
+											<!-- <p:commandButton styleClass="button-class" value="#{i18n['web.client.search.field.Find']}" actionListener="#{otBean.find}" update=":serviceForm" oncomplete="myOtTable.update();myschedule.update();" />
+                                             --> <h:commandButton styleClass="btn_std_small" value="#{i18n['ot.button.Find']}" action="#{otBean.find}" disabled="#{otBean.entity ne null }">
+												<f:ajax execute=":serviceForm:searchBoxGroupPanel" render="@form :scheduleForm:schedulePanelGroup" onerror="manageAjaxErrors" />
+											</h:commandButton> <h:commandButton styleClass="btn_std_small" value="#{i18n['ot.button.Clean']}" action="#{otBean.clean}" disabled="#{otBean.entity ne null }">
+												<f:ajax execute=":serviceForm:searchBoxGroupPanel" render="@form :scheduleForm:schedulePanelGroup" onerror="manageAjaxErrors" />
+											</h:commandButton>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</h:panelGroup>
+
+						<h:panelGroup id="listTablePanelGroup">
+							<!-- LIST TABLE **********************************************************************************************-->
+							<div class="body">
+								<h:dataTable id="crudListTable" value="#{otBean.dataModel}" var="item" rendered="#{otBean.dataModel.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+									<h:column>
+										<f:facet name="header">
+											<h:selectBooleanCheckbox id="chkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{otBean.entity ne null }" onclick="checkUncheckAllInForm(this, this.checked);" />
+										</f:facet>
+										<h:selectBooleanCheckbox id="chkBoxSelected" value="#{otBean.selectedItems[item.servicevalueCod]}" disabled="#{otBean.entity ne null }" />
+									</h:column>
+									<h:column>
+										<f:facet name="header">
+											<span> <h:commandLink value="#{i18n['ot.field.OtCode']}" action="#{otBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['ot.field.OtCode']}" disabled="#{otBean.entity ne null }">
+													<f:setPropertyActionListener value="#{not otBean.sortHelper.ascending}" target="#{otBean.sortHelper.ascending}" />
+													<f:setPropertyActionListener value="otCode" target="#{otBean.sortHelper.field}" />
+													<f:ajax execute="@this" render="@form :scheduleForm:schedulePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandLink> <h:outputText value="#{otBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{otBean.sortHelper.field eq 'otCode'}" />
+											</span>
+										</f:facet>
+										<h:outputText value="#{item.otCode}">
+											<f:convertNumber groupingUsed="true" integerOnly="true" />
+										</h:outputText>
+									</h:column>
+									<h:column>
+										<f:facet name="header">
+											<span> <h:commandLink value="#{i18n['ot.field.OtActivityDesc']}" action="#{otBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['ot.field.OtActivityDesc']}" disabled="#{otBean.entity ne null }">
+													<f:setPropertyActionListener value="#{not otBean.sortHelper.ascending}" target="#{otBean.sortHelper.ascending}" />
+													<f:setPropertyActionListener value="activityDescription" target="#{otBean.sortHelper.field}" />
+													<f:ajax execute="@this" render="@form :scheduleForm:schedulePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandLink> <h:outputText value="#{otBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{otBean.sortHelper.field eq 'activityDescription'}" />
+											</span>
+										</f:facet>
+										<csui:columnWidthChar value="#{item.activityDescription}" header="#{i18n['ot.field.OtActivityDesc']}" />
+									</h:column>
+									<h:column>
+										<f:facet name="header">
+											<span> <h:commandLink value="#{i18n['ot.field.ClientCode']}" action="#{otBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['ot.field.ClientCode']}" disabled="#{otBean.entity ne null }">
+													<f:setPropertyActionListener value="#{not otBean.sortHelper.ascending}" target="#{otBean.sortHelper.ascending}" />
+													<f:setPropertyActionListener value="clientCod" target="#{otBean.sortHelper.field}" />
+													<f:ajax execute="@this" render="@form :scheduleForm:schedulePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandLink> <h:outputText value="#{otBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{otBean.sortHelper.field eq 'clientCod'}" />
+											</span>
+										</f:facet>
+										<csui:columnWidthChar value="#{item.clientCod}" header="#{i18n['ot.field.ClientCode']}" />
+									</h:column>
+									<h:column>
+										<f:facet name="header">
+											<span> <h:commandLink value="#{i18n['ot.field.ClientDesc']}" action="#{otBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['ot.field.ClientDesc']}" disabled="#{otBean.entity ne null }">
+													<f:setPropertyActionListener value="#{not otBean.sortHelper.ascending}" target="#{otBean.sortHelper.ascending}" />
+													<f:setPropertyActionListener value="clientDescription" target="#{otBean.sortHelper.field}" />
+													<f:ajax execute="@this" render="@form :scheduleForm:schedulePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandLink> <h:outputText value="#{otBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{otBean.sortHelper.field eq 'clientDescription'}" />
+											</span>
+										</f:facet>
+										<csui:columnWidthChar value="#{item.clientDescription}" header="#{i18n['ot.field.ClientDesc']}" />
+									</h:column>
+
+									<h:column>
+										<f:facet name="header">
+											<span> <h:commandLink value="#{i18n['ot.field.ZoneDesc']}" action="#{otBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['ot.field.ZoneDesc']}" disabled="#{otBean.entity ne null }">
+													<f:setPropertyActionListener value="#{not otBean.sortHelper.ascending}" target="#{otBean.sortHelper.ascending}" />
+													<f:setPropertyActionListener value="zoneDescription" target="#{otBean.sortHelper.field}" />
+													<f:ajax execute="@this" render="@form :scheduleForm:schedulePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandLink> <h:outputText value="#{otBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{otBean.sortHelper.field eq 'zoneDescription'}" />
+											</span>
+										</f:facet>
+										<csui:columnWidthChar value="#{item.zoneDescription}" header="#{i18n['ot.field.ZoneDesc']}" />
+									</h:column>
+
+									<h:column>
+										<f:facet name="header">
+											<span> <h:commandLink value="#{i18n['ot.field.WorkingGroup']}" action="#{otBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['ot.field.WorkingGroup']}" disabled="#{otBean.entity ne null }">
+													<f:setPropertyActionListener value="#{not otBean.sortHelper.ascending}" target="#{otBean.sortHelper.ascending}" />
+													<f:setPropertyActionListener value="nameChr" target="#{otBean.sortHelper.field}" />
+													<f:ajax execute="@this" render="@form :scheduleForm:schedulePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandLink> <h:outputText value="#{otBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{otBean.sortHelper.field eq 'nameChr'}" />
+											</span>
+										</f:facet>
+										<!--                                         <csui:columnWidthChar value="#{item.nameChr}" header="#{i18n['ot.field.WorkingGroup']}" /> -->
+										<csui:columnWidthChar value="#{item.nameChr}" rendered="#{item.codUserphone != 0}" header="#{i18n['ot.field.WorkingGroup']}" />
+										<csui:columnWidthChar value=" " rendered="#{item.codUserphone == 0}" header="#{i18n['ot.field.WorkingGroup']}" />
+									</h:column>
+
+									<h:column>
+										<f:facet name="header">
+											<span> <h:commandLink value="#{i18n['ot.field.OtCreatedDate']}" action="#{otBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['ot.field.OtCreatedDate']}" disabled="#{otBean.entity ne null}">
+													<f:setPropertyActionListener value="#{not otViewBean.sortHelper.ascending}" target="#{otViewBean.sortHelper.ascending}" />
+													<f:setPropertyActionListener value="createdDate" target="#{otBean.sortHelper.field}" />
+													<f:ajax execute="@this" render="@form :scheduleForm:schedulePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandLink> <h:outputText value="#{otBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{otBean.sortHelper.field eq 'createdDate'}" />
+											</span>
+										</f:facet>
+										<h:outputText value="#{item.createdDate}">
+											<f:convertDateTime pattern="#{applicationBean.defaultOutputDateFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+										</h:outputText>
+									</h:column>
+
+									<h:column>
+										<f:facet name="header">
+											<span> <h:commandLink value="#{i18n['ot.report.field.AssignedDate']}" action="#{otBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['ot.report.field.AssignedDate']}" disabled="#{otBean.entity ne null}">
+													<f:setPropertyActionListener value="#{not otViewBean.sortHelper.ascending}" target="#{otViewBean.sortHelper.ascending}" />
+													<f:setPropertyActionListener value="assignedDate" target="#{otBean.sortHelper.field}" />
+													<f:ajax execute="@this" render="@form :scheduleForm:schedulePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandLink> <h:outputText value="#{otBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{otBean.sortHelper.field eq 'assignedDate'}" />
+											</span>
+										</f:facet>
+										<h:outputText value="#{item.assignedDate}">
+											<f:convertDateTime pattern="#{applicationBean.defaultOutputDateTimeFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+										</h:outputText>
+									</h:column>
+
+
+								</h:dataTable>
+							</div>
+							<!-- PAGINATION -->
+							<div class="foot">
+								<h:panelGroup rendered="#{otBean.dataModel.rowCount gt 0}">
+									<h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{otBean.previousPage}" disabled="#{not otBean.paginationHelper.hasPreviousPage or otBean.entity ne null }">
+										<f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+									</h:commandLink>
+                                    &#160;|&#160;
+                                    <h:outputText value="#{otBean.paginationHelper.pageFirstItem + 1}..#{otBean.paginationHelper.pageLastItem + 1} / #{otBean.paginationHelper.itemsCount}" />&#160;|&#160;
+                                    <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{otBean.nextPage}" disabled="#{not otBean.paginationHelper.hasNextPage or otBean.entity ne null }">
+										<f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+									</h:commandLink>
+								</h:panelGroup>
+								<h:panelGroup rendered="#{otBean.dataModel.rowCount le 0}">
+									<div style="text-align: center; font-weight: bold;">
+										<h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+									</div>
+								</h:panelGroup>
+							</div>
+							<!-- BUTTONS -->
+							<div class="buttons_bottom">
+								<h:commandButton value="#{i18n['ot.button.ViewDetail']}" styleClass="btn_std_small" action="#{otBean.editEntity}" rendered="#{otBean.dataModel.rowCount gt 0}" disabled="#{otBean.entity ne null }">
+									<f:ajax execute=":serviceForm:listTablePanelGroup" render=":scheduleForm:openDialogPanelGroup :scheduleForm:detailPanelGroup " onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+								</h:commandButton>
+
+								<h:commandButton type="button" value="#{i18n['ot.label.NewOt']}" styleClass="btn_std_small" onclick="handleClearDialog();" disabled="#{otBean.entity ne null }" action="#{otBean.newOT}">
+									<f:ajax execute=":serviceForm:listTablePanelGroup" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+								</h:commandButton>
+								<h:commandButton value="#{i18n['ot.button.Delete']}" styleClass="btn_std_small" action="#{otBean.deleteOT}" disabled="#{otBean.entity ne null }" onclick="return showStdConfirmDeleteRegistryMessage(this);" rendered="#{otBean.dataModel.rowCount gt 0 and otBean.selectedDataStatus.getDataPK().getCodigo() eq '0'}">
+									<f:ajax execute=":serviceForm:listTablePanelGroup" render=":serviceForm:listTablePanelGroup :scheduleForm:schedulePanelGroup :scheduleForm:messages" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+								</h:commandButton>
+								<h:commandButton value="#{i18n['ot.button.Schedule']}" styleClass="btn_std_small" action="#{otBean.scheduleOT}" rendered="#{otBean.dataModel.rowCount gt 0 and otBean.selectedDataStatus.getDataPK().getCodigo() eq '0'}" disabled="#{otBean.entity ne null }">
+									<f:ajax execute=":serviceForm:listTablePanelGroup" render=":serviceForm:searchBoxGroupPanel :serviceForm:userphonePanelGroup :serviceForm:listTablePanelGroup :scheduleForm:schedulePanelGroup :scheduleForm:messages" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+								</h:commandButton>
+							</div>
+						</h:panelGroup>
+					</div>
+
+
+					<h:panelGroup id="userphonePanelGroup">
+						<div class="tablebox">
+							<h:panelGroup id="newotPanelGroup" rendered="#{otBean.entity ne null and otBean.entity.statusCod eq '0'}">
+								<div class="head">#{i18n['ot.title.ScheduleOt']}</div>
+								<div class="headcontainer">
+									<table>
+										<tr>
+											<th><h:outputLabel value="#{i18n['ot.label.WorkingGroups']}" /></th>
+											<td><h:selectOneMenu id="listUserphone" value="#{otBean.selectedUserphone}" converter="userphoneConverter">
+													<f:selectItem itemValue="#{null}" itemLabel="" />
+													<f:selectItems value="#{otBean.userphoneList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.nameChr}" />
+													<!--                                                     <f:ajax event="valueChange" execute="@this" render=":scheduleForm:schedulePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" listener="#{otBean.onChangeUserphone}" />                                                -->
+													<p:ajax listener="#{otBean.onChangeUserphone}" process="listUserphone" event="change" oncomplete="myschedule.update();" />
+												</h:selectOneMenu> &nbsp;&nbsp; <h:selectBooleanCheckbox id="chkIncludAllGroups1" value="#{otBean.showAllGroups}">
+													<f:ajax event="click" execute="@this" render=":serviceForm:newotPanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:selectBooleanCheckbox> <h:outputLabel for="chkIncludAllGroups1" value="#{i18n['ot.label.IncludeAll']}" /></td>
+											<td></td>
+											<td></td>
+											<td></td>
+										</tr>
+										<tr>
+											<th><h:outputLabel value="#{i18n['ot.field.OTAssignedDate']}" /></th>
+											<td><p:calendar pattern="#{applicationBean.defaultInputDateTimeFormat}" value="#{otBean.assignedDate}" id="assignedDate" timeZone="#{applicationBean.defaultTimeZoneID}" /></td>
+											<td></td>
+											<td></td>
+										</tr>
+									</table>
+								</div>
+							</h:panelGroup>
+						</div>
+
+						<div class="buttons_bottom">
+							<h:commandButton value="#{i18n['ot.label.Schedule']}" styleClass="btn_std_small" action="#{otBean.assignCurrentActivity}" rendered="#{otBean.entity ne null and otBean.entity.statusCod eq '0'}">
+								<f:ajax execute=":serviceForm:newotPanelGroup" render=":serviceForm:searchBoxGroupPanel :serviceForm:listTablePanelGroup :serviceForm:userphonePanelGroup :scheduleForm:schedulePanelGroup :scheduleForm:messages" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+							</h:commandButton>
+							<h:commandButton value="#{i18n['web.client.screen.button.Cancel']}" styleClass="btn_std_small" action="#{otBean.cancelEditing}" rendered="#{otBean.entity ne null and otBean.entity.statusCod eq '0'}">
+								<f:ajax execute="@this" render=":serviceForm:searchBoxGroupPanel :serviceForm:listTablePanelGroup :serviceForm:userphonePanelGroup :scheduleForm:schedulePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+							</h:commandButton>
+						</div>
+					</h:panelGroup>
+
+				</h:form>
+				<h:form id="scheduleForm">
+					<p:growl id="messages" showDetail="true" sticky="false" />
+					<h:panelGroup id="schedulePanelGroup">
+						<p:fieldset legend="#{i18n['ot.title.Calendar']}" id="droppableSchedule" toggleable="true">
+							<p:schedule id="otSchedule" value="#{otBean.eventModel}" widgetVar="myschedule" initialDate="#{otBean.selectedDate}">
+								<p:ajax event="eventMove" listener="#{otBean.onEventMove}" oncomplete="myschedule.update();" update="messages" />
+								<p:ajax event="eventResize" listener="#{otBean.onEventResize}" oncomplete="myschedule.update();" update="messages" />
+								<p:ajax event="eventSelect" listener="#{otBean.onEventSelect}" update=":serviceForm:listTablePanelGroup :scheduleForm:details :scheduleForm:panelLog :scheduleForm:panelButton" oncomplete="detailDialog.show();" />
+							</p:schedule>
+						</p:fieldset>
+						<p:calendar id="PopUp" widgetVar="popup" value="#{otBean.selectedDate}" style="display:none;" />
+					</h:panelGroup>
+
+					<h:panelGroup id="detailPanelGroup">
+						<p:dialog id="detailDialogId" widgetVar="detailDialog" header="#{i18n['ot.title.OtDetails']}" width="400" resizable="false" modal="true">
+							<p:ajax event="close" listener="#{otBean.handleClose}" update=":serviceForm:listTablePanelGroup" />
+							<!-- 	                        <p:fieldset legend="OT" toggleable="true" > -->
+							<h:panelGrid id="details" columns="2" cellpadding="5" cellspacing="5">
+								<h:outputLabel for="code" value="#{i18n['ot.field.OtCode']}  " />
+								<h:outputLabel id="code" value="#{otBean.entity.otCode}" />
+
+								<h:outputLabel for="title" value="#{i18n['ot.field.OtActivityDesc']}  " />
+								<h:outputLabel id="title" value="#{otBean.entity.activityDescription}" />
+
+								<h:outputLabel for="client" value="#{i18n['ot.field.ClientDesc']}  " />
+								<h:outputLabel id="client" value="#{otBean.entity.clientDescription}" />
+
+								<h:outputLabel for="workingGroup" value="#{i18n['ot.label.WorkingGroup']}  " />
+
+								<h:panelGrid id="groups" columns="3">
+									<h:selectOneMenu id="workingGroup" value="#{otBean.selectedUserphone}" converter="userphoneConverter" disabled="#{not otBean.canModifyOt}">
+										<f:selectItem itemLabel=" " itemValue="#{null}" />
+										<f:selectItems value="#{otBean.userphoneList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.nameChr}" />
+									</h:selectOneMenu>
+									<h:selectBooleanCheckbox id="chkIncludAllGroups" value="#{otBean.showAllGroups}" disabled="#{not otBean.canModifyOt}">
+										<f:ajax event="click" execute=":scheduleForm:groups" render=":scheduleForm:groups" />
+									</h:selectBooleanCheckbox>
+									<h:outputLabel for="chkIncludAllGroups" value="#{i18n['ot.label.IncludeAll']}" />
+								</h:panelGrid>
+
+								<!-- 	                            <h:outputLabel for="created" value="#{i18n['ot.field.OtCreatedDate']}  " /> -->
+								<!-- 	                            <h:outputLabel id="created" value="#{otBean.selectedOtOnSchedule.createdDate}"> -->
+								<!-- 	                                <f:convertDateTime pattern="#{applicationBean.defaultOutputDateTimeFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" /> -->
+								<!-- 	                            </h:outputLabel> -->
+
+								<h:outputLabel for="assigned" value="#{i18n['ot.field.OTAssignedDate']}" />
+								<!--                             <h:outputLabel id="assigned" value="#{otBean.event.startDate}"> -->
+								<!--                                 <f:convertDateTime pattern="#{applicationBean.defaultOutputDateTimeFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" /> -->
+								<!--                             </h:outputLabel> -->
+								<p:calendar pattern="#{applicationBean.defaultInputDateTimeFormat}" value="#{otBean.entity.assignedDate}" id="assigned" timeZone="#{applicationBean.defaultTimeZoneID}" disabled="#{otBean.entity.statusCod eq '0' or otBean.entity.statusCod eq '2' or otBean.entity.statusCod eq '4' or otBean.entity.statusCod eq '5'}" />
+
+								<h:outputLabel for="end" value="#{i18n['ot.field.OTEndDate']}  " />
+								<h:outputLabel id="end" value="#{otBean.entity.endDate}">
+									<f:convertDateTime pattern="#{applicationBean.defaultOutputDateTimeFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+								</h:outputLabel>
+
+								<h:outputLabel for="status" value="#{i18n['ot.field.OTStateDesc']}  " />
+								<h:outputLabel id="status" value="#{otBean.entity.statusDescription}" />
+
+								<h:outputLabel for="statusEdit" value="#{i18n['ot.field.ChangeToState']}  " rendered="#{otBean.entity.statusCod eq '1' or otBean.entity.statusCod eq '3'}" />
+								<h:selectOneMenu id="statusEdit" value="#{otBean.selectedStatusListDialog}" converter="datastatusConverter" rendered="#{otBean.entity.statusCod eq '1' or otBean.entity.statusCod eq '3'}" disabled="#{not otBean.canModifyOt}">
+									<f:selectItem itemLabel=" " itemValue="#{null}" />
+									<f:selectItems value="#{otBean.statusListDialog}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem}" />
+								</h:selectOneMenu>
+
+								<h:outputLabel for="contact_name" value="#{i18n['ot.field.ContactName']}  " />
+								<h:inputTextarea id="contact_name" value="#{otBean.eventDataClient.nombrecontacto}" cols="40" rows="3" disabled="#{otBean.entity.statusCod eq '4' or otBean.entity.statusCod eq '5' or otBean.eventDataClient eq null}" />
+								<!--                             <h:inputText id="contact_name" value="#{otBean.eventDataClient.nombrecontacto}"/> -->
+
+								<h:outputLabel for="contact_number" value="#{i18n['ot.field.ContactNumber']}  " />
+								<h:inputText id="contact_number" value="#{otBean.eventDataClient.nrocontacto}" disabled="#{otBean.entity.statusCod eq '4' or otBean.entity.statusCod eq '5' or otBean.eventDataClient eq null}" />
+
+								<h:outputLabel for="observation" value="#{i18n['ot.field.Observation']}  " />
+								<h:inputTextarea id="observation" value="#{otBean.eventDataClient.observacion}" cols="40" rows="3" disabled="#{otBean.entity.statusCod eq '4' or otBean.entity.statusCod eq '5' or otBean.eventDataClient eq null}" />
+
+							</h:panelGrid>
+							<!-- 	                        </p:fieldset> -->
+
+							<p:fieldset legend="Detalle" toggleable="true">
+								<h:panelGroup id="panelLog" columns="2" cellpadding="5" cellspacing="5">
+									<p:dataTable id="logTable" var="det" value="#{otBean.detalles}">
+										<p:column id="ltDate">
+											<f:facet name="header">#{i18n['ot.label.Date']}</f:facet>
+											<h:outputText value="#{det.date}">
+												<f:convertDateTime pattern="#{applicationBean.defaultOutputDateTimeFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+											</h:outputText>
+										</p:column>
+										<p:column id="ltEvent">
+											<f:facet name="header">#{i18n['ot.label.Event']}</f:facet>
+											<h:outputText value="#{det.eventDesc}" />
+										</p:column>
+										<p:column id="ltObs">
+											<f:facet name="header">#{i18n['ot.label.Obs']}</f:facet>
+											<h:outputText value="#{det.obs}" />
+										</p:column>
+									</p:dataTable>
+								</h:panelGroup>
+								<br />
+								<br />
+							</p:fieldset>
+							<h:panelGroup id="panelButton" columns="2" cellpadding="5" cellspacing="5">
+								<div class="buttons_bottom">
+									<!-- 	                                <br /> -->
+									<p:commandButton process="detailDialogId" value="#{i18n['ot.title.Save']}" oncomplete="handleAdjustRequest(xhr, status, args)" actionListener="#{otBean.adjustOt}" update=":serviceForm:listTablePanelGroup :scheduleForm:schedulePanelGroup :scheduleForm:messages :scheduleForm:detailDialogId" disabled="#{otBean.entity.statusCod eq '4' or otBean.entity.statusCod eq '5'}" style="height: 23px; border: 0; margin-right: 6px; font-size: 12px !important;color: #FFF; text-align: center; cursor: pointer; width: 70px;background: url(/resources/images/btn_std_small.png) no-repeat;" />
+									<h:button styleClass="btn_std_small" value="#{i18n['ot.title.Close']}" onclick="detailDialog.hide(); return false;" />
+								</div>
+							</h:panelGroup>
+						</p:dialog>
+					</h:panelGroup>
+
+					<p:dialog widgetVar="eventDialog" header="#{i18n['ot.title.NewOt']}" modal="true" id="saveDialog">
+						<p:ajax event="close" listener="#{otBean.handleCloseNewOT}" update=":serviceForm:listTablePanelGroup :scheduleForm:saveDialog" />
+						<h:panelGrid id="eventDetails" columns="2" style="margin-bottom:10px;" cellpadding="5">
+							<h:outputLabel for="otCode" value="#{i18n['ot.field.OtCode']}" />
+							<p:inputText id="otCode" value="#{otBean.newOt.otCode}" required="false" />
+
+							<h:outputLabel for="listActivity" value="#{i18n['ot.field.OtActivityDesc']}" />
+							<h:selectOneMenu id="listActivity" value="#{otBean.selectedActivity}" converter="dataactivityConverter">
+								<f:selectItem itemValue="#{null}" itemLabel="(#{i18n['web.client.selectonemenu.All']})" />
+								<f:selectItems value="#{otBean.activityList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem}" />
+							</h:selectOneMenu>
+
+							<h:outputLabel value="#{i18n['ot.field.ClientDesc']}" for="otClient" />
+							<p:autoComplete id="otClient" value="#{otBean.selectedDataClient}" completeMethod="#{otBean.complete}" var="p" itemLabel="#{p.cliente}" itemValue="#{p}" converter="dataclientConverter" forceSelection="false">
+								<!--                             	<p:ajax event="itemSelect" listener="#{otBean.handleSelect}" update="saveDialog" />   -->
+							</p:autoComplete>
+							<h:outputLabel value="#{i18n['ot.field.ZoneDesc']}" for="otZone" />
+							<p:autoComplete id="otZone" value="#{otBean.selectedDataZone}" completeMethod="#{otBean.completeDataZone}" var="z" itemLabel="#{z.descripcion}" itemValue="#{z}" converter="datazoneConverter" forceSelection="true" />
+
+							<!--                             <p:commandButton process="saveDialog" value="#{i18n['web.client.screen.button.Save']}" oncomplete="eventDialog.hide();" actionListener="#{otBean.saveOt}" update=":serviceForm:listTablePanelGroup :scheduleForm:saveDialog" /> -->
+
+						</h:panelGrid>
+						<div class="buttons_bottom">
+							<br />
+							<p:commandButton process="saveDialog" value="#{i18n['web.client.screen.button.Save']}" oncomplete="handleSaveRequest(xhr, status, args)" actionListener="#{otBean.saveOt}" update=":serviceForm:listTablePanelGroup :scheduleForm:saveDialog :scheduleForm:schedulePanelGroup :scheduleForm:messages" style="height: 23px; border: 0; margin-right: 6px; font-size: 12px !important;color: #FFF; text-align: center; cursor: pointer; width: 70px;background: url(/resources/images/btn_std_small.png) no-repeat;" />
+						</div>
+					</p:dialog>
+
+					<h:panelGroup id="openDialogPanelGroup">
+						<h:panelGroup rendered="#{otBean.entity ne null}">
+							<script type="text/javascript" charset="UTF-8">
+								//    
+								$(document).ready(function() {
+									detailDialog.show();
+								});
+
+								//
+							</script>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{otBean.entity eq null}">
+							<script type="text/javascript" charset="UTF-8">
+								//    
+								$(document).ready(function() {
+									detailDialog.hide();
+								});
+
+								//
+							</script>
+						</h:panelGroup>
+					</h:panelGroup>
+					<script type="text/javascript" charset="UTF-8">
+						//         
+						function handleClearDialog() {
+							document.getElementById('scheduleForm:otCode')
+									.setAttribute('value', '');
+							eventDialog.show();
+						}
+						// 																					function handleDetailDialog() {
+						// // 																						detailDialog.show();
+						// 																					}
+						function handleSaveRequest(xhr, status, args) {
+							if (!args.datasValidated) {
+								eventDialog.show();
+							} else {
+								eventDialog.hide();
+							}
+						}
+					</script>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
+</html>

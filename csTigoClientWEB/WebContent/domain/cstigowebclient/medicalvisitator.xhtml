@@ -1,0 +1,682 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:csui="http://java.sun.com/jsf/composite/uicomponents" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/mapScreenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.servicename.MedicalVisitator']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="medicalvisitator" value="#{i18n['web.servicename.MedicalVisitator']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <!-- GOOGLE MAPS API -->
+<!--         <script src="https://maps.google.com/maps/api/js?client=#{applicationBean.appKey}&amp;sensor=false" type="text/javascript" /> -->
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="fastReportForm" target="_blank">
+                </h:form>
+                <h:form id="serviceForm">
+                    <p:focus for="serviceForm:celularSearch:celularSearch" />
+                    <h:panelGroup id="cabPanelGroup" rendered="#{medicalVisitatorBean.currentDataModel eq null}">
+                        <div class="tablebox">
+                            <div class="head">#{i18n['medicalVisitator.title.ListOf']}</div>
+                            <!-- SEARCH BOX -->
+                            <h:panelGroup id="searchBoxGroupPanel">
+                                <div class="headcontainer">
+                                    <table class="tablesearch">
+                                        <tr>
+                                            <th><h:outputText value="#{i18n['web.client.search.field.Mobile']}" /></th>
+                                            <td><csui:cellphoneInputText id="celularSearch" value="#{medicalVisitatorBean.mobilePhoneNumber}" tabindex="1" /></td>
+                                            <th>#{i18n['web.client.search.field.Show']}</th>
+                                            <td class="thin"><h:selectOneMenu id="listRowQuant" value="#{medicalVisitatorBean.rowQuantSelected}" disabled="#{medicalVisitatorBean.serviceValue ne null}" valueChangeListener="#{medicalVisitatorBean.applyQuantity}" tabindex="2">
+                                                    <f:selectItems value="#{medicalVisitatorBean.rowQuantList}" />
+                                                    <f:ajax event="change" execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:selectOneMenu></td>
+                                            <td rowspan="3" style="text-align: center;"><h:commandButton id="btnSearch" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Find']}" action="#{medicalVisitatorBean.applyFilter}" disabled="#{medicalVisitatorBean.serviceValue ne null}" tabindex="5">
+                                                    <f:ajax execute=":serviceForm:searchBoxGroupPanel" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandButton></td>
+                                        </tr>
+                                        <tr>
+                                            <th><h:outputText value="#{i18n['web.client.search.field.User']}" /></th>
+                                            <td><h:selectOneMenu id="listSearchOption" value="#{medicalVisitatorBean.selectedUserphone}" converter="userphoneConverter">
+                                                    <f:selectItem itemLabel="(#{i18n['web.client.selectonemenu.All']})" itemValue="#{null}" />
+                                                    <f:selectItems value="#{medicalVisitatorBean.userphoneList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.nameChr}" />
+                                                </h:selectOneMenu></td>
+                                            <th><h:outputText value="#{i18n['web.client.search.field.UserName']}" /></th>
+                                            <td><h:inputText id="textNameCriteria" value="#{medicalVisitatorBean.usermobileName}" /></td>
+                                        </tr>
+                                        <tr>
+                                            <th>#{i18n['web.client.search.field.FromDate']}</th>
+                                            <td><p:calendar id="textDateFrom" locale="#{iBean.locale}" value="#{medicalVisitatorBean.dateFrom}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" /></td>
+                                            <th>#{i18n['web.client.search.field.ToDate']}</th>
+                                            <td><p:calendar id="textDateTo" locale="#{iBean.locale}" value="#{medicalVisitatorBean.dateTo}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" /></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </h:panelGroup>
+                            <h:panelGroup id="listTablePanelGroup">
+                                <!-- LIST TABLE -->
+                                <div class="body">
+                                    <h:dataTable id="serviceListTable" value="#{medicalVisitatorBean.dataModelHeader}" var="item" rendered="#{medicalVisitatorBean.dataModelHeader.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <h:selectBooleanCheckbox id="chkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{medicalVisitatorBean.serviceValue ne null}" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                            </f:facet>
+                                            <h:selectBooleanCheckbox id="chkBoxSelected" value="#{medicalVisitatorBean.selectedItems[item.servicevalueCod]}" disabled="#{medicalVisitatorBean.serviceValue ne null}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:commandLink value="#{i18n['medicalVisitator.field.MobileNumber']}" action="#{medicalVisitatorBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['medicalVisitator.field.MobileNumber']}" disabled="#{medicalVisitatorBean.serviceValue ne null}">
+                                                        <f:setPropertyActionListener value="#{not medicalVisitatorBean.sortHelper.ascending}" target="#{medicalVisitatorBean.sortHelper.ascending}" />
+                                                        <f:setPropertyActionListener value="userphone.cellphoneNum" target="#{medicalVisitatorBean.sortHelper.field}" />
+                                                        <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandLink>
+                                                    <h:outputText value="#{medicalVisitatorBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{medicalVisitatorBean.sortHelper.field eq 'userphone.cellphoneNum'}" />
+                                                </span>
+                                            </f:facet>
+                                            <h:outputText value="#{item.userphone.cellphoneNum}" converter="cellphoneConverter" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:commandLink value="#{i18n['medicalVisitator.field.Names']}" action="#{medicalVisitatorBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['medicalVisitator.field.Names']}" disabled="#{medicalVisitatorBean.serviceValue ne null}">
+                                                        <f:setPropertyActionListener value="#{not medicalVisitatorBean.sortHelper.ascending}" target="#{medicalVisitatorBean.sortHelper.ascending}" />
+                                                        <f:setPropertyActionListener value="userphone.nameChr" target="#{medicalVisitatorBean.sortHelper.field}" />
+                                                        <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandLink>
+                                                    <h:outputText value="#{medicalVisitatorBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{medicalVisitatorBean.sortHelper.field eq 'userphone.nameChr'}" />
+                                                </span>
+                                            </f:facet>
+                                            <csui:columnWidthChar value="#{item.userphone.nameChr}" header="#{i18n['medicalVisitator.field.Names']}"/>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:commandLink value="#{i18n['medicalVisitator.field.Date']}" action="#{medicalVisitatorBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['medicalVisitator.field.Date']}" disabled="#{medicalVisitatorBean.serviceValue ne null}">
+                                                        <f:setPropertyActionListener value="#{not medicalVisitatorBean.sortHelper.ascending}" target="#{medicalVisitatorBean.sortHelper.ascending}" />
+                                                        <f:setPropertyActionListener value="recorddateDat" target="#{medicalVisitatorBean.sortHelper.field}" />
+                                                        <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandLink>
+                                                    <h:outputText value="#{medicalVisitatorBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{medicalVisitatorBean.sortHelper.field eq 'recorddateDat'}" />
+                                                </span>
+                                            </f:facet>
+                                            <h:outputText value="#{item.recorddateDat}">
+                                                <f:convertDateTime pattern="#{applicationBean.defaultOutputDateFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                            </h:outputText>
+                                        </h:column>
+                                    </h:dataTable>
+                                </div>
+                                <!-- PAGINATION -->
+                                <div class="foot">
+                                    <h:panelGroup rendered="#{medicalVisitatorBean.dataModelHeader.rowCount gt 0}">
+                                        <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{medicalVisitatorBean.previousHeaderPage}" disabled="#{not medicalVisitatorBean.paginationHelper.hasPreviousPage or medicalVisitatorBean.serviceValue ne null}">
+                                            <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandLink>
+                                            &#160;|&#160;<h:outputText value="#{medicalVisitatorBean.paginationHelper.pageFirstItem + 1}..#{medicalVisitatorBean.paginationHelper.pageLastItem + 1} / #{medicalVisitatorBean.paginationHelper.itemsCount}" />&#160;|&#160;
+                                            <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{medicalVisitatorBean.nextHeaderPage}" disabled="#{not medicalVisitatorBean.paginationHelper.hasNextPage or medicalVisitatorBean.serviceValue ne null}">
+                                            <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandLink>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{medicalVisitatorBean.dataModelHeader.rowCount le 0}">
+                                        <div style="text-align: center; font-weight: bold;">
+                                            <h:outputText value="#{iBean.iValue('web.client.table.row.NoData')}" />
+                                        </div>
+                                    </h:panelGroup>
+                                </div>
+                            </h:panelGroup>
+                        </div>
+                        <!-- BUTTONS -->
+                        <h:panelGroup id="buttonsPanelGroup">
+                            <div class="buttons_bottom">
+                                <h:commandButton value="#{i18n['web.client.screen.button.Localize']}" styleClass="btn_std_small" action="#{medicalVisitatorBean.showHeaderMap}" rendered="#{medicalVisitatorBean.geolocalizationAllowed and medicalVisitatorBean.showMapOnHeader and medicalVisitatorBean.dataModelHeader ne null and medicalVisitatorBean.dataModelHeader.rowCount gt 0}">
+                                    <f:ajax execute=":serviceForm:listTablePanelGroup" render=":serviceForm:map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                                <h:commandButton value="#{i18n['web.client.screen.button.Details']}" styleClass="btn_std_small" action="#{medicalVisitatorBean.viewClinicDetails}" disabled="#{medicalVisitatorBean.serviceValue ne null}" rendered="#{medicalVisitatorBean.dataModelHeader ne null and medicalVisitatorBean.dataModelHeader.rowCount gt 0}">
+                                    <f:ajax execute=":serviceForm:listTablePanelGroup" render="@form :fastReportForm" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                            </div>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                    <!-- CLINIC SECTION -->
+                    <h:panelGroup id="cliniTablePanelGroup" rendered="#{medicalVisitatorBean.currentDataModel ne null and medicalVisitatorBean.previousServiceVale eq null}">
+                        <div class="buttons_top">
+                            <h:commandButton styleClass="btn_xls" title="#{i18n['web.client.report.tip.XLSReport']}" action="#{medicalVisitatorBean.viewXLSclinic}" onclick="return reportPrint('serviceForm');" />
+                            <h:commandButton styleClass="btn_pdf" title="#{i18n['web.client.report.tip.PDFReport']}" action="#{medicalVisitatorBean.viewPDFclinic}" onclick="return reportPrint('serviceForm');" />
+                        </div>
+                        <div class="tablebox">
+                            <div class="head">
+                                #{i18n['medicalVisitator.clinic.DetailOf']} #{medicalVisitatorBean.serviceValue.userphone.nameChr} (
+                                <h:outputText value="#{medicalVisitatorBean.serviceValue.userphone.cellphoneNum}" converter="cellphoneConverter" />
+                                )
+                            </div>
+                            <!-- LIST TABLE -->
+                            <div class="body">
+                                <h:dataTable id="detailListTable" value="#{medicalVisitatorBean.currentDataModel}" var="currentItem" rendered="#{medicalVisitatorBean.currentDataModel.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <h:selectBooleanCheckbox id="clinicChkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{medicalVisitatorBean.currentDetailDataModel ne null}" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                        </f:facet>
+                                        <h:selectBooleanCheckbox id="clinicChkBoxSelected" value="#{medicalVisitatorBean.currentDataModelItems[currentItem.servicevalueCod]}" disabled="#{medicalVisitatorBean.currentDetailDataModel ne null}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['medicalVisitator.field.ClinicCode']}" action="#{medicalVisitatorBean.applySortCurrent}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['visitorder.field.ClientCode']}" disabled="#{medicalVisitatorBean.currentDetailDataModel ne null}">
+                                                    <f:setPropertyActionListener value="#{not medicalVisitatorBean.currentSortHelper.ascending}" target="#{medicalVisitatorBean.currentSortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="column2Chr" target="#{medicalVisitatorBean.currentSortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:cliniTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{medicalVisitatorBean.currentSortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{medicalVisitatorBean.currentSortHelper.field eq 'column2Chr'}" />
+                                            </span>
+                                        </f:facet>
+                                       <csui:columnWidthChar value="#{currentItem.column2Chr}" header="#{i18n['medicalVisitator.field.ClinicCode']}"/>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:outputText value="#{i18n['medicalVisitator.field.ClinicName']}" title="#{i18n['medicalVisitator.field.ClinicName']}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{medicalVisitatorBean.mapClinic[currentItem.column2Chr]}" rendered="#{medicalVisitatorBean.mapClinic[currentItem.column2Chr] ne null}" header="#{i18n['medicalVisitator.field.ClinicName']}"/>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['medicalVisitator.field.Date']}" action="#{medicalVisitatorBean.applySortCurrent}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['medicalVisitator.field.Date']}" disabled="#{medicalVisitatorBean.currentDetailDataModel ne null}">
+                                                    <f:setPropertyActionListener value="#{not medicalVisitatorBean.currentSortHelper.ascending}" target="#{medicalVisitatorBean.currentSortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="message.dateinDat" target="#{medicalVisitatorBean.currentSortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:cliniTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{medicalVisitatorBean.currentSortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{medicalVisitatorBean.currentSortHelper.field eq 'message.dateinDat'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{currentItem.message.dateinDat}">
+                                            <f:convertDateTime pattern="#{applicationBean.defaultOutputDateTimeFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                        </h:outputText>
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+                            <!-- CLINIC PAGINATION -->
+                            <div class="foot">
+                                <h:panelGroup rendered="#{medicalVisitatorBean.currentDataModel.rowCount gt 0}">
+                                    <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{medicalVisitatorBean.previousCurrentPage}" disabled="#{not medicalVisitatorBean.currentPaginationHelper.hasPreviousPage or medicalVisitatorBean.currentDetailDataModel ne null}">
+                                        <f:ajax execute="@this" render=":serviceForm:cliniTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                        &#160;|&#160;<h:outputText value="#{medicalVisitatorBean.currentPaginationHelper.pageFirstItem + 1}..#{medicalVisitatorBean.currentPaginationHelper.pageLastItem + 1} / #{medicalVisitatorBean.currentPaginationHelper.itemsCount}" />&#160;|&#160;
+                                        <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{medicalVisitatorBean.nextCurrentPage}" disabled="#{not medicalVisitatorBean.currentPaginationHelper.hasNextPage or medicalVisitatorBean.currentDetailDataModel ne null}">
+                                        <f:ajax execute="@this" render=":serviceForm:cliniTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{medicalVisitatorBean.currentDataModel.rowCount le 0}">
+                                    <div style="text-align: center; font-weight: bold;">
+                                        <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                    <!-- CLINIC BUTTONS -->
+                    <h:panelGroup id="clinicLocalizationButtonsPanelGroup" rendered="#{medicalVisitatorBean.currentDataModel ne null and medicalVisitatorBean.currentDataModel.rowCount gt 0 and medicalVisitatorBean.previousServiceVale eq null}">
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['web.client.screen.button.Localize']}" styleClass="btn_std_small" action="#{medicalVisitatorBean.showDetailMap}" rendered="#{medicalVisitatorBean.geolocalizationAllowed and medicalVisitatorBean.showMapOnDetail and medicalVisitatorBean.dataModelDetail ne null and medicalVisitatorBean.dataModelDetail.rowCount gt 0}" disabled="#{medicalVisitatorBean.currentDetailDataModel ne null}">
+                                <f:ajax execute=":serviceForm:cliniTablePanelGroup" render=":serviceForm:map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['medicalVisitator.clinic.Medic']}" styleClass="btn_std_large" action="#{medicalVisitatorBean.viewMedicDetails}" disabled="#{medicalVisitatorBean.currentDetailDataModel ne null}">
+                                <f:ajax execute=":serviceForm:cliniTablePanelGroup" render="@form :fastReportForm" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['medicalVisitator.clinic.Details']}" styleClass="btn_std_large" action="#{medicalVisitatorBean.viewClinicVisitDetails}" disabled="#{medicalVisitatorBean.currentDetailDataModel ne null}">
+                                <f:ajax execute=":serviceForm:cliniTablePanelGroup" render="@form :fastReportForm" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.screen.button.ReturnToList']}" styleClass="btn_std_large" action="#{medicalVisitatorBean.cancelCurrent}" disabled="#{medicalVisitatorBean.currentDetailDataModel ne null}">
+                                <f:ajax execute="@this" render="@form :fastReportForm" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+                    <!-- CLINIC DETAILS -->
+                    <h:panelGroup id="clinicDetailTablePanelGroup" rendered="#{medicalVisitatorBean.currentDetailDataModel ne null and medicalVisitatorBean.previousServiceVale eq null}">
+                        <div class="buttons_top">
+                            <h:commandButton styleClass="btn_xls" title="#{i18n['web.client.report.tip.XLSReport']}" acion="#{medicalVisitatorBean.viewXLSclinicDetails}" onclick="return reportPrint('serviceForm');" />
+                            <h:commandButton styleClass="btn_pdf" title="#{i18n['web.client.report.tip.PDFReport']}" action="#{medicalVisitatorBean.viewPDFclinicDetails}" onclick="return reportPrint('serviceForm');" />
+                        </div>
+                        <div class="tablebox">
+                            <div class="head">#{i18n['medicalVisitator.title.ClinicDetails']}</div>
+                            <!-- LIST TABLE -->
+                            <div class="body">
+                                <h:dataTable id="clinicDetailListTable" value="#{medicalVisitatorBean.currentDetailDataModel}" var="currentDetail" rendered="#{medicalVisitatorBean.currentDetailDataModel.rowCount gt 0}" rowClasses="odd_row,even_row">
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <h:selectBooleanCheckbox id="clinicChkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" onclick="checkUncheckAllInTable('clinicDetailChkBox',this, this.checked);" />
+                                        </f:facet>
+                                        <h:selectBooleanCheckbox id="clinicDetailChkBox" value="#{medicalVisitatorBean.currentDetailDataModelItems[currentDetail.servicevaluedetailCod]}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['medicalVisitator.title.Events']}" action="#{medicalVisitatorBean.applySortCurrentDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['medicalVisitator.title.Events']}">
+                                                    <f:setPropertyActionListener value="#{not medicalVisitatorBean.currentDetailSortHelper.ascending}" target="#{medicalVisitatorBean.currentDetailSortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="column1Chr" target="#{medicalVisitatorBean.currentDetailSortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:clinicDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{medicalVisitatorBean.currentDetailSortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{medicalVisitatorBean.currentDetailSortHelper.field eq 'column1Chr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{medicalVisitatorBean.mapEncodingEvents[currentDetail.column1Chr]}" header="#{i18n['medicalVisitator.title.Events']}"/>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['medicalVisitator.field.InitialKm']}" action="#{medicalVisitatorBean.applySortCurrentDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['medicalVisitator.field.InitialKm']}">
+                                                    <f:setPropertyActionListener value="#{not medicalVisitatorBean.currentDetailSortHelper.ascending}" target="#{medicalVisitatorBean.currentDetailSortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="column2Chr" target="#{medicalVisitatorBean.currentDetailSortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:clinicDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{medicalVisitatorBean.currentDetailSortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{medicalVisitatorBean.currentDetailSortHelper.field eq 'column2Chr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{currentDetail.column2Chr}" header="#{i18n['medicalVisitator.field.InitialKm']}"/>
+                                    </h:column>
+
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['medicalVisitator.field.Duration']}" action="#{medicalVisitatorBean.applySortCurrentDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['medicalVisitator.field.Duration']}">
+                                                    <f:setPropertyActionListener value="#{not medicalVisitatorBean.currentDetailSortHelper.ascending}" target="#{medicalVisitatorBean.currentDetailSortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="column3Chr" target="#{medicalVisitatorBean.currentDetailSortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:clinicDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{medicalVisitatorBean.currentDetailSortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{medicalVisitatorBean.currentDetailSortHelper.field eq 'column3Chr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{medicalVisitatorBean.mapDuration[currentDetail.column3Chr]}" rendered="#{medicalVisitatorBean.mapDuration[currentDetail.column3Chr] ne null}" header="#{i18n['medicalVisitator.field.Duration']}"/>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['medicalVisitator.field.Observation']}" action="#{medicalVisitatorBean.applySortCurrentDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['medicalVisitator.field.Observation']}">
+                                                    <f:setPropertyActionListener value="#{not medicalVisitatorBean.currentDetailSortHelper.ascending}" target="#{medicalVisitatorBean.currentDetailSortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="column4Chr" target="#{medicalVisitatorBean.currentDetailSortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:clinicDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{medicalVisitatorBean.currentDetailSortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{medicalVisitatorBean.currentDetailSortHelper.field eq 'column4Chr'}" />
+                                            </span>
+                                        </f:facet>
+                                         <csui:columnWidthChar value="#{currentDetail.column4Chr}" header="#{i18n['medicalVisitator.field.Observation']}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['medicalVisitator.field.Date']}" action="#{medicalVisitatorBean.applySortCurrentDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['medicalVisitator.field.Date']}">
+                                                    <f:setPropertyActionListener value="#{not medicalVisitatorBean.currentDetailSortHelper.ascending}" target="#{medicalVisitatorBean.currentDetailSortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="recorddateDat" target="#{medicalVisitatorBean.currentDetailSortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:clinicDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{medicalVisitatorBean.currentDetailSortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{medicalVisitatorBean.currentDetailSortHelper.field eq 'recorddateDat'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{currentDetail.recorddateDat}">
+                                            <f:convertDateTime pattern="#{applicationBean.defaultOutputDateTimeFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                        </h:outputText>
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+                            <!-- PAGINATION -->
+                            <div class="foot">
+                                <h:panelGroup rendered="#{medicalVisitatorBean.currentDetailDataModel.rowCount gt 0}">
+                                    <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{medicalVisitatorBean.previousCurrentDetailPage}" disabled="#{not medicalVisitatorBean.currentDetailPaginationHelper.hasPreviousPage}">
+                                        <f:ajax execute="@this" render=":serviceForm:clinicDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                                            &#160;|&#160;<h:outputText value="#{medicalVisitatorBean.currentDetailPaginationHelper.pageFirstItem + 1}..#{medicalVisitatorBean.currentDetailPaginationHelper.pageLastItem + 1} / #{medicalVisitatorBean.currentDetailPaginationHelper.itemsCount}" />&#160;|&#160;
+                                                            <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{medicalVisitatorBean.nextCurrentDetailPage}" disabled="#{not medicalVisitatorBean.currentDetailPaginationHelper.hasNextPage}">
+                                        <f:ajax execute="@this" render=":serviceForm:clinicDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{medicalVisitatorBean.currentDetailDataModel.rowCount le 0}">
+                                    <div style="text-align: center; font-weight: bold;">
+                                        <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                    <!-- BUTTONS -->
+                    <h:panelGroup id="clinicDetailButtonsPanelGroup" rendered="#{medicalVisitatorBean.currentDetailDataModel ne null and medicalVisitatorBean.previousServiceVale eq null}">
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['web.client.screen.button.Localize']}" styleClass="btn_std_small" action="#{medicalVisitatorBean.showCurrentDetailMap}" rendered="#{medicalVisitatorBean.geolocalizationAllowed and medicalVisitatorBean.showMapOnDetail and medicalVisitatorBean.currentDetailDataModel ne null and medicalVisitatorBean.currentDetailDataModel.rowCount gt 0}">
+                                <f:ajax execute=":serviceForm:clinicDetailTablePanelGroup" render=":serviceForm:map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.visitorder.screen.button.Cancel']}" styleClass="btn_std_small" action="#{medicalVisitatorBean.cancelCurrentDetail}">
+                                <f:ajax execute="@this" render="@form :fastReportForm" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+
+                    <!-- MEDIC SECTION -->
+                    <h:panelGroup id="medicTablePanelGroup" rendered="#{medicalVisitatorBean.currentDataModel ne null and medicalVisitatorBean.previousServiceVale ne null}">
+                        <div class="buttons_top">
+                            <h:commandButton styleClass="btn_xls" title="#{i18n['web.client.report.tip.XLSReport']}" action="#{medicalVisitatorBean.viewXLSmedic}" onclick="return reportPrint('serviceForm');" />
+                            <h:commandButton styleClass="btn_pdf" title="#{i18n['web.client.report.tip.PDFReport']}" action="#{medicalVisitatorBean.viewPDFmedic}" onclick="return reportPrint('serviceForm');" />
+                        </div>
+                        <div class="tablebox">
+                            <div class="head">
+                                #{i18n['medicalVisitator.medic.DetailOf']} #{medicalVisitatorBean.serviceValue.userphone.nameChr} (
+                                <h:outputText value="#{medicalVisitatorBean.serviceValue.userphone.cellphoneNum}" converter="cellphoneConverter" />
+                                ) (#{medicalVisitatorBean.previousServiceVale.column2Chr} - #{medicalVisitatorBean.mapClinic[medicalVisitatorBean.previousServiceVale.column2Chr]} )
+                            </div>
+                            <!-- LIST TABLE -->
+                            <div class="body">
+                                <h:dataTable id="medicListTable" value="#{medicalVisitatorBean.currentDataModel}" var="currentItem" rendered="#{medicalVisitatorBean.currentDataModel.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <h:selectBooleanCheckbox id="clinicChkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{medicalVisitatorBean.currentDetailDataModel ne null}" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                        </f:facet>
+                                        <h:selectBooleanCheckbox id="clinicChkBoxSelected" value="#{medicalVisitatorBean.currentDataModelItems[currentItem.servicevalueCod]}" disabled="#{medicalVisitatorBean.currentDetailDataModel ne null}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['medicalVisitator.field.MedicCode']}" action="#{medicalVisitatorBean.applySortCurrent}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['visitorder.field.MedicCode']}" disabled="#{medicalVisitatorBean.currentDetailDataModel ne null}">
+                                                    <f:setPropertyActionListener value="#{not medicalVisitatorBean.currentSortHelper.ascending}" target="#{medicalVisitatorBean.currentSortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="column2Chr" target="#{medicalVisitatorBean.currentSortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:medicTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{medicalVisitatorBean.currentSortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{medicalVisitatorBean.currentSortHelper.field eq 'column2Chr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{currentItem.column2Chr}" header="#{i18n['medicalVisitator.field.MedicCode']}"/>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:outputText value="#{i18n['medicalVisitator.field.MedicName']}" title="#{i18n['medicalVisitator.field.MedicName']}" />
+                                            </span>
+                                        </f:facet>
+                                       <csui:columnWidthChar value="#{medicalVisitatorBean.mapMedic[currentItem.column2Chr]}" rendered="#{medicalVisitatorBean.mapMedic[currentItem.column2Chr] ne null}" header="#{i18n['medicalVisitator.field.MedicName']}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['medicalVisitator.field.Date']}" action="#{medicalVisitatorBean.applySortCurrent}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['medicalVisitator.field.Date']}" disabled="#{medicalVisitatorBean.currentDetailDataModel ne null}">
+                                                    <f:setPropertyActionListener value="#{not medicalVisitatorBean.currentSortHelper.ascending}" target="#{medicalVisitatorBean.currentSortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="message.dateinDat" target="#{medicalVisitatorBean.currentSortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:cliniTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{medicalVisitatorBean.currentSortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{medicalVisitatorBean.currentSortHelper.field eq 'message.dateinDat'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{currentItem.message.dateinDat}">
+                                            <f:convertDateTime pattern="#{applicationBean.defaultOutputDateTimeFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                        </h:outputText>
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+                            <!-- MEDIC PAGINATION -->
+                            <div class="foot">
+                                <h:panelGroup rendered="#{medicalVisitatorBean.currentDataModel.rowCount gt 0}">
+                                    <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{medicalVisitatorBean.previousCurrentPage}" disabled="#{not medicalVisitatorBean.currentPaginationHelper.hasPreviousPage or medicalVisitatorBean.currentDetailDataModel ne null}">
+                                        <f:ajax execute="@this" render=":serviceForm:medicTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                        &#160;|&#160;<h:outputText value="#{medicalVisitatorBean.currentPaginationHelper.pageFirstItem + 1}..#{medicalVisitatorBean.currentPaginationHelper.pageLastItem + 1} / #{medicalVisitatorBean.currentPaginationHelper.itemsCount}" />&#160;|&#160;
+                                        <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{medicalVisitatorBean.nextCurrentPage}" disabled="#{not medicalVisitatorBean.currentPaginationHelper.hasNextPage or medicalVisitatorBean.currentDetailDataModel ne null}">
+                                        <f:ajax execute="@this" render=":serviceForm:medicTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{medicalVisitatorBean.currentDataModel.rowCount le 0}">
+                                    <div style="text-align: center; font-weight: bold;">
+                                        <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                    <!-- MEDIC BUTTONS -->
+                    <h:panelGroup id="medicLocalizationButtonsPanelGroup" rendered="#{medicalVisitatorBean.currentDataModel ne null and medicalVisitatorBean.currentDataModel.rowCount gt 0 and medicalVisitatorBean.previousServiceVale ne null}">
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['medicalVisitator.clinic.Products']}" styleClass="btn_std_large" action="#{medicalVisitatorBean.viewProductDetails}" disabled="#{medicalVisitatorBean.currentDetailDataModel ne null}">
+                                <f:ajax execute="@form :fastReportForm" render="@form :fastReportForm" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['medicalVisitator.clinic.Details']}" styleClass="btn_std_large" action="#{medicalVisitatorBean.viewClinicVisitDetails}" disabled="#{medicalVisitatorBean.currentDetailDataModel ne null}">
+                                <f:ajax execute="@form :fastReportForm" render="@form :fastReportForm" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.screen.button.ReturnToList']}" styleClass="btn_std_large" action="#{medicalVisitatorBean.backClinicDetails}" disabled="#{medicalVisitatorBean.currentDetailDataModel ne null}">
+                                <f:ajax execute="@this" render="@form :fastReportForm" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+                    <!-- MEDIC DETAILS -->
+                    <h:panelGroup id="medicDetailTablePanelGroup" rendered="#{medicalVisitatorBean.currentDetailDataModel ne null and medicalVisitatorBean.previousServiceVale ne null}">
+                        <div class="buttons_top">
+                            <h:commandButton styleClass="btn_xls" title="#{i18n['web.client.report.tip.XLSReport']}" acion="#{medicalVisitatorBean.viewPDFmedicDetails}" onclick="return reportPrint('serviceForm');" />
+                            <h:commandButton styleClass="btn_pdf" title="#{i18n['web.client.report.tip.PDFReport']}" action="#{medicalVisitatorBean.viewPDFmedicDetails}" onclick="return reportPrint('serviceForm');" />
+                        </div>
+                        <div class="tablebox">
+                            <div class="head">#{i18n['medicalVisitator.title.MedicDetails']}</div>
+                            <!-- LIST TABLE -->
+                            <div class="body">
+                                <h:dataTable id="medicDetailListTable" value="#{medicalVisitatorBean.currentDetailDataModel}" var="currentDetail" rendered="#{medicalVisitatorBean.currentDetailDataModel.rowCount gt 0}" rowClasses="odd_row,even_row">
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <h:selectBooleanCheckbox id="medicChkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" onclick="checkUncheckAllInTable('medicChkBox',this, this.checked);" />
+                                        </f:facet>
+                                        <h:selectBooleanCheckbox id="medicChkBox" value="#{medicalVisitatorBean.currentDetailDataModelItems[currentDetail.servicevaluedetailCod]}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['medicalVisitator.title.Events']}" action="#{medicalVisitatorBean.applySortCurrentDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['medicalVisitator.title.Events']}">
+                                                    <f:setPropertyActionListener value="#{not medicalVisitatorBean.currentDetailSortHelper.ascending}" target="#{medicalVisitatorBean.currentDetailSortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="column1Chr" target="#{medicalVisitatorBean.currentDetailSortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:medicDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{medicalVisitatorBean.currentDetailSortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{medicalVisitatorBean.currentDetailSortHelper.field eq 'column1Chr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{medicalVisitatorBean.mapEncodingEvents[currentDetail.column1Chr]}" header="#{i18n['medicalVisitator.title.Events']}"/>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['medicalVisitator.field.MotiveCode']}" action="#{medicalVisitatorBean.applySortCurrentDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['medicalVisitator.field.MotiveCode']}">
+                                                    <f:setPropertyActionListener value="#{not medicalVisitatorBean.currentDetailSortHelper.ascending}" target="#{medicalVisitatorBean.currentDetailSortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="column2Chr" target="#{medicalVisitatorBean.currentDetailSortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:medicDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{medicalVisitatorBean.currentDetailSortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{medicalVisitatorBean.currentDetailSortHelper.field eq 'column2Chr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{currentDetail.column2Chr}" header="#{i18n['medicalVisitator.field.MotiveCode']}"/>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:outputText value="#{i18n['medicalVisitator.field.MotiveName']}" title="#{i18n['medicalVisitator.field.MotiveName']}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{medicalVisitatorBean.mapMotive[currentDetail.column2Chr]}" rendered="#{medicalVisitatorBean.mapMotive[currentDetail.column2Chr] ne null}" header="#{i18n['medicalVisitator.field.MotiveName']}"/>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['medicalVisitator.field.Observation']}" action="#{medicalVisitatorBean.applySortCurrentDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['medicalVisitator.field.Observation']}">
+                                                    <f:setPropertyActionListener value="#{not medicalVisitatorBean.currentDetailSortHelper.ascending}" target="#{medicalVisitatorBean.currentDetailSortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="column6Chr" target="#{medicalVisitatorBean.currentDetailSortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:medicDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{medicalVisitatorBean.currentDetailSortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{medicalVisitatorBean.currentDetailSortHelper.field eq 'column6Chr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{currentDetail.column6Chr}" header="#{i18n['medicalVisitator.field.Observation']}"/>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['medicalVisitator.field.Date']}" action="#{medicalVisitatorBean.applySortCurrentDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['medicalVisitator.field.Date']}">
+                                                    <f:setPropertyActionListener value="#{not medicalVisitatorBean.currentDetailSortHelper.ascending}" target="#{medicalVisitatorBean.currentDetailSortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="recorddateDat" target="#{medicalVisitatorBean.currentDetailSortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:clinicDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{medicalVisitatorBean.currentDetailSortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{medicalVisitatorBean.currentDetailSortHelper.field eq 'recorddateDat'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{currentDetail.recorddateDat}">
+                                            <f:convertDateTime pattern="#{applicationBean.defaultOutputDateTimeFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" />
+                                        </h:outputText>
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+                            <!-- PAGINATION -->
+                            <div class="foot">
+                                <h:panelGroup rendered="#{medicalVisitatorBean.currentDetailDataModel.rowCount gt 0}">
+                                    <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{medicalVisitatorBean.previousCurrentDetailPage}" disabled="#{not medicalVisitatorBean.currentDetailPaginationHelper.hasPreviousPage}">
+                                        <f:ajax execute="@this" render=":serviceForm:medicDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                                            &#160;|&#160;<h:outputText value="#{medicalVisitatorBean.currentDetailPaginationHelper.pageFirstItem + 1}..#{medicalVisitatorBean.currentDetailPaginationHelper.pageLastItem + 1} / #{medicalVisitatorBean.currentDetailPaginationHelper.itemsCount}" />&#160;|&#160;
+                                                            <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{medicalVisitatorBean.nextCurrentDetailPage}" disabled="#{not medicalVisitatorBean.currentDetailPaginationHelper.hasNextPage}">
+                                        <f:ajax execute="@this" render=":serviceForm:medicDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{medicalVisitatorBean.currentDetailDataModel.rowCount le 0}">
+                                    <div style="text-align: center; font-weight: bold;">
+                                        <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                    <!-- BUTTONS -->
+                    <h:panelGroup id="medicDetailButtonsPanelGroup" rendered="#{medicalVisitatorBean.currentDetailDataModel ne null and medicalVisitatorBean.previousServiceVale ne null }">
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['web.client.screen.button.Localize']}" styleClass="btn_std_small" action="#{medicalVisitatorBean.showCurrentDetailMap}" rendered="#{medicalVisitatorBean.geolocalizationAllowed and medicalVisitatorBean.showMapOnDetail and medicalVisitatorBean.currentDetailDataModel ne null and medicalVisitatorBean.currentDetailDataModel.rowCount gt 0}">
+                                <f:ajax execute=":serviceForm:medicDetailTablePanelGroup" render=":serviceForm:map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.visitorder.screen.button.Cancel']}" styleClass="btn_std_small" action="#{medicalVisitatorBean.cancelCurrentDetail}">
+                                <f:ajax execute="@this" render="@form :fastReportForm" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+
+                    <!-- PRODUCT DETAILS -->
+                    <h:panelGroup id="productDetailTablePanelGroup" rendered="#{medicalVisitatorBean.productDataModel ne null and medicalVisitatorBean.previousServiceVale ne null}">
+                        <div class="buttons_top">
+                            <h:commandButton styleClass="btn_xls" title="#{i18n['web.client.report.tip.XLSReport']}" acion="#{medicalVisitatorBean.viewPDFproductDetails}" onclick="return reportPrint('serviceForm');" />
+                            <h:commandButton styleClass="btn_pdf" title="#{i18n['web.client.report.tip.PDFReport']}" action="#{medicalVisitatorBean.viewPDFproductDetails}" onclick="return reportPrint('serviceForm');" />
+                        </div>
+                        <div class="tablebox">
+                            <div class="head">#{i18n['medicalVisitator.title.ProductDetails']}</div>
+                            <!-- LIST TABLE -->
+                            <div class="body">
+                                <h:dataTable id="productDetailListTable" value="#{medicalVisitatorBean.productDataModel}" var="currentDetail" rendered="#{medicalVisitatorBean.productDataModel.rowCount gt 0}" rowClasses="odd_row,even_row">
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['medicalVisitator.field.ProductCode']}" action="#{medicalVisitatorBean.applySortProductDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['medicalVisitator.field.ProductCode']}">
+                                                    <f:setPropertyActionListener value="#{not medicalVisitatorBean.productSortHelper.ascending}" target="#{medicalVisitatorBean.productSortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="column1Chr" target="#{medicalVisitatorBean.productSortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:productDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{medicalVisitatorBean.productSortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{medicalVisitatorBean.productSortHelper.field eq 'column1Chr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{currentDetail.column1Chr}" header="#{i18n['medicalVisitator.field.ProductCode']}"/>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:outputText value="#{i18n['medicalVisitator.field.ProductName']}" title="#{i18n['medicalVisitator.field.ProductName']}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{medicalVisitatorBean.mapProduct[currentDetail.column1Chr]}" rendered="#{medicalVisitatorBean.mapProduct[currentDetail.column1Chr] ne null}" header="#{i18n['medicalVisitator.field.ProductName']}"/>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['medicalVisitator.field.Quantity']}" action="#{medicalVisitatorBean.applySortProductDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['medicalVisitator.field.Quantity']}">
+                                                    <f:setPropertyActionListener value="#{not medicalVisitatorBean.productSortHelper.ascending}" target="#{medicalVisitatorBean.productSortHelper.ascending}" />
+                                                    <f:setPropertyActionListener value="column2Chr" target="#{medicalVisitatorBean.productSortHelper.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:productDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{medicalVisitatorBean.productSortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{medicalVisitatorBean.productSortHelper.field eq 'column2Chr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{currentDetail.column2Chr}" header="#{i18n['medicalVisitator.field.Quantity']}"/>
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+                            <!-- PAGINATION -->
+                            <div class="foot">
+                                <h:panelGroup rendered="#{medicalVisitatorBean.productDataModel.rowCount gt 0}">
+                                    <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{medicalVisitatorBean.previousProductPage}" disabled="#{not medicalVisitatorBean.productPaginationHelper.hasPreviousPage}">
+                                        <f:ajax execute="@this" render=":serviceForm:medicDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                                            &#160;|&#160;<h:outputText value="#{medicalVisitatorBean.productPaginationHelper.pageFirstItem + 1}..#{medicalVisitatorBean.productPaginationHelper.pageLastItem + 1} / #{medicalVisitatorBean.productPaginationHelper.itemsCount}" />&#160;|&#160;
+                                                            <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{medicalVisitatorBean.nextProductPage}" disabled="#{not medicalVisitatorBean.productPaginationHelper.hasNextPage}">
+                                        <f:ajax execute="@this" render=":serviceForm:productDetailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{medicalVisitatorBean.productDataModel.rowCount le 0}">
+                                    <div style="text-align: center; font-weight: bold;">
+                                        <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                    <!-- BUTTONS -->
+                    <h:panelGroup id="productDetailButtonsPanelGroup" rendered="#{medicalVisitatorBean.productDataModel ne null and medicalVisitatorBean.previousServiceVale ne null }">
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['web.client.visitorder.screen.button.Cancel']}" styleClass="btn_std_small" action="#{medicalVisitatorBean.cancelProductDetail}">
+                                <f:ajax execute="@this" render="@form :fastReportForm" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+
+                    <f:view contentType="text/html">
+                        <!-- GOOGLE MAP -->
+                        <h:panelGroup id="mapGroup" rendered="#{medicalVisitatorBean.geolocalizationAllowed and medicalVisitatorBean.currentDetailDataModel ne null and medicalVisitatorBean.currentDetailDataModel.rowCount gt 0 and medicalVisitatorBean.showMapOnDetail}">
+                            <div class="tablebox">
+                                <div class="head">#{i18n['web.client.screen.subtitle.LocalizationMap']}</div>
+                                <h:panelGroup id="map">
+                                    <div class="body" style="padding-left: 1px; padding-top: 2px;">
+                                        <p:gmap center="#{medicalVisitatorBean.mapCenterStr}" zoom="#{medicalVisitatorBean.mapZoom}" type="#{medicalVisitatorBean.mapType}" style="width:979px;height:600px" model="#{medicalVisitatorBean.mapModel}">
+                                            <p:ajax event="overlaySelect" listener="#{medicalVisitatorBean.onMarkerSelect}" update="textbox" />
+                                            <p:ajax event="stateChange" listener="#{medicalVisitatorBean.onMapStateChange}" />
+                                            <p:ajax event="pointSelect" listener="#{medicalVisitatorBean.onPointSelect}" update="map" />
+                                            <p:gmapInfoWindow maxWidth="4">
+                                                <p:outputPanel id="textbox">
+                                                    <h:outputText value="#{medicalVisitatorBean.selectedMarker.data}" rendered="#{not medicalVisitatorBean.clientMarker}" escape="false" />
+                                                    <h:panelGroup style="width:320px;height:150px" id="clientMark" rendered="#{medicalVisitatorBean.clientMarker}">
+                                                        <table style="width: 300px; height: 120px">
+                                                            <tr>
+                                                                <td><h:outputText id="descriptionClientMarkerOut" value="#{i18n['web.client.abstractServiceBean.map.Title']}" /></td>
+                                                                <td><h:inputText id="descriptionClientMarker" value="#{medicalVisitatorBean.selectedMarker.title}" /></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><h:outputText id="titleClientMarkerOut" value="#{i18n['web.client.abstractServiceBean.map.Description']}" /></td>
+                                                                <td><h:inputText id="titleClientMarker" value="#{medicalVisitatorBean.selectedMarker.data}" /></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2" style="text-align: right;"><h:commandButton id="btnSaveMark" styleClass="btn_std_small" value="#{i18n['web.client.abstractServiceBean.map.button.SaveMark']}" action="#{medicalVisitatorBean.saveClientMarker}">
+                                                                        <f:ajax execute=":serviceForm:mapGroup" render="map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                                    </h:commandButton> <h:commandButton id="DeleteMark" styleClass="btn_std_small" value="#{i18n['web.client.abstractServiceBean.map.button.DeleteMark']}" action="#{medicalVisitatorBean.deleteClientMarker}">
+                                                                        <f:ajax execute=":serviceForm:mapGroup" render="map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                                    </h:commandButton></td>
+                                                            </tr>
+                                                        </table>
+                                                    </h:panelGroup>
+                                                </p:outputPanel>
+                                            </p:gmapInfoWindow>
+                                        </p:gmap>
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </h:panelGroup>
+                    </f:view>
+
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

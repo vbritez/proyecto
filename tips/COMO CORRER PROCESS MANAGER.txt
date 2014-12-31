@@ -1,0 +1,32 @@
+Para probar ProcessManager, poner todos los procesos en estado desactivado, menos el proceso de envio de reporte, para ello
+verificar en la tabla Process, que el servicio de envio automatico de reportes sea 1 y todos los demas 4.
+En la tabla Process Execution, poner que el codigo de execution sea 1. y especificar en el campo Value la hora que quiero que corra. O utilizar el codigo de execution 10 y especificar cada cuanto se desea que corra.
+
+El process Manager utiliza el csTigoJPA, en el ResouceLocal se debe especificar a que BD va a apuntar.
+
+Para levantar el SMSManager, es necesario exportar el SMSManager con MANIFEST,
+y exportar los jar de csTigoBean, csTigoCommons, csTigoAPI,csTigoJPA,
+csLbsServiceClient. 
+Exportar el smsDistpacher dentro de la carpeta plugins.
+
+csDispatchingAgent el que responde para WIB.
+csDispatchingAndroidAgent el que responde para los sms Android.
+
+Dentro de la clase CellAPI se toco el metodo getCellId, para que si la celda es nula pregunte al LBS.
+
+TIPS del SmsManager
+TENER EN CUENTA EL MANIFEST DEL SMSMANAGER, EL ORDEN de las librerias en el MANIFEST IMPORTA.
+La libreria del gson debe ser importada antes del csTigoBean en el MANIFEST.
+Tirar la libreria del gso dentro de la carpeta lib del csSmsManager.
+Mirar el log nohup.log porque ahi se tira los errores.
+
+
+TIPS CON WEBSERVICES
+El seridor de test 76 no resuelve por DNS, entonces se debe poner en el
+archivo /etc/hosts/ la ip y dominio para que pueda resolver.
+
+Contraseña de root en el 76 Telecel!
+Si es un error del csLbsServiceClient, utilizar del processManager.
+Tener en cuenta la version del java con la que se compila.
+
+

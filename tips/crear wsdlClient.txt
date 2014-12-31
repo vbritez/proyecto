@@ -1,0 +1,8 @@
+
+"C:\lothar\dev\trunk\paraguay\java\jdk\jdk1.6.0_24\bin\wsimport" -keep http://10.16.203.162:8080/GetAdvanceAmount/GetAdvanceAmountWS?wsdl .
+
+"C:\lothar\dev\trunk\paraguay\java\jdk\jdk1.6.0_24\bin\wsimport" -keep http://10.3.20.59:8080/NavidadMundo2Driver/NavidadPromo?wsdl .
+
+
+"C:\lothar\dev\trunk\paraguay\java\jdk\jdk1.6.0_24\bin\wsimport" -keep LendRecordWS.xml -b LendRecordWS.xsd .
+

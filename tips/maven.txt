@@ -1,0 +1,46 @@
+﻿Maven permite gestionar y crear proyectos.
+Generalmente al desarrollar un proyecto contamos con una carpeta de librerias en donde ponemos todos los jars que utilizamos,
+por ejemplo el JDBC de nuestra motor de BD, y al subir el proyecto a nuestro repositorio, por lo general no se suele alzar las librerias,
+y luego si otro programador baja el contenido, suele encontrarse con la problematica de que el proyecto referencia a librerias con que éste no cuenta,
+si son librerias externas no hay mucho problema, porque se pueden descargar y agregar al classpath del proyecto, pero si se trata de librerias propias esto suele ser un problema. 
+Otro problema que solemos encontrar es que los IDE crean proyectos que tienen diferentes estructuras, por ejemplo un proyecto WEb creado con eclipse contiene una estructura de directorios diferente a uno creado con netbeans, sin embargo maven crea un proyecto con una estructura estandar compatible con todos los IDE, siempre y cuando estos IDE tengan instalado el plugin correspondiente.
+
+Un proyecto desarrollado con maven contiene un archivo llamado pom.xml, en donde se define la estructura y librerias que tendra el proyecto.
+Entonces cuando se levanta un proyecto desarrolado en maven al repositorio, cuando los demas programadores descargan los mismos no tendran conflico alguno en cuanto a librerias ya que estaran referenciando al mismo archivo pom.xml en donde estara definido cuales son las librerias y de que repositorio descargarlas. Maven lo que hara sera descargar las librerias referencias en el pom.xml del proyecto al repositorio local de la maquina
+situada dentro de ~/.m2/repository. De esta manera se asegura que todos los desarrolladores estan utilizando las mismas librerias.
+
+SNAPSHOT: significa que son versiones aun en etapa de desarrollo, versiones beta, que aun faltan mejorar, si en la opcion version no le ponemos el nombre de SNAPSHOT significa que son versiones finales, versiones alphas.
+
+mvn plugin:goal
+Ejemplo mvn achetype:create, mvn eclipse:eclipse, mvn eclipse:clean, etc. 
+
+Fases de maven con sus metas correspondientes:
+process-resources---> resources:resources
+compile --->   compiler:compile
+process-testResource ---> resources:testResources 
+test-compile ---> compiler:testCompile
+test ----> surefire:test
+package ---> jar:jar
+
+El comando mvn install ejecuta todas las fases definidas anteriormente.
+Cada meta accede a la informacion definida en el archivo pom.xml
+
+
+mvn exec:java -Dexec.mainClass=org.sonatype.mavenbook.weather.Main --> ejecuta el main de una clase java
+mvn exec:java -Dexec.mainClass=org.sonatype.mavenbook.weather.Main -Dexec.args="70112" --> ejecuta el main 
+con los parametros que se le pasa
+
+mvn help:describe -Dplugin=exec -Dfull --> lista todas las metas disponibles para el plugin exec
+
+mvn dependency:resolve --> te lista las librerias que seran inluidas en el classpath de tu proyecto
+mvn dependency:tree --> para saber la dependencias de las librerias incluidas
+mvn install -Dmaven.test.skip=true --> compila el proyecto excluyendo la fase de test
+mvn install assembly:assembly --> utiliza el plugin assembly que permite generar el proyecto en cualquier formato que se desee utilizando un descriptor assembly personalizado
+
+mvn archetype:generate -DgroupId=com.tigo.cs -DartifactId=proviosioning  -Dversion=1.0-SNAPSHOT -DarchetypeArtifactId=maven-archetype-webapp -DinteractiveMode=false
+
+
+mvn archetype:generate -DgroupId=py.com.lothar.bma -DartifactId=bmaProvisioningejb -Dversion=1.0-SNAPSHOT -DarchetypeArtifactId=org.codehaus.mojo.archetypes:ejb-jee6 -DinteractiveMode=false
+
+    
+	

@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:csui="http://java.sun.com/jsf/composite/uicomponents" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/mapScreenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.servicename.Guardian']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="guard" value="#{i18n['web.servicename.Guardian']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <!-- GOOGLE MAPS API -->
+<!--         <script src="https://maps.google.com/maps/api/js?client=#{applicationBean.appKey}&amp;sensor=false" type="text/javascript" /> -->
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="fastReportForm" target="_blank">
+                    <h:panelGroup rendered="#{guardBean.dataModelDetail eq null}">
+                        <div class="buttons_top">
+                            <h:commandButton styleClass="btn_xls" title="#{i18n['web.client.report.tip.XLSReport']}" action="#{guardBean.viewXLSCabDetail}" />
+                            <h:commandButton styleClass="btn_pdf" title="#{i18n['web.client.report.tip.PDFReport']}" action="#{guardBean.viewPDFCabDetail}" />
+                        </div>
+                    </h:panelGroup>
+                </h:form>
+                <h:form id="serviceForm">
+                    <p:focus for="serviceForm:listSearchOption" />
+                    <h:panelGroup id="cabPanelGroup" rendered="#{guardBean.dataModelDetail eq null}">
+                        <div class="tablebox">
+                            <div class="head">#{i18n['guardian.title.ListOf']}</div>
+                            <!-- SEARCH BOX -->
+                            <h:panelGroup id="searchBoxGroupPanel">
+                                <div class="headcontainer">
+                                    <table class="tablesearch">
+                                        <tr>
+                                            <th>#{i18n['web.client.search.field.Mobile']}</th>
+                                            <td>
+                                                <csui:cellphoneInputText id="celularSearch" value="#{guardBean.mobilePhoneNumber}" tabindex="1" />
+                                            </td>
+                                            <th>#{i18n['web.client.search.field.Show']}</th>
+                                            <td class="thin">
+                                                <h:selectOneMenu id="listRowQuant" value="#{guardBean.rowQuantSelected}" disabled="#{guardBean.serviceValue ne null}" valueChangeListener="#{guardBean.applyQuantity}" tabindex="2">
+                                                    <f:selectItems value="#{guardBean.rowQuantList}" />
+                                                    <f:ajax event="change" execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:selectOneMenu>
+                                            </td>
+                                            <td rowspan="3" style="text-align: center;">
+                                                <h:commandButton id="btnSearch" styleClass="btn_std_small" value="#{i18n['web.client.search.field.Find']}" action="#{guardBean.applyFilter}" disabled="#{guardBean.serviceValue ne null}" tabindex="5">
+                                                    <f:ajax execute=":serviceForm:searchBoxGroupPanel" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandButton>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>#{i18n['web.client.search.field.User']}</th>
+                                            <td>
+                                                <h:selectOneMenu id="listSearchOption" value="#{guardBean.selectedUserphone}" converter="userphoneConverter">
+                                                    <f:selectItem itemLabel="(#{i18n['web.client.selectonemenu.All']})" itemValue="#{null}" />
+                                                    <f:selectItems value="#{guardBean.userphoneList}" var="uLItem" itemValue="#{uLItem}" itemLabel="#{uLItem.nameChr}" />
+                                                </h:selectOneMenu>
+                                            </td>
+                                            <th>#{i18n['web.client.search.field.UserName']}</th>
+                                            <td>
+                                                <h:inputText id="textNameCriteria" value="#{guardBean.usermobileName}" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>#{i18n['web.client.search.field.FromDate']}</th>
+                                            <td>
+                                                <p:calendar id="textDateFrom" locale="#{iBean.locale}" value="#{guardBean.dateFrom}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                            </td>
+                                            <th>#{i18n['web.client.search.field.ToDate']}</th>
+                                            <td>
+                                                <p:calendar id="textDateTo" locale="#{iBean.locale}" value="#{guardBean.dateTo}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </h:panelGroup>
+                            <h:panelGroup id="listTablePanelGroup">
+                                <!-- LIST TABLE -->
+                                <div class="body">
+                                    <h:dataTable id="serviceListTable" value="#{guardBean.dataModelHeader}" var="item" rendered="#{guardBean.dataModelHeader.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <h:selectBooleanCheckbox id="chkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{guardBean.serviceValue ne null}" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                            </f:facet>
+                                            <h:selectBooleanCheckbox id="chkBoxSelected" value="#{guardBean.selectedItems[item.servicevalueCod]}" disabled="#{guardBean.serviceValue ne null}" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:commandLink value="#{i18n['guardian.field.MobileNumber']}" action="#{guardBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['guardian.field.MobileNumber']}" disabled="#{guardBean.serviceValue ne null}">
+                                                        <f:setPropertyActionListener value="#{not guardBean.sortHelper.ascending}" target="#{guardBean.sortHelper.ascending}" />
+                                                        <f:setPropertyActionListener value="userphone.cellphoneNum" target="#{guardBean.sortHelper.field}" />
+                                                        <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandLink>
+                                                    <h:outputText value="#{guardBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{guardBean.sortHelper.field eq 'userphone.cellphoneNum'}" />
+                                                </span>
+                                            </f:facet>
+                                            <h:outputText value="#{item.userphone.cellphoneNum}" converter="cellphoneConverter" />
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:commandLink value="#{i18n['guardian.field.Names']}" action="#{guardBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['guardian.field.Names']}" disabled="#{guardBean.serviceValue ne null}">
+                                                        <f:setPropertyActionListener value="#{not guardBean.sortHelper.ascending}" target="#{guardBean.sortHelper.ascending}" />
+                                                        <f:setPropertyActionListener value="userphone.nameChr" target="#{guardBean.sortHelper.field}" />
+                                                        <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandLink>
+                                                    <h:outputText value="#{guardBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{guardBean.sortHelper.field eq 'userphone.nameChr'}" />
+                                                </span>
+                                            </f:facet>
+                                            <csui:columnWidthChar value="#{item.userphone.nameChr}" header="#{i18n['guardian.field.Names']}"/>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:commandLink value="#{i18n[guardBean.columnsData['column1'].descriptionChr]}" action="#{guardBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n[guardBean.columnsData['column1'].descriptionChr]}" disabled="#{guardBean.serviceValue ne null}">
+                                                        <f:setPropertyActionListener value="#{not guardBean.sortHelper.ascending}" target="#{guardBean.sortHelper.ascending}" />
+                                                        <f:setPropertyActionListener value="column1Chr" target="#{guardBean.sortHelper.field}" />
+                                                        <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandLink>
+                                                    <h:outputText value="#{guardBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{guardBean.sortHelper.field eq 'column1Chr'}" />
+                                                </span>
+                                            </f:facet>
+                                            <csui:columnWidthChar value="#{item.column1Chr}" header="#{i18n[guardBean.columnsData['column1'].descriptionChr]}"/>
+                                        </h:column>
+
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:outputText value="#{i18n['guardian.field.GuardName']}" title="#{i18n['guardian.field.GuardName']}" />
+                                                </span>
+                                            </f:facet>
+                                            <csui:columnWidthChar  value="#{guardBean.mapGuards[item.column1Chr]}" rendered="#{guardBean.mapGuards[item.column1Chr] ne null}" header="#{i18n['guardian.field.GuardName']}"/>
+                                        </h:column>
+
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:commandLink value="#{i18n[guardBean.columnsData['column2'].descriptionChr]}" action="#{guardBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n[guardBean.columnsData['column2'].descriptionChr]}" disabled="#{guardBean.serviceValue ne null}">
+                                                        <f:setPropertyActionListener value="#{not guardBean.sortHelper.ascending}" target="#{guardBean.sortHelper.ascending}" />
+                                                        <f:setPropertyActionListener value="column2Chr" target="#{guardBean.sortHelper.field}" />
+                                                        <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandLink>
+                                                    <h:outputText value="#{guardBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{guardBean.sortHelper.field eq 'column2Chr'}" />
+                                                </span>
+                                            </f:facet>
+                                            <h:outputText value="#{item.column2Chr}">
+                                                <f:convertDateTime pattern="#{applicationBean.defaultOutputDateTimeFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" type="time" />
+                                            </h:outputText>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:commandLink value="#{i18n[guardBean.columnsData['column3'].descriptionChr]}" action="#{guardBean.applySort}" title="#{iBeani18n['web.client.table.tip.OrderBy']} #{i18n[guardBean.columnsData['column3'].descriptionChr]}" disabled="#{guardBean.serviceValue ne null}">
+                                                        <f:setPropertyActionListener value="#{not guardBean.sortHelper.ascending}" target="#{guardBean.sortHelper.ascending}" />
+                                                        <f:setPropertyActionListener value="column3Chr" target="#{guardBean.sortHelper.field}" />
+                                                        <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandLink>
+                                                    <h:outputText value="#{guardBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{guardBean.sortHelper.field eq 'column3Chr'}" />
+                                                </span>
+                                            </f:facet>
+                                            <csui:columnWidthChar  value="#{item.column3Chr}" header="#{i18n[guardBean.columnsData['column3'].descriptionChr]}"/>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:commandLink value="#{i18n[guardBean.columnsData['column5'].descriptionChr]}" action="#{guardBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n[guardBean.columnsData['column5'].descriptionChr]}" disabled="#{guardBean.serviceValue ne null}">
+                                                        <f:setPropertyActionListener value="#{not guardBean.sortHelper.ascending}" target="#{guardBean.sortHelper.ascending}" />
+                                                        <f:setPropertyActionListener value="column5Chr" target="#{guardBean.sortHelper.field}" />
+                                                        <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandLink>
+                                                    <h:outputText value="#{guardBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{guardBean.sortHelper.field eq 'column5Chr'}" />
+                                                </span>
+                                            </f:facet>
+                                            <h:outputText value="#{item.column5Chr}">
+                                                <f:convertDateTime pattern="#{applicationBean.defaultOutputDateTimeFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" type="time" />
+                                            </h:outputText>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:commandLink value="#{i18n[guardBean.columnsData['column6'].descriptionChr]}" action="#{guardBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n[guardBean.columnsData['column6'].descriptionChr]}" disabled="#{guardBean.serviceValue ne null}">
+                                                        <f:setPropertyActionListener value="#{not guardBean.sortHelper.ascending}" target="#{guardBean.sortHelper.ascending}" />
+                                                        <f:setPropertyActionListener value="column6Chr" target="#{guardBean.sortHelper.field}" />
+                                                        <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandLink>
+                                                    <h:outputText value="#{guardBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{guardBean.sortHelper.field eq 'column6Chr'}" />
+                                                </span>
+                                            </f:facet>
+                                            <csui:columnWidthChar value="#{item.column6Chr}" header="#{i18n[guardBean.columnsData['column6'].descriptionChr]}"/>
+                                        </h:column>
+                                        <h:column>
+                                            <f:facet name="header">
+                                                <span>
+                                                    <h:commandLink value="#{i18n[guardBean.columnsData['column4'].descriptionChr]}" action="#{guardBean.applySort}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n[guardBean.columnsData['column4'].descriptionChr]}" disabled="#{guardBean.serviceValue ne null}">
+                                                        <f:setPropertyActionListener value="#{not guardBean.sortHelper.ascending}" target="#{guardBean.sortHelper.ascending}" />
+                                                        <f:setPropertyActionListener value="column4Chr" target="#{guardBean.sortHelper.field}" />
+                                                        <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                    </h:commandLink>
+                                                    <h:outputText value="#{guardBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}" rendered="#{guardBean.sortHelper.field eq 'column4Chr'}" />
+                                                </span>
+                                            </f:facet>
+                                            <csui:columnWidthChar value="#{item.column4Chr}" header="#{i18n[guardBean.columnsData['column4'].descriptionChr]}"/>
+                                        </h:column>
+                                    </h:dataTable>
+                                </div>
+                                <!-- PAGINATION -->
+                                <div class="foot">
+                                    <h:panelGroup rendered="#{guardBean.dataModelHeader.rowCount gt 0}">
+                                        <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{guardBean.previousHeaderPage}" disabled="#{not guardBean.paginationHelper.hasPreviousPage or guardBean.serviceValue ne null}">
+                                            <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandLink>
+                                            &#160;|&#160;<h:outputText value="#{guardBean.paginationHelper.pageFirstItem + 1}..#{guardBean.paginationHelper.pageLastItem + 1} / #{guardBean.paginationHelper.itemsCount}" />&#160;|&#160;
+                                            <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{guardBean.nextHeaderPage}" disabled="#{not guardBean.paginationHelper.hasNextPage or guardBean.serviceValue ne null}">
+                                            <f:ajax execute="@this" render=":serviceForm:listTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                        </h:commandLink>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{guardBean.dataModelHeader.rowCount le 0}">
+                                        <div style="text-align: center; font-weight: bold;">
+                                            <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                        </div>
+                                    </h:panelGroup>
+                                </div>
+                            </h:panelGroup>
+                        </div>
+                        <!-- BUTTONS -->
+                        <h:panelGroup id="buttonsPanelGroup">
+                            <div class="buttons_bottom">
+                                <h:commandButton value="#{i18n['web.client.screen.button.Localize']}" styleClass="btn_std_small" action="#{guardBean.showHeaderMap}" rendered="#{guardBean.geolocalizationAllowed and guardBean.showMapOnHeader and guardBean.dataModelHeader ne null and guardBean.dataModelHeader.rowCount gt 0}">
+                                    <f:ajax execute=":serviceForm:listTablePanelGroup" render=":serviceForm:map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                                <h:commandButton value="#{i18n['web.client.screen.button.Details']}" styleClass="btn_std_small" action="#{guardBean.viewDetails}" disabled="#{guardBean.serviceValue ne null}" rendered="#{guardBean.dataModelHeader ne null and guardBean.dataModelHeader.rowCount gt 0}">
+                                    <f:ajax execute=":serviceForm:listTablePanelGroup" render="@form :fastReportForm" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                </h:commandButton>
+                            </div>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                    <!-- DETAIL SECTION -->
+                    <h:panelGroup id="detailTablePanelGroup" rendered="#{guardBean.dataModelDetail ne null}">
+                        <div class="buttons_top">
+                            <h:commandButton styleClass="btn_xls" title="#{i18n['web.client.report.tip.XLSReport']}" action="#{guardBean.viewXLSDetail}" onclick="return reportPrint('serviceForm');" />
+                            <h:commandButton styleClass="btn_pdf" title="#{i18n['web.client.report.tip.PDFReport']}" action="#{guardBean.viewPDFDetail}" onclick="return reportPrint('serviceForm');" />
+                        </div>
+                        <div class="tablebox">
+                            <div class="head">
+                                #{i18n['guardian.title.DetailOf']} #{guardBean.serviceValue.userphone.nameChr} (
+                                <h:outputText value="#{guardBean.serviceValue.userphone.cellphoneNum}" converter="cellphoneConverter" />
+                                )
+                            </div>
+                            <!-- LIST TABLE -->
+                            <div class="body">
+                                <h:dataTable id="detailListTable" value="#{guardBean.dataModelDetail}" var="itemDetail" rendered="#{guardBean.dataModelDetail.rowCount gt 0}" rowClasses="odd_row,even_row" columnClasses="thin">
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <h:selectBooleanCheckbox id="detailChkBoxSelectedAll" title="#{i18n['web.client.table.check.SelectAndDeselect']}" disabled="#{guardBean.serviceValueDetail ne null}" onclick="checkUncheckAllInForm(this, this.checked);" />
+                                        </f:facet>
+                                        <h:selectBooleanCheckbox id="detailChkBoxSelected" value="#{guardBean.selectedDetailItems[itemDetail.servicevaluedetailCod]}" disabled="#{guardBean.serviceValueDetail ne null}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n[guardBean.columnsDataDetail['column1'].descriptionChr]}" action="#{guardBean.applySortDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n[guardBean.columnsDataDetail['column1'].descriptionChr]}" disabled="#{guardBean.serviceValueDetail ne null}">
+                                                    <f:setPropertyActionListener value="#{not guardBean.sortHelperDetail.ascending}" target="#{guardBean.sortHelperDetail.ascending}" />
+                                                    <f:setPropertyActionListener value="column1Chr" target="#{guardBean.sortHelperDetail.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:detailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{guardBean.sortHelperDetail.ascending ? '&#9650;' : '&#9660;'}" rendered="#{guardBean.sortHelperDetail.field eq 'column1Chr'}" />
+                                            </span>
+                                        </f:facet>
+                                        <csui:columnWidthChar value="#{itemDetail.column1Chr}" rendered="#{itemDetail.column2Chr ne 'S'}" header="#{i18n[guardBean.columnsDataDetail['column1'].descriptionChr]}" />
+                                        <csui:columnWidthChar value="#{itemDetail.column1Chr}" style="color: red;" rendered="#{itemDetail.column2Chr eq 'S'}" header="#{i18n[guardBean.columnsDataDetail['column1'].descriptionChr]}" />
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">
+                                            <span>
+                                                <h:commandLink value="#{i18n['guardian.field.Date']}" action="#{guardBean.applySortDetail}" title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['guardian.field.Date']}" disabled="#{guardBean.serviceValueDetail ne null}">
+                                                    <f:setPropertyActionListener value="#{not guardBean.sortHelperDetail.ascending}" target="#{guardBean.sortHelperDetail.ascending}" />
+                                                    <f:setPropertyActionListener value="recorddateDat" target="#{guardBean.sortHelperDetail.field}" />
+                                                    <f:ajax execute="@this" render=":serviceForm:detailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                </h:commandLink>
+                                                <h:outputText value="#{guardBean.sortHelperDetail.ascending ? '&#9650;' : '&#9660;'}" rendered="#{guardBean.sortHelperDetail.field eq 'recorddateDat'}" />
+                                            </span>
+                                        </f:facet>
+                                        <h:outputText value="#{itemDetail.recorddateDat}" rendered="#{itemDetail.column2Chr ne 'S'}">
+                                            <f:convertDateTime pattern="#{applicationBean.defaultOutputDateTimeFormat}" timeZone="#{applicationBean.defaultTimeZoneID}" type="time" />
+                                        </h:outputText>
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
+                            <!-- PAGINATION -->
+                            <div class="foot">
+                                <h:panelGroup rendered="#{guardBean.dataModelDetail.rowCount gt 0}">
+                                    <h:commandLink value="&#9668;#{i18n['web.client.table.row.Previus']}" action="#{guardBean.previousDetailPage}" disabled="#{not guardBean.paginationHelperDetail.hasPreviousPage or guardBean.serviceValueDetail ne null}">
+                                        <f:ajax execute="@this" render=":serviceForm:detailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                        &#160;|&#160;<h:outputText value="#{guardBean.paginationHelperDetail.pageFirstItem + 1}..#{guardBean.paginationHelperDetail.pageLastItem + 1} / #{guardBean.paginationHelperDetail.itemsCount}" />&#160;|&#160;
+                                        <h:commandLink value="#{i18n['web.client.table.row.Next']}&#9658;" action="#{guardBean.nextDetailPage}" disabled="#{not guardBean.paginationHelperDetail.hasNextPage or guardBean.serviceValueDetail ne null}">
+                                        <f:ajax execute="@this" render=":serviceForm:detailTablePanelGroup" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                    </h:commandLink>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{guardBean.dataModelDetail.rowCount le 0}">
+                                    <div style="text-align: center; font-weight: bold;">
+                                        <h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                    <!-- BUTTONS -->
+                    <h:panelGroup id="localizationButtonsPanelGroup" rendered="#{guardBean.dataModelDetail ne null and guardBean.dataModelDetail.rowCount gt 0}">
+                        <div class="buttons_bottom">
+                            <h:commandButton value="#{i18n['web.client.screen.button.Localize']}" styleClass="btn_std_small" action="#{guardBean.showDetailMap}" rendered="#{guardBean.geolocalizationAllowed and guardBean.showMapOnDetail and guardBean.dataModelDetail ne null and guardBean.dataModelDetail.rowCount gt 0}">
+                                <f:ajax execute=":serviceForm:detailTablePanelGroup" render=":serviceForm:map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                            <h:commandButton value="#{i18n['web.client.screen.button.ReturnToList']}" styleClass="btn_std_large" action="#{guardBean.cancelDetail}">
+                                <f:ajax execute="@this" render="@form :fastReportForm" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                            </h:commandButton>
+                        </div>
+                    </h:panelGroup>
+                    <f:view contentType="text/html">
+                        <!-- GOOGLE MAP -->
+                        <h:panelGroup id="mapGroup" rendered="#{guardBean.geolocalizationAllowed and (guardBean.dataModelHeader ne null and guardBean.dataModelHeader.rowCount gt 0 and guardBean.showMapOnHeader)}">
+                            <div class="tablebox">
+                                <div class="head">#{i18n['web.client.screen.subtitle.LocalizationMap']}</div>
+                                <h:panelGroup id="map">
+                                    <div class="body" style="padding-left: 1px; padding-top: 2px;">
+                                        <p:gmap center="#{guardBean.mapCenterStr}" zoom="#{guardBean.mapZoom}" type="#{guardBean.mapType}" style="width:979px;height:600px" model="#{guardBean.mapModel}">
+                                            <p:ajax event="overlaySelect" listener="#{guardBean.onMarkerSelect}" update="textbox" />
+                                            <p:ajax event="stateChange" listener="#{guardBean.onMapStateChange}" />
+                                            <p:ajax event="pointSelect" listener="#{guardBean.onPointSelect}" update="map" />
+                                            <p:gmapInfoWindow maxWidth="4">
+                                                <p:outputPanel id="textbox">
+                                                    <h:outputText value="#{guardBean.selectedMarker.data}" rendered="#{not guardBean.clientMarker}" escape="false" />
+                                                    <h:panelGroup style="width:320px;height:150px" id="clientMark" rendered="#{guardBean.clientMarker}">
+                                                        <table style="width: 300px; height: 120px">
+                                                            <tr>
+                                                                <td>
+                                                                    <h:outputText id="descriptionClientMarkerOut" value="#{i18n['web.client.abstractServiceBean.map.Title']}" />
+                                                                </td>
+                                                                <td>
+                                                                    <h:inputText id="descriptionClientMarker" value="#{guardBean.selectedMarker.title}" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <h:outputText id="titleClientMarkerOut" value="#{i18n['web.client.abstractServiceBean.map.Description']}" />
+                                                                </td>
+                                                                <td>
+                                                                    <h:inputText id="titleClientMarker" value="#{guardBean.selectedMarker.data}" />
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2" style="text-align: right;">
+                                                                    <h:commandButton id="btnSaveMark" styleClass="btn_std_small" value="#{i18n['web.client.abstractServiceBean.map.button.SaveMark']}" action="#{guardBean.saveClientMarker}">
+                                                                        <f:ajax execute=":serviceForm:mapGroup" render="map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                                    </h:commandButton>
+                                                                    <h:commandButton id="DeleteMark" styleClass="btn_std_small" value="#{i18n['web.client.abstractServiceBean.map.button.DeleteMark']}" action="#{guardBean.deleteClientMarker}">
+                                                                        <f:ajax execute=":serviceForm:mapGroup" render="map" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                                                                    </h:commandButton>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </h:panelGroup>
+                                                </p:outputPanel>
+                                            </p:gmapInfoWindow>
+                                        </p:gmap>
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                        </h:panelGroup>
+                    </f:view>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

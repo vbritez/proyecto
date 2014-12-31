@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_arp_sr_matricula" pageWidth="198" pageHeight="99" columnWidth="198" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="2.1435888100000016"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="COD_SERVICEVALUE" class="java.lang.Long">
+		<parameterDescription><![CDATA[Código de valor servicio]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT SVD.COLUMN2_CHR MATRICULA
+FROM SERVICE_VALUE_DETAIL SVD
+WHERE SVD.COLUMN1_CHR = 'M' AND SVD.COD_SERVICEVALUE = $P{COD_SERVICEVALUE}]]>
+	</queryString>
+	<field name="MATRICULA" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="198" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{ARP.field.Enrollment}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField pattern="#,##0">
+				<reportElement mode="Transparent" x="0" y="0" width="198" height="15" backcolor="#E4E9DA"/>
+				<box rightPadding="0">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{MATRICULA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+</jasperReport>

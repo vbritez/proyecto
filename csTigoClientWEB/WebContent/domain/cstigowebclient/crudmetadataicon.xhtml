@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:csui="http://java.sun.com/jsf/composite/uicomponents"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<ui:composition
+	template="/resources/templates/fileUploadDefaultClient.xhtml">
+	<!-- TITLE -->
+	<ui:define name="title">#{i18n['web.client.meta.Icon']}</ui:define>
+	<!-- STATUS LOCATION -->
+	<ui:define name="status">
+		<h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="crudmetadataicon"
+			value="#{i18n['web.client.meta.Icon']}" />
+	</ui:define>
+	<!-- PRINCIPAL CONTAINER -->
+	<ui:define name="container">
+		<div id="page_col">
+			<div id="cent_full">
+				<h:form id="fastReportForm" target="_blank">
+					<div class="buttons_top">
+						<h:commandButton styleClass="btn_xls"
+							title="#{i18n['web.client.report.tip.XLSReport']}"
+							action="#{crudMetaDataIconBean.viewXLS}" />
+						<h:commandButton styleClass="btn_pdf"
+							title="#{i18n['web.client.report.tip.PDFReport']}"
+							action="#{crudMetaDataIconBean.viewPDF}" />
+					</div>
+				</h:form>
+				<h:form id="crudForm">
+					<div class="tablebox">
+						<div class="head">#{i18n['web.client.metadataicon.screen.title.ListOf']}</div>
+						<!-- SEARCH BOX -->
+						<h:panelGroup id="searchBoxGroupPanel">
+							<p:focus for="crudForm:listSearchOption" />
+							<div class="headcontainer">
+								<table class="tablesearch">
+									<tr>
+										<th>#{i18n['web.client.search.field.FindBy']}</th>
+										<td><h:selectOneMenu id="listSearchOption"
+												value="#{crudMetaDataIconBean.filterSelectedField}"
+												onchange="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');"
+												onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');"
+												disabled="#{crudMetaDataIconBean.data ne null}">
+												<f:selectItem
+													itemLabel="(#{i18n['web.client.search.field.OptionSelect']})"
+													itemValue="-1" />
+												<f:selectItems
+													value="#{crudMetaDataIconBean.filterFields}" />
+											</h:selectOneMenu></td>
+										<th>#{i18n['web.client.search.field.Criteria']}</th>
+										<td><h:inputText id="textSearchCriteria"
+												value="#{crudMetaDataIconBean.filterCriteria}"
+												onkeyup="searchFieldOnchange('crudForm:listSearchOption', 'crudForm:textSearchCriteria', 'crudForm:btnSearch');"
+												disabled="#{crudMetaDataIconBean.data ne null}" /></td>
+										<td><h:commandButton id="btnSearch"
+												styleClass="btn_std_small"
+												value="#{i18n['web.client.search.field.Find']}"
+												action="#{crudMetaDataIconBean.applyFilter}"
+												disabled="#{crudMetaDataIconBean.data ne null}">
+												<f:ajax execute=":crudForm:searchBoxGroupPanel"
+													render=":crudForm:listTablePanelGroup :crudForm:btnClean"
+													onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+											</h:commandButton> <h:commandButton id="btnClean" styleClass="btn_std_small"
+												value="#{i18n['web.client.search.field.Clear']}"
+												action="#{crudMetaDataIconBean.cleanFilter}"
+												disabled="#{crudMetaDataIconBean.filterCriteria eq '' or crudMetaDataIconBean.data ne null}">
+												<f:ajax execute="@this"
+													render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup"
+													onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+											</h:commandButton></td>
+										<th>#{i18n['web.client.search.field.Show']}</th>
+										<td class="thin"><h:selectOneMenu id="listRowQuant"
+												value="#{crudMetaDataIconBean.rowQuantSelected}"
+												disabled="#{crudMetaDataIconBean.data ne null}"
+												valueChangeListener="#{crudMetaDataIconBean.applyQuantity}">
+												<f:selectItems
+													value="#{crudMetaDataIconBean.rowQuantList}" />
+												<f:ajax event="change" execute="@this"
+													render=":crudForm:listTablePanelGroup"
+													onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+											</h:selectOneMenu></td>
+									</tr>
+								</table>
+							</div>
+							<!-- SCRIPTS -->
+							<script type="text/javascript" charset="UTF-8">
+								//         
+								if (document
+										.getElementById('crudForm:listSearchOption').disabled == false) {
+									searchFieldOnchange(
+											'crudForm:listSearchOption',
+											'crudForm:textSearchCriteria',
+											'crudForm:btnSearch');
+								}
+								//
+							</script>
+						</h:panelGroup>
+						<h:panelGroup id="listTablePanelGroup">
+							<!-- LIST TABLE -->
+							<div class="body">
+								<h:dataTable id="crudListTable"
+									value="#{crudMetaDataIconBean.dataModelSpecific}" var="item"
+									rendered="#{crudMetaDataIconBean.dataModelSpecific.rowCount gt 0}"
+									rowClasses="odd_row,even_row" columnClasses="thin">
+									<h:column>
+										<f:facet name="header">
+											<h:selectBooleanCheckbox id="chkBoxSelectedAll"
+												title="#{i18n['web.client.table.check.SelectAndDeselect']}"
+												disabled="#{crudMetaDataIconBean.data ne null}"
+												onclick="checkUncheckAllInForm(this, this.checked);" />
+										</f:facet>
+										<h:selectBooleanCheckbox id="chkBoxSelected"
+											value="#{crudMetaDataIconBean.selectedItems[item.dataPK]}"
+											disabled="#{crudMetaDataIconBean.data ne null}" />
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">
+											<span> <h:commandLink
+													value="#{i18n['web.client.metadataicon.screen.field.IconCode']}"
+													action="#{crudMetaDataIconBean.applySort}"
+													title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.metadataicon.screen.field.IconCode']}"
+													disabled="#{crudMetaDataIconBean.data ne null}">
+													<f:setPropertyActionListener
+														value="#{not crudMetaDataIconBean.sortHelper.ascending}"
+														target="#{crudMetaDataIconBean.sortHelper.ascending}" />
+													<f:setPropertyActionListener value="dataPK.codigo"
+														target="#{crudMetaDataIconBean.sortHelper.field}" />
+													<f:ajax execute="@this"
+														render=":crudForm:listTablePanelGroup"
+														onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandLink> <h:outputText
+													value="#{crudMetaDataIconBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}"
+													rendered="#{crudMetaDataIconBean.sortHelper.field eq 'dataPK.codigo'}" />
+											</span>
+										</f:facet>
+										<h:outputText value="#{item.dataPK.codigo}">
+											<f:convertNumber groupingUsed="true" integerOnly="true" />
+										</h:outputText>
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">
+											<span> <h:commandLink
+													value="#{i18n['web.client.metadataicon.screen.field.description']}"
+													action="#{crudMetaDataIconBean.applySort}"
+													title="#{i18n['web.client.table.tip.OrderBy']} #{i18n['web.client.metadataicon.screen.field.description']}"
+													disabled="#{crudMetaDataIconBean.data ne null}">
+													<f:setPropertyActionListener
+														value="#{not crudMetaDataIconBean.sortHelper.ascending}"
+														target="#{crudMetaDataIconBean.sortHelper.ascending}" />
+													<f:setPropertyActionListener value="descripcion"
+														target="#{crudMetaDataIconBean.sortHelper.field}" />
+													<f:ajax execute="@this"
+														render=":crudForm:listTablePanelGroup"
+														onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+												</h:commandLink> <h:outputText
+													value="#{crudMetaDataIconBean.sortHelper.ascending ? '&#9650;' : '&#9660;'}"
+													rendered="#{crudMetaDataIconBean.sortHelper.field eq 'descripcion'}" />
+											</span>
+										</f:facet>
+										<csui:columnWidthChar value="#{item.descripcion}"
+											header="#{i18n['web.client.metadataicon.screen.field.description']}" />
+									</h:column>
+									
+									
+									<h:column>
+									<f:facet name="header">
+											<span> <h:outputText
+													value="#{i18n['web.client.metadataicon.screen.field.icon']}" />
+											</span>	
+									</f:facet>
+									<h:graphicImage url="#{item.url}" title="#{item.descripcion}" width="20"/>
+									</h:column>
+								</h:dataTable>
+							</div>
+							<!-- PAGINATION -->
+							<div class="foot">
+								<h:panelGroup
+									rendered="#{crudMetaDataIconBean.dataModel.rowCount gt 0}">
+									<h:commandLink
+										value="&#9668;#{i18n['web.client.table.row.Previus']}"
+										action="#{crudMetaDataIconBean.previousPage}"
+										disabled="#{not crudMetaDataIconBean.paginationHelper.hasPreviousPage or crudMetaDataIconBean.data ne null}">
+										<f:ajax execute="@this" render=":crudForm:listTablePanelGroup"
+											onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+									</h:commandLink>
+                                        &#160;|&#160;<h:outputText
+										value="#{crudMetaDataIconBean.paginationHelper.pageFirstItem + 1}..#{crudMetaDataIconBean.paginationHelper.pageLastItem + 1} / #{crudMetaDataIconBean.paginationHelper.itemsCount}" />&#160;|&#160;
+                                        <h:commandLink
+										value="#{i18n['web.client.table.row.Next']}&#9658;"
+										action="#{crudMetaDataIconBean.nextPage}"
+										disabled="#{not crudMetaDataIconBean.paginationHelper.hasNextPage or crudMetaDataIconBean.data ne null}">
+										<f:ajax execute="@this" render=":crudForm:listTablePanelGroup"
+											onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+									</h:commandLink>
+								</h:panelGroup>
+								<h:panelGroup
+									rendered="#{crudMetaDataIconBean.dataModel.rowCount le 0}">
+									<div style="text-align: center; font-weight: bold;">
+										<h:outputText value="#{i18n['web.client.table.row.NoData']}" />
+									</div>
+								</h:panelGroup>
+							</div>
+						</h:panelGroup>
+					</div>
+					<!-- BUTTONS -->
+					<div class="buttons_bottom">
+						<h:commandButton
+							value="#{i18n['web.client.metadata.screen.button.MassDelete']}"
+							styleClass="btn_std_large"
+							action="#{crudMetaDataIconBean.deleteEntitiesMass}"
+							disabled="#{crudMetaDataIconBean.data ne null or crudMetaDataIconBean.uploadSectionVisible}"
+							onclick="return showStdSonfirmDeleteRegistryMeta(this);">
+							<f:ajax execute=":crudForm:listTablePanelGroup"
+								render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup"
+								onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+						</h:commandButton>
+						<h:commandButton
+							value="#{i18n['web.client.metadata.screen.button.New']}"
+							styleClass="btn_std_small"
+							action="#{crudMetaDataIconBean.newEntity}"
+							disabled="#{crudMetaDataIconBean.data ne null or crudMetaDataIconBean.uploadSectionVisible}">
+							<f:ajax execute="@this" render="@form" onevent="manageAjaxEvents"
+								onerror="manageAjaxErrors" />
+						</h:commandButton>
+						<h:commandButton
+							value="#{i18n['web.client.metadata.screen.button.Edit']}"
+							styleClass="btn_std_small"
+							action="#{crudMetaDataIconBean.editEntityPlusMember}"
+							disabled="#{crudMetaDataIconBean.data ne null or crudMetaDataIconBean.uploadSectionVisible}">
+							<f:ajax execute=":crudForm:listTablePanelGroup" render="@form"
+								onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+						</h:commandButton>
+						<h:commandButton
+							value="#{i18n['web.client.metadata.screen.button.Delete']}"
+							styleClass="btn_std_small"
+							action="#{crudMetaDataIconBean.deleteEntitiesPlusMember}"
+							disabled="#{crudMetaDataIconBean.data ne null or crudMetaDataIconBean.uploadSectionVisible}"
+							onclick="return showStdSonfirmDeleteRegistryCollection(this);">
+							<f:ajax execute=":crudForm:listTablePanelGroup"
+								render=":crudForm:searchBoxGroupPanel :crudForm:listTablePanelGroup"
+								onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+						</h:commandButton>
+					</div>
+					<!-- EDITING SECTION -->
+					<h:panelGroup id="editingPanelGroup"
+						rendered="#{crudMetaDataIconBean.data ne null and not crudMetaDataIconBean.associateSectionVisible}">
+						<p:focus for="crudForm:codEdit" />
+						<div class="tablebox">
+							<div class="head">#{i18n['web.client.metadataicon.screen.title.IconDetails']}</div>
+							<div class="body">
+								<table width="100%">
+								<tr>
+									<th>#{i18n['web.client.metadataicon.screen.field.IconCode']}</th>
+										<td><h:inputText id="codEdit"
+												value="#{crudMetaDataIconBean.data.dataPK.codigo}"
+												maxlength="200" size="40"
+												disabled="#{crudMetaDataIconBean.data.dataPK.codigo ne null}" />
+										</td>
+									</tr>
+									<tr>
+										<th>#{i18n['web.client.metadataicon.screen.field.description']}</th>
+										<td><h:inputText id="textDescripcionEdit"
+												value="#{crudMetaDataIconBean.data.descripcion}"
+												maxlength="200" size="40" /></td>
+									</tr>
+									<!--  <tr>
+										<th>#{i18n['web.metadata.title.icon']}</th>
+										<td>
+										<p:selectOneListbox id="scroll"
+												value="#{crudMetaDataIconBean.selectIcon}" var="p" converter="iconTypeConverter"  style="height:100px">
+												<f:selectItems value="#{crudMetaDataIconBean.iconsList}"
+													var="icon" itemLabel="#{icon.description}"
+													itemValue="#{icon}" />
+												<p:column>
+													<p:graphicImage value="#{p.url}" title="#{p.description}" width="20" />
+												</p:column>
+												
+												
+										</p:selectOneListbox>
+										</td>
+									</tr>-->
+								  
+									<tr>
+										<th>#{i18n['web.client.metadataicon.screen.field.icon']}</th>
+										<td>
+											<h:panelGroup id="iconPanelGroupEdit">
+												<table class="listmultiplecheckbox">
+													<ui:repeat value="#{crudMetaDataIconBean.iconsList}" var="item">
+														<h:panelGroup id="ff" >
+															<tr >
+																<td style="vertical-align: top;">
+																	<h:selectBooleanCheckbox id="iconCheck" value="#{crudMetaDataIconBean.selectedIconMap[item.iconTypeCod]}">
+																	<f:ajax event="change"
+																				execute="@this"
+																				render=":crudForm:iconPanelGroupEdit" 
+																				listener="#{crudMetaDataIconBean.listenerIconSelect(item)}"
+																				onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+																	</h:selectBooleanCheckbox>
+																	&#160;&#160;
+																	
+																	<h:graphicImage url="#{item.url}" width="20"/>
+																</td>
+															</tr>
+														</h:panelGroup>
+													</ui:repeat>
+												</table>
+											</h:panelGroup>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div class="buttons_bottom">
+							<h:commandButton
+								value="#{i18n['web.client.metadata.screen.button.Save']}"
+								styleClass="btn_std_small"
+								action="#{crudMetaDataIconBean.savePlusMember}">
+								<f:ajax execute=":crudForm:editingPanelGroup" render="@form"
+									onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+							</h:commandButton>
+							<h:commandButton
+								value="#{i18n['web.client.metadata.screen.button.Delete']}"
+								styleClass="btn_std_small"
+								action="#{crudMetaDataIconBean.deleteEditingPlusMember}"
+								disabled="#{crudMetaDataIconBean.data.dataPK.codigo eq null}"
+								onclick="return showStdConfirmDeleteRegistryMessage(this);">
+								<f:ajax execute="@this" render="@form"
+									onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+							</h:commandButton>
+							<h:commandButton
+								value="#{i18n['web.client.metadata.screen.button.Cancel']}"
+								styleClass="btn_std_small"
+								action="#{crudMetaDataIconBean.cancelEditing}">
+								<f:ajax execute="@this" render="@form"
+									onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+							</h:commandButton>
+						</div>
+					</h:panelGroup>
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
+</html>

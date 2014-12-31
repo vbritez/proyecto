@@ -1,0 +1,1 @@
+tcpdump -U -w tigomoney_client.out -qns 0 -i eth4 dst port 80 --> guarda en el arhivo tigomoney_client todo los request cuyo puerto de destino es el 80

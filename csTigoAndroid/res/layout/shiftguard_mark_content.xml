@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/guard_mark_guardCode"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/guardMarkGuardCode"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView1"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:ems="10"
+        android:inputType="text" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/guardMarkGuardCode"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:text="@string/guard_mark_observation"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/guardMarkObservation"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView2"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:ems="10"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/guardSendMarkButton"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="145dp"
+        android:background="@drawable/button_selector"
+        android:text="@string/guard_mark_sendMark" />
+
+</RelativeLayout>

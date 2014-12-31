@@ -1,0 +1,20 @@
+﻿crear y agregar clave publica y privada
+ssh-keygen -t rsa
+mkdir ~/.ssh
+chmod 700 ~/.ssh
+cd ~/.ssh
+vim authorized_keys ---> copias el contenido de la clave publica generada
+chmod 600 authorized_keys
+
+
+
+
+
+
+
+en el server git ejecutar el comando
+git config receive.denyCurrentBranch ignore
+git reset --hard HEAD
+
+
+mvn install:install-file -Dfile=C:\lothar\dev\trunk\paraguay\libraries\java\OracleJDBC\ojdbc6.jar -DgroupId=com.oracle -DartifactId=ojdbc6 -Dversion=11.1.0.7.0 -Dpackaging=jar

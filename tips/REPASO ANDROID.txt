@@ -1,0 +1,15 @@
+Para crear un nuevo servicio.
+crear el sql de la nueva version, esto se encuentra en el Commons.
+En el archivo sql se tiene que insertar el nuevo el servicio,
+asi como insertar el service event, en donde se define el patron del servicio.
+Para saber el patron de un servicio ver el archivo wib del mismo.
+
+crear el archivo sql de la vieja version a la nueva version, tambien el Commons.
+Cambiar la version de la base de datos a utilziar en el AbstractHelper.
+Agregar en la clase Cypher del Commons, los nuevos archivos sql, y ejecutar la clase para que los mismos se cifren.
+Descargar la imagen para el nuevo servicio y con GIMP escalar la imagen para cada resulucion, 128x128, 96x96, 72x72, 48x48.
+
+Copiar un layaout de un servicio y utilizar como base para hacer la pagina. Se debe tener un xml main y un xml content, el cual es embedido en el main.
+Crear la clase Activity para el servicio, y ahi implementar la funcionalidad.
+
+Para hacer que el android apunte a Test a Produccion cambiar en el script de base de datos el numero corto. 22754 a 22755

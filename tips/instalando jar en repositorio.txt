@@ -1,0 +1,28 @@
+mvn install:install-file -Dfile=/home/cstigo/vivi/maven/libraries/Allot/Allot.jar -DgroupId=com.tigo.cs -DartifactId=allot -Dversion=1.0.0 -Dpackaging=jar
+
+mvn install:install-file -Dfile=/home/cstigo/vivi/maven/libraries/ApacheCommons/commons-beanutils.jar -DgroupId=com.tigo.cs.apacheCommons -DartifactId=commons-beanutils -Dversion=1.0.0 -Dpackaging=jar
+
+mvn install:install-file -Dfile=/home/cstigo/vivi/maven/libraries/ApacheCommons/commons-codec.jar -DgroupId=com.tigo.cs.apacheCommons -DartifactId=commons-codec -Dversion=1.0.0 -Dpackaging=jar
+
+mvn install:install-file -Dfile=/home/cstigo/vivi/maven/libraries/ApacheCommons/commons-collections-3.2.1.jar -DgroupId=com.tigo.cs.apacheCommons -DartifactId=commons-collections -Dversion=3.2.1 -Dpackaging=jar
+
+mvn install:install-file -Dfile=/home/cstigo/vivi/maven/libraries/ApacheCommons/commons-dbcp-1.4.jar -DgroupId=com.tigo.cs.apacheCommons -DartifactId=commons-dbcp -Dversion=1.4 -Dpackaging=jar
+
+mvn install:install-file -Dfile=/home/cstigo/vivi/maven/libraries/ApacheCommons/commons-digester.jar -DgroupId=com.tigo.cs.apacheCommons -DartifactId=commons-digester -Dversion=1.0.0 -Dpackaging=jar
+
+mvn install:install-file -Dfile=/home/cstigo/vivi/maven/libraries/ApacheCommons/commons-discovery.jar -DgroupId=com.tigo.cs.apacheCommons -DartifactId=commons-discovery -Dversion=1.0.0 -Dpackaging=jar
+
+mvn install:install-file -Dfile=/home/cstigo/vivi/maven/libraries/ApacheCommons/commons-httpclient.jar -DgroupId=com.tigo.cs.apacheCommons -DartifactId=commons-httpclient -Dversion=1.0.0 -Dpackaging=jar
+
+mvn install:install-file -Dfile=/home/cstigo/vivi/maven/libraries/ApacheCommons/commons-lang-2.6.jar -DgroupId=com.tigo.cs.apacheCommons -DartifactId=commons-lang -Dversion=2.6 -Dpackaging=jar
+
+mvn install:install-file -Dfile=/home/cstigo/vivi/maven/libraries/ApacheCommons/commons-lang3-3.1.jar -DgroupId=com.tigo.cs.apacheCommons -DartifactId=commons-lang -Dversion=3.3.1 -Dpackaging=jar
+
+mvn install:install-file -Dfile=/home/cstigo/vivi/maven/libraries/ApacheCommons/commons-collections-3.2.1.jar -DgroupId=com.tigo.cs.apacheCommons -DartifactId=commons-collections -Dversion=3.2.1 -Dpackaging=jar
+
+mvn install:install-file -Dfile=/home/cstigo/vivi/maven/libraries/ApacheCommons/commons-logging-1.1.1.jar -DgroupId=com.tigo.cs.apacheCommons -DartifactId=commons-logging -Dversion=1.1.1 -Dpackaging=jar
+
+mvn install:install-file -Dfile=/home/cstigo/vivi/maven/libraries/ApacheCommons/commons-pool-1.5.7.jar -DgroupId=com.tigo.cs.apacheCommons -DartifactId=commons-pool -Dversion=1.5.7 -Dpackaging=jar
+
+mvn install:install-file -Dfile=/home/cstigo/vivi/maven/libraries/ApacheCommons/httpcore-4.0.jar -DgroupId=com.tigo.cs.apacheCommons -DartifactId=httpcore -Dversion=4.0 -Dpackaging=jar
+

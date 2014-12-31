@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="ejbModule"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/csTigoCommons"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Hibernate3.6">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+			<attribute name="owner.project.facets" value="jpt.jpa"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Log4j-1.2.16"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/tigoMoneyWSJPA"/>
+	<classpathentry kind="con" path="oracle.eclipse.tools.glassfish.lib.system">
+		<attributes>
+			<attribute name="owner.project.facets" value="jst.ejb"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

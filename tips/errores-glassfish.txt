@@ -1,0 +1,4 @@
+Cuando da error de unbound ejb ir a la consola de administracion Configurarion/server-config/Contenedor EJB/
+Y agregar una propiedades lo siguiente
+disable-nonportable-jndi-names y en el valor true
+

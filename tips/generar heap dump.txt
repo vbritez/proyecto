@@ -1,0 +1,4 @@
+1.	Cd JAVA_HOME/bin
+2.	./jps -l –m ? Identifica todos los procesos que están utilizando tu JVM y te muestra el process id de cada uno, aca identifica el del smsManager
+3.	./jmap -dump:file=<nombre archivo>.hprof <process_id> ? Te genera el archivo dump del proceso que queres.
+4. El archivo hprof abrir con el eclipse mat

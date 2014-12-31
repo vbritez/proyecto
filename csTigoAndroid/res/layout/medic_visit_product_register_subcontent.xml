@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/orderProductCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:textAppearance="@style/textSize" />
+
+    <EditText
+        android:id="@+id/terportRegisterContainerEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/orderProductCount"
+        android:layout_marginLeft="7dp"
+        android:layout_toRightOf="@+id/terportRegisterContainerView"
+        android:ems="10"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/terportRegisterUbicationEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/terportRegisterContainerEdit"
+        android:layout_marginLeft="7dp"
+        android:layout_toRightOf="@+id/terportRegisterContainerView"
+        android:ems="10"
+        android:inputType="number" />
+
+    <TextView
+        android:id="@+id/terportRegisterUbicationView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/terportRegisterUbicationEdit"
+        android:layout_alignBottom="@+id/terportRegisterUbicationEdit"
+        android:layout_marginRight="7dp"
+        android:text="@string/order_quantity"
+        android:textAppearance="@style/textSize" />
+
+    <TextView
+        android:id="@+id/terportRegisterContainerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/terportRegisterContainerEdit"
+        android:layout_alignBottom="@+id/terportRegisterContainerEdit"
+        android:layout_marginRight="15dp"
+        android:text="@string/order_product_code"
+        android:textAppearance="@style/textSize" />
+
+    <ImageView
+        android:id="@+id/productRemove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/terportRegisterUbicationEdit"
+        android:contentDescription="@string/imagen"
+        android:src="@drawable/delete" />
+
+</RelativeLayout>

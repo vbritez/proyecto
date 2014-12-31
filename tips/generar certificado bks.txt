@@ -1,0 +1,11 @@
+Descargar el certificado del navegador en formato X509
+Convertir el certificado con extencion crt o cer a pem
+openssl x509 -in cert.crt -inform der -outform pem -out cert.pem
+Copiar la libreria bcprov-jdk16-146.jar en el directorio JAVA_HOME/jre/lib/ext
+Añadir al archivo JAVA_HOME/jre/lib/security/java.security lo siguiente 
+security.provider.9=org.bouncycastle.jce.provider.BouncyCastleProvider
+
+y luego por ultimo ejecutar el siguiente comando:
+cd JAVA_HOME/bin
+
+./keytool -import -v -trustcacerts -alias soluciones -file /home/cstigo/vivi/cert.pem -keystore mytruststore.bks -storetype BKS -provider org.bouncycastle.jce.provider.BouncyCastleProvider -storepass secret

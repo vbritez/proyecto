@@ -1,0 +1,9 @@
+Instalar maven
+descargar el .zip, descomprimir en /opt
+agregar la variable de entorno M2, y esto agregarlo a la variable de entorno $PATH
+mvn install:install-file -Dfile=/root/soluciones/instaladores/ojdbc6.jar -DgroupId=com.oracle 
+-DartifactId=ojdbc6 -Dversion=11.2.0 -Dpackaging=jar
+copia en la carpeta /root/soluciones/instaladores/jasperreports-server-cp-5.0.0-bin/buildomatic/conf_source/db/oracle/jdbc el orjdb6-10.jar que se encuentra
+dentro del repositorio de maven .m2
+configurar el archivo default_master.properties para establecer datos de conexion y otras configuraciones.
+ejecutar el comando ./js-ant create-js-db que se encuentra dentro de la carpeta buildomatic

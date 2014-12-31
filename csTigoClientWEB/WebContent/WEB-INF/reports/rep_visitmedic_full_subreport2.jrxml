@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_visitmedic_full_subreport2" pageWidth="770" pageHeight="555" orientation="Landscape" columnWidth="770" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="2.5937424601000023"/>
+	<property name="ireport.x" value="1306"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SV_CLINIC" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DURATION_FORMAT" class="java.lang.String" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[select to_number(nvl(svd.column3_chr,'0'))  duracion_clinic,svd.RECORDDATE_DAT,
+svd.column4_chr obs_clinic
+from SERVICE_VALUE sv
+inner join SERVICE_VALUE_DETAIL svd on svd.COD_SERVICEVALUE = sv.SERVICEVALUE_COD
+where sv.COD_SERVICE = 17
+and sv.COLUMN3_CHR = 'CL' and svd.COLUMN1_CHR = 'SAL'
+and sv.SERVICEVALUE_COD = $P!{SV_CLINIC}]]>
+	</queryString>
+	<field name="DURACION_CLINIC" class="java.lang.Long"/>
+	<field name="RECORDDATE_DAT" class="java.sql.Timestamp"/>
+	<field name="OBS_CLINIC" class="java.lang.String"/>
+	<variable name="DURACION_TOTAL_CLINIC" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{DURACION_CLINIC} == null ? 0L : $F{DURACION_CLINIC}]]></variableExpression>
+		<initialValueExpression><![CDATA[0L]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement mode="Opaque" x="260" y="0" width="110" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.DurationClinic}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+				<reportElement x="95" y="0" width="165" height="15"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{RECORDDATE_DAT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="635" y="0" width="135" height="15"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{OBS_CLINIC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="480" y="0" width="155" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.ObsFinishClinic}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="0" y="0" width="95" height="15" forecolor="#FFFFFF" backcolor="#3E72AA"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{visitmedic.field.datefinishlocal}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="370" y="0" width="110" height="15"/>
+				<box>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#999999"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[com.tigo.cs.commons.util.DateUtil.getPeriodWithFormat($P{DURATION_FORMAT},0L,$V{DURACION_TOTAL_CLINIC})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

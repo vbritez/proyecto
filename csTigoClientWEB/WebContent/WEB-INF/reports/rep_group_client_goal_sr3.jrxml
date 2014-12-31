@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rep_group_client_goal_sr3" pageWidth="127" pageHeight="99" whenNoDataType="AllSectionsNoDetail" columnWidth="127" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true">
+	<property name="ireport.zoom" value="3.4522712143931042"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="FECHA_INI" class="java.util.Date"/>
+	<parameter name="FECHA_FIN" class="java.util.Date"/>
+	<parameter name="WHERE" class="java.lang.String">
+		<parameterDescription><![CDATA[SQL Criteria]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COD_META" class="java.lang.Long" isForPrompting="false">
+		<defaultValueExpression><![CDATA[10L]]></defaultValueExpression>
+	</parameter>
+	<parameter name="GOAL_NUM" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NOMBRE_META" class="java.lang.String">
+		<parameterDescription><![CDATA[""]]></parameterDescription>
+	</parameter>
+	<parameter name="USERPHONE_COD" class="java.math.BigDecimal"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\dev\\soluciones\\productos\\soluciones_corporativas\\03.implementacion\\csTigoClientWEB\\WebContent\\WEB-INF\\reports\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select count(*) AS ALCANCE
+from (select sv.SERVICEVALUE_COD
+	from USERPHONE u
+	join SERVICE_VALUE sv on (sv.COD_USERPHONE = u.USERPHONE_COD)
+	join SERVICE_VALUE_DETAIL svd on (sv.SERVICEVALUE_COD = svd.COD_SERVICEVALUE)
+	join CLIENT_GOAL_USERPHONE cu on (u.USERPHONE_COD = cu.COD_USERPHONE)
+	join CLIENT_GOAL cg on (cu.COD_CLIENT_GOAL = cg.CLIENT_GOAL_COD)
+	where TRUNC(svd.RECORDDATE_DAT) between $P{FECHA_INI} and $P{FECHA_FIN}
+	AND cu.COD_CLIENT_GOAL = $P{COD_META}
+	AND u.USERPHONE_COD = $P{USERPHONE_COD}
+	$P!{WHERE}
+
+) a]]>
+	</queryString>
+	<field name="ALCANCE" class="java.lang.Integer"/>
+	<variable name="PORCENTAJE" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[new java.math.BigDecimal($F{ALCANCE}).divide(new java.math.BigDecimal($P{GOAL_NUM}),new Integer("3"),RoundingMode.HALF_UP).multiply(new java.math.BigDecimal(100))]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="62" height="15"/>
+				<box rightPadding="2">
+					<pen lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.25" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.25" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{ALCANCE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.0;-#,##0.0">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="62" y="0" width="49" height="15"/>
+				<box rightPadding="2">
+					<pen lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.25" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.25" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[($F{ALCANCE} != null ? $V{PORCENTAJE} : new java.math.BigDecimal(0))]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="111" y="0" width="16" height="15"/>
+				<box>
+					<pen lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.25" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[" %"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band/>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

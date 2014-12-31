@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+
+	<persistence-unit name="csTigoPU" transaction-type="JTA">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<jta-data-source>csTigoDS</jta-data-source>
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />
+			<property name="hibernate.show_sql" value="false" />
+			<property name="hibernate.format_sql" value="false" />
+
+		</properties>
+	</persistence-unit>
+	
+<!-- 	<persistence-unit name="csTigoMTSPU" transaction-type="JTA"> -->
+<!-- 		<provider>org.hibernate.ejb.HibernatePersistence</provider> -->
+<!-- 		<jta-data-source>csTigoMTSDS</jta-data-source> -->
+<!-- 		<properties> -->
+<!-- 			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" /> -->
+<!-- 			<property name="hibernate.show_sql" value="false" /> -->
+<!-- 			<property name="hibernate.format_sql" value="false" /> -->
+<!-- 		</properties> -->
+<!-- 	</persistence-unit> -->
+
+	<persistence-unit name="csJPAPU" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />
+			<property name="hibernate.show_sql" value="false" />
+			<property name="hibernate.format_sql" value="false" />
+
+			<property name="javax.persistence.jdbc.url"
+				value="jdbc:oracle:thin:@10.16.201.150:1521:SHELDON" />
+			<property name="javax.persistence.jdbc.password" value="cstigo2010" />
+			<property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver" />
+			<property name="javax.persistence.jdbc.user" value="cstigo" />
+
+		</properties>
+	</persistence-unit>
+	
+	<persistence-unit name="csJPAMTSPU" transaction-type="RESOURCE_LOCAL"> 
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />
+			<property name="hibernate.show_sql" value="false" />
+			<property name="hibernate.format_sql" value="false" />
+
+			<property name="javax.persistence.jdbc.url"
+				value="jdbc:oracle:thin:@10.255.8.14:1521:mts4m" />
+			<property name="javax.persistence.jdbc.password" value="EKYC$201!" />
+			<property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver" />
+			<property name="javax.persistence.jdbc.user" value="EKYC" />
+
+		</properties>
+	</persistence-unit>
+
+</persistence>

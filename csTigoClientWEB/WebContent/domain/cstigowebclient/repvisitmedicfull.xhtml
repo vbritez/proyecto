@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/screenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.client.report.VisitMedicReport']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="repvisitmedicfull" value="#{i18n['web.client.report.VisitMedicReport']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="repvisitmedicFullForm">
+                    <p:focus for="repvisitmedicFullForm:textDateFrom" />
+                    <div class="tablebox">
+                        <div class="head">#{i18n['web.client.reportvisitmedic.screen.title.reportParameters']}</div>
+                        <!-- PARAMETERS BOX -->
+                        <div class="body">
+                            <table class="tablesearch">
+                                <tr>
+                                    <th>#{i18n['web.client.search.field.FromDate']}</th>
+                                    <td>
+                                        <p:calendar id="textDateFrom" locale="#{iBean.locale}" value="#{reportVisitMedicFullBean.dateFrom}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>#{i18n['web.client.search.field.ToDate']}</th>
+                                    <td>
+                                        <p:calendar id="textDateTo" locale="#{iBean.locale}" value="#{reportVisitMedicFullBean.dateTo}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                    </td>
+                                </tr>
+                                <tr>
+									<th>#{i18n['web.client.screen.admin.webUsers.field.Classification']}</th>
+
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkClassificationList"
+															value="#{reportVisitMedicFullBean.validatedAllClassification}"
+															disabled="#{reportVisitMedicFullBean.selectedUserphoneList.size() gt 0 or reportVisitMedicFullBean.validatedAllUsers}">
+															<f:ajax event="change"
+																listener="#{reportVisitMedicFullBean.selectAll}"
+																execute=":repvisitmedicFullForm:chkClassificationList"
+																render=":repvisitmedicFullForm:listClasification :repvisitmedicFullForm:chkUserphoneList :repvisitmedicFullForm:listUserphone"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkClassificationist"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listClasification"
+														value="#{reportVisitMedicFullBean.selectedClassificationList}"
+														converter="classificationConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportVisitMedicFullBean.validatedAllClassification or reportVisitMedicFullBean.validatedAllUsers 
+														or reportVisitMedicFullBean.selectedUserphoneList.size() gt 0}">
+														<f:selectItems
+															value="#{reportVisitMedicFullBean.classificationList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.descriptionChr}" />
+														<f:ajax
+															execute=":repvisitmedicFullForm:listClasification"
+															render=":repvisitmedicFullForm:chkUserphoneList :repvisitmedicFullForm:listUserphone"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox></td>
+											</tr>
+										</table>
+									</td>
+								</tr> 
+
+								<tr>
+									<th>#{i18n['web.client.search.field.User']}</th>
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkUserphoneList"
+															value="#{reportVisitMedicFullBean.validatedAllUsers}"
+															disabled="#{reportVisitMedicFullBean.selectedClassificationList.size() gt 0 or reportVisitMedicFullBean.validatedAllClassification}">
+															<f:ajax event="change"
+																listener="#{reportVisitMedicFullBean.selectAll}"
+																execute=":repvisitmedicFullForm:chkUserphoneList"
+																render=":repvisitmedicFullForm:listUserphone :repvisitmedicFullForm:listClasification :repvisitmedicFullForm:chkClassificationList"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkUserphoneList"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listUserphone"
+														value="#{reportVisitMedicFullBean.selectedUserphoneList}"
+														converter="userphoneConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportVisitMedicFullBean.validatedAllUsers or reportVisitMedicFullBean.validatedAllClassification 
+														or reportVisitMedicFullBean.selectedClassificationList.size() gt 0}">
+
+														<f:selectItems
+															value="#{reportVisitMedicFullBean.userphoneList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.nameChr}" />
+
+														<f:ajax
+															
+															execute=":repvisitmedicFullForm:listUserphone"
+															render=":repvisitmedicFullForm:chkClassificationList :repvisitmedicFullForm:listClasification"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+
+											</tr>
+										</table>
+									</td>
+								</tr>
+								
+								<tr>
+                                 <th>#{i18n['web.client.search.field.ReportOption']}</th>
+                                    <td>
+                                        <h:selectOneRadio id="reportOption2" value="#{reportVisitMedicFullBean.reportOption}" layout="pageDirection" style="width: auto; border: none;">
+                                            <f:selectItem itemValue="grouped" itemLabel="#{i18n['web.client.reportOption.Grouped']}" />
+                                            <f:selectItem itemValue="grid" itemLabel="#{i18n['web.client.reportOption.Grid']}" />
+                                        </h:selectOneRadio>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>#{i18n['web.client.table.tip.OrderBy']}</th>
+                                    <td>
+                                        <h:selectOneMenu id="listOrderby" value="#{reportVisitMedicFullBean.selectedOrderby}">
+                                            <f:selectItems value="#{reportVisitMedicFullBean.orderByList}" />
+                                        </h:selectOneMenu>
+                                    </td>
+                                </tr>
+
+
+                            </table>
+                        </div>
+                    </div>
+                    <div class="buttons_bottom">
+                        <h:commandButton id="btnGeneratePDF" value="#{i18n['web.client.report.title.PDFReport']}" action="#{reportVisitMedicFullBean.validateParameters}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="pdf" target="#{reportVisitMedicFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGenerateXLS" value="#{i18n['web.client.report.title.XLSReport']}" action="#{reportVisitMedicFullBean.validateParameters}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="xls" target="#{reportVisitMedicFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGenerate" action="#{reportVisitMedicFullBean.generateReport}" style="display: none;" rendered="#{reportVisitMedicFullBean.parametersValidated}" />
+                        <h:commandButton id="btnGenerateChartReport" action="#{reportVisitMedicFullBean.generateReportChart}" style="display: none;" rendered="#{reportVisitMedicFullBean.parametersValidatedChart}" />
+                    </div>
+                    <!-- SCRIPTS -->
+                    <h:panelGroup rendered="#{reportVisitMedicFullBean.parametersValidated}">
+                        <script type="text/javascript" charset="UTF-8">
+																									//         
+																									function autoGenerateReport() {
+																										document
+																												.getElementById('repvisitmedicFullForm').target = '_blank';
+																										document
+																												.getElementById(
+																														'repvisitmedicFullForm:btnGenerate')
+																												.click();
+																										document
+																												.getElementById('repvisitmedicFullForm').target = '';
+																									}
+
+																									$(
+																											document)
+																											.ready(
+																													function() {
+																														setTimeout(
+																																"autoGenerateReport()",
+																																500);
+																													});
+																									//
+																								</script>
+                    </h:panelGroup>
+                    <h:panelGroup rendered="#{reportVisitMedicFullBean.parametersValidatedChart}">
+                        <script type="text/javascript" charset="UTF-8">
+                            //<![CDATA[
+                            function autoGenerateReportChart() {
+                                document.getElementById('repvisitmedicFullForm').target = '_blank';
+                                document.getElementById('repvisitmedicFullForm:btnGenerateChartReport').click();
+                                document.getElementById('repvisitmedicFullForm').target = '';
+                            }
+                            $(document).ready(function() {
+                                setTimeout("autoGenerateReportChart()", 500);
+                            });
+                            
+                            //]]>
+                        </script>
+                    </h:panelGroup>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

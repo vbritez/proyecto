@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/resources/templates/screenDefaultClient.xhtml">
+    <!-- TITLE -->
+    <ui:define name="title">#{i18n['web.client.report.InventoryReport']}</ui:define>
+    <!-- STATUS LOCATION -->
+    <ui:define name="status">
+        <h:commandLink action="home" value="Home" />
+            &#160;/&#160;<h:commandLink action="repinventorydafull" value="#{i18n['web.client.report.InventoryReport']}" />
+    </ui:define>
+    <!-- PRINCIPAL CONTAINER -->
+    <ui:define name="container">
+        <div id="page_col">
+            <div id="cent_full">
+                <h:form id="repInventoryFullForm">
+                    <p:focus for="repInventoryFullForm:textDateFrom" />
+                    <div class="tablebox">
+                        <div class="head">#{i18n['web.client.report.inventory.screen.title.reportParameters']}</div>
+                        <!-- PARAMETERS BOX -->
+                        <div class="body">
+                            <table class="tablesearch">
+                                <tr>
+                                    <th>#{i18n['web.client.search.field.FromDate']}</th>
+                                    <td>
+                                        <p:calendar id="textDateFrom" locale="#{iBean.locale}" value="#{reportInventoryDAFullBean.dateFrom}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>#{i18n['web.client.search.field.ToDate']}</th>
+                                    <td>
+                                        <p:calendar id="textDateTo" locale="#{iBean.locale}" value="#{reportInventoryDAFullBean.dateTo}" timeZone="#{applicationBean.defaultTimeZoneID}" pattern="#{applicationBean.defaultInputDateFormat}" />
+                                    </td>
+                                </tr>
+                               <tr>
+									<th>#{i18n['web.client.screen.admin.webUsers.field.Classification']}</th>
+
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkClassificationList"
+															value="#{reportInventoryDAFullBean.validatedAllClassification}"
+															disabled="#{reportInventoryDAFullBean.selectedUserphoneList.size() gt 0 or reportInventoryDAFullBean.validatedAllUsers}">
+															<f:ajax event="change"
+																listener="#{reportInventoryDAFullBean.selectAll}"
+																execute=":repInventoryFullForm:chkClassificationList"
+																render=":repInventoryFullForm:listClasification :repInventoryFullForm:chkUserphoneList :repInventoryFullForm:listUserphone"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkClassificationist"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listClasification"
+														value="#{reportInventoryDAFullBean.selectedClassificationList}"
+														converter="classificationConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportInventoryDAFullBean.validatedAllClassification or reportInventoryDAFullBean.validatedAllUsers 
+														or reportInventoryDAFullBean.selectedUserphoneList.size() gt 0}">
+														<f:selectItems
+															value="#{reportInventoryDAFullBean.classificationList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.descriptionChr}" />
+														<f:ajax
+															execute=":repInventoryFullForm:listClasification"
+															render=":repInventoryFullForm:chkUserphoneList :repInventoryFullForm:listUserphone"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+								<tr>
+									<th>#{i18n['web.client.search.field.User']}</th>
+									<td>
+										<table>
+											<tr>
+												<td><h:panelGroup>
+														<h:selectBooleanCheckbox id="chkUserphoneList"
+															value="#{reportInventoryDAFullBean.validatedAllUsers}"
+															disabled="#{reportInventoryDAFullBean.selectedClassificationList.size() gt 0 or reportInventoryDAFullBean.validatedAllClassification}">
+															<f:ajax event="change"
+																listener="#{reportInventoryDAFullBean.selectAll}"
+																execute=":repInventoryFullForm:chkUserphoneList"
+																render=":repInventoryFullForm:listUserphone :repInventoryFullForm:listClasification :repInventoryFullForm:chkClassificationList"
+																onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+														</h:selectBooleanCheckbox>
+
+														<h:outputLabel for="chkUserphoneList"
+															value="(#{i18n['web.client.selectonemenu.All']})" />
+													</h:panelGroup></td>
+											</tr>
+											<tr>
+												<td><h:selectManyListbox id="listUserphone"
+														value="#{reportInventoryDAFullBean.selectedUserphoneList}"
+														converter="userphoneConverter" size="5"
+														style="width: auto;"
+														disabled="#{reportInventoryDAFullBean.validatedAllUsers or reportInventoryDAFullBean.validatedAllClassification 
+														or reportInventoryDAFullBean.selectedClassificationList.size() gt 0}">
+
+														<f:selectItems
+															value="#{reportInventoryDAFullBean.userphoneList}"
+															var="uLItem" itemValue="#{uLItem}"
+															itemLabel="#{dLItem.nameChr}" />
+
+														<f:ajax
+															
+															execute=":repInventoryFullForm:listUserphone"
+															render=":repInventoryFullForm:chkClassificationList :repInventoryFullForm:listClasification"
+															onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+													</h:selectManyListbox> <!-- se agrega el checkbox de todos los usuarios --></td>
+
+											</tr>
+										</table>
+									</td>
+								</tr>
+                                <tr>
+                                    <th>#{i18n['web.client.search.field.OrderBy']}</th>
+                                    <td>
+                                        <h:selectOneMenu id="listOrderby" value="#{reportInventoryDAFullBean.selectedOrderby}">
+                                            <f:selectItems value="#{reportInventoryDAFullBean.orderByList}" />
+                                        </h:selectOneMenu>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="buttons_bottom">
+                        <h:commandButton id="btnGeneratePDF" value="#{i18n['web.client.report.title.PDFReport']}" action="#{reportInventoryDAFullBean.validateParameters}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="pdf" target="#{reportInventoryDAFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGenerateXLS" value="#{i18n['web.client.report.title.XLSReport']}" action="#{reportInventoryDAFullBean.validateParameters}" styleClass="btn_std_large">
+                            <f:setPropertyActionListener value="xls" target="#{reportInventoryDAFullBean.reportType}" />
+                            <f:ajax execute="@form" render="@form" onevent="manageAjaxEvents" onerror="manageAjaxErrors" />
+                        </h:commandButton>
+                        <h:commandButton id="btnGenerate" action="#{reportInventoryDAFullBean.generateReport}" style="display: none;" rendered="#{reportInventoryDAFullBean.parametersValidated}" />
+                    </div>
+                    <!-- SCRIPTS -->
+                    <h:panelGroup rendered="#{reportInventoryDAFullBean.parametersValidated}">
+                        <script type="text/javascript" charset="UTF-8">
+							function autoGenerateReport() {
+								document.getElementById('repInventoryFullForm').target = '_blank';
+								document.getElementById('repInventoryFullForm:btnGenerate').click();
+								document.getElementById('repInventoryFullForm').target = '';
+							}
+
+							$(document).ready(function() {
+								setTimeout("autoGenerateReport()", 500);
+							});
+						</script>
+                    </h:panelGroup>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

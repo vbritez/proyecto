@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="repinventorystd_xls" pageWidth="786" pageHeight="595" orientation="Landscape" columnWidth="786" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" resourceBundle="ReportLocaleBundle" isIgnorePagination="true">
+	<property name="ireport.zoom" value="1.3636363636363635"/>
+	<property name="ireport.x" value="231"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="TITLE" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[Report Title]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Reporte Completo de Visitas (Servicio Visitas)"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="WHERE" class="java.lang.String">
+		<parameterDescription><![CDATA[SQL Criteria]]></parameterDescription>
+		<defaultValueExpression><![CDATA[" and sv.cod_service = 10 "]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PARAMETERS_DESCRIPTION" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[Criteria Description]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LOGO" class="java.lang.Object" isForPrompting="false">
+		<parameterDescription><![CDATA[Logo Path]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USER" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[Logguedin user]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ORDER_BY" class="java.lang.String">
+		<parameterDescription><![CDATA[Order Criteria]]></parameterDescription>
+		<defaultValueExpression><![CDATA["order by  svd.recorddate_dat asc"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SESSION_ID" class="java.lang.String">
+		<parameterDescription><![CDATA[Session id del usuario logueado]]></parameterDescription>
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CLIENT_LOGO" class="java.lang.Object" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[SELECT      cl.DESCRIPTION_CHR,
+cl.CLASSIFICATION_COD,
+sv.SERVICEVALUE_COD,
+	  u.CELLPHONE_NUM,
+	  u.NAME_CHR,
+	  sv.RECORDDATE_DAT,
+	  svD.RECORDDATE_DAT HORA,
+	  svd.COLUMN1_CHR COD_DEPOSITO,
+       	  CASE WHEN (mcD.ENABLED_CHR = '1' AND mdD.value_chr IS NOT NULL) THEN mdD.value_chr ELSE tD.DATA_C END DEPOSITO,
+	  svd.COLUMN2_CHR COD_PRODUCTO,
+       	  CASE WHEN (mcP.ENABLED_CHR = '1' AND mdP.value_chr IS NOT NULL) THEN mdP.value_chr ELSE tP.DATA_C END PRODUCTO,
+       	  svd.COLUMN3_CHR CANTIDAD
+
+FROM  SERVICE_VALUE sv INNER JOIN SERVICE_VALUE_DETAIL SVD ON SVD.COD_SERVICEVALUE = SV. SERVICEVALUE_COD
+	INNER JOIN USERPHONE u ON (sv.COD_USERPHONE = u.USERPHONE_COD)
+INNER join USERPHONE_CLASSIFICATION uc on (u.USERPHONE_COD = uc.COD_USERPHONE)
+         	INNER join CLASSIFICATION cl on (uc.COD_CLASSIFICATION = cl.CLASSIFICATION_COD)
+	INNER JOIN MESSAGE m ON (m.MESSAGE_COD = sv.COD_MESSAGE)
+	INNER JOIN CLIENT c ON (c.CLIENT_COD = m.COD_CLIENT)
+	LEFT OUTER JOIN TMP_WSRESULT tD ON (TRIM(tD.DATA_ID) = TRIM(svd.COLUMN1_CHR) AND
+		tD.DATA_TYPE = 'D' AND
+		tD.SESSION_ID = '$P!{SESSION_ID}')
+	LEFT JOIN META_CLIENT mcD ON (mcD.cod_client = m.COD_CLIENT AND
+		mcD.COD_META = 10)
+	LEFT JOIN META_DATA mdD ON (mdD.cod_client = m.COD_CLIENT AND
+		mdD.cod_meta = 10 AND mdD.cod_member = 1 AND mdD.CODE_CHR = svd.COLUMN1_CHR)
+	LEFT OUTER JOIN TMP_WSRESULT tP ON (TRIM(tP.DATA_ID) = TRIM(svd.COLUMN2_CHR) AND
+		tP.DATA_TYPE = 'P' AND tP.SESSION_ID = '$P!{SESSION_ID}')
+	LEFT JOIN META_CLIENT mcP ON (mcP.cod_client = m.COD_CLIENT AND
+		mcP.COD_META = 2)
+	LEFT JOIN META_DATA mdP ON (mdP.cod_client = m.COD_CLIENT AND
+		mdP.cod_meta = 2 AND mdP.cod_member = 1 AND
+		mdP.CODE_CHR = svd.COLUMN2_CHR)
+WHERE 1 = 1
+and sv.COD_SERVICE = 10 $P!{WHERE}
+$P!{ORDER_BY}]]>
+	</queryString>
+	<field name="DESCRIPTION_CHR" class="java.lang.String"/>
+	<field name="CLASSIFICATION_COD" class="java.math.BigDecimal"/>
+	<field name="SERVICEVALUE_COD" class="java.math.BigDecimal"/>
+	<field name="CELLPHONE_NUM" class="java.math.BigDecimal"/>
+	<field name="NAME_CHR" class="java.lang.String"/>
+	<field name="RECORDDATE_DAT" class="java.sql.Timestamp"/>
+	<field name="HORA" class="java.sql.Timestamp"/>
+	<field name="COD_DEPOSITO" class="java.lang.String"/>
+	<field name="DEPOSITO" class="java.lang.String"/>
+	<field name="COD_PRODUCTO" class="java.lang.String"/>
+	<field name="PRODUCTO" class="java.lang.String"/>
+	<field name="CANTIDAD" class="java.lang.String"/>
+	<group name="groupServiceValueCod">
+		<groupExpression><![CDATA[new SimpleDateFormat("ddMMyyyy").format($F{RECORDDATE_DAT}) + $F{CELLPHONE_NUM}.toString()]]></groupExpression>
+	</group>
+	<group name="CLASSIFICATION_GROUP">
+		<groupExpression><![CDATA[$F{CLASSIFICATION_COD}]]></groupExpression>
+		<groupHeader>
+			<band height="32">
+				<textField>
+					<reportElement mode="Opaque" x="0" y="0" width="100" height="15" forecolor="#FFFFFF" backcolor="#74A0CC"/>
+					<box leftPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{clasification.label}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="100" y="0" width="686" height="15" forecolor="#FFFFFF" backcolor="#74A0CC"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{DESCRIPTION_CHR}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="15" width="100" height="16" forecolor="#FFFFFF" backcolor="#74A0CC"/>
+					<box leftPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{inventorystd.field.Date}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="100" y="15" width="92" height="16" forecolor="#FFFFFF" backcolor="#74A0CC"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{inventorystd.field.MobileNumber}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="192" y="15" width="117" height="16" forecolor="#FFFFFF" backcolor="#74A0CC"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{inventorystd.field.Names}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="309" y="15" width="75" height="16" forecolor="#FFFFFF" backcolor="#74A0CC"/>
+					<box leftPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{inventorystd.field.DepositCode}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="384" y="15" width="102" height="16" forecolor="#FFFFFF" backcolor="#74A0CC"/>
+					<box leftPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{inventorystd.field.DepositName}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="486" y="15" width="71" height="16" forecolor="#FFFFFF" backcolor="#74A0CC"/>
+					<box leftPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{inventorystd.field.ProductCode}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="557" y="15" width="114" height="16" forecolor="#FFFFFF" backcolor="#74A0CC"/>
+					<box leftPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{inventorystd.field.ProductName}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="734" y="15" width="52" height="16" forecolor="#FFFFFF" backcolor="#74A0CC"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{inventorystd.field.Hour}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="671" y="15" width="63" height="16" forecolor="#FFFFFF" backcolor="#74A0CC"/>
+					<box leftPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$R{inventorystd.field.Quantity}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="68" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="90" y="52" width="606" height="16"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{inventorystd.report.Title}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame" onErrorType="Blank">
+				<reportElement x="0" y="0" width="90" height="68"/>
+				<imageExpression class="java.awt.Image"><![CDATA[$P{LOGO}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="90" y="0" width="606" height="52"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$R{report.client.commons.CSTigoName}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame" onErrorType="Blank">
+				<reportElement x="696" y="0" width="90" height="68"/>
+				<imageExpression class="java.awt.Image"><![CDATA[$P{CLIENT_LOGO}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="16"/>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="HH.mm" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="734" y="0" width="52" height="16"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{HORA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="192" y="0" width="117" height="16" backcolor="#FFFFFF"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NAME_CHR}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="100" y="0" width="92" height="16" backcolor="#FFFFFF"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{CELLPHONE_NUM}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="486" y="0" width="71" height="16"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COD_PRODUCTO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="309" y="0" width="75" height="16"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COD_DEPOSITO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="100" height="16" backcolor="#FFFFFF"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{RECORDDATE_DAT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="557" y="0" width="114" height="16"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PRODUCTO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="384" y="0" width="102" height="16"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{DEPOSITO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="671" y="0" width="63" height="16"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CANTIDAD}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

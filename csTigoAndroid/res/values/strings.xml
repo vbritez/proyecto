@@ -1,0 +1,659 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Soluciones Corporativas</string>
+    <string name="soluciones_corporativas">Soluciones Corporativas</string>
+    <string name="sending_message">Enviando mensaje</string>
+    <string name="message_sent">Mensaje de {0} enviado.</string>
+    <string name="lothar_copyrigth">Copyright (©) Lothar Systems S.A. Todos los derechos reservados.</string>
+    <string name="guard_mark">Marcar</string>
+    <string name="guard_metadataquery">Consultas de guardias</string>
+    <string name="guard_historic">HISTORICO DE MENSAJES</string>
+    <string name="guard_mark_guardCode">Codigo de guardia</string>
+    <string name="guard_mark_observation">Observación</string>
+    <string name="guard_mark_sendMark">Marcar</string>
+    <string name="guard_mark_unknow">Desconodido</string>
+    <string name="not_support_gps">La localización a través de GPS no esta disponible</string>
+    <string name="not_support_network">La localización a través de la red no esta disponible</string>
+    <string name="database_insert_error">Ocurrió un problema durante la insercion de un registro en la base de datos.</string>
+    <string name="database_update_error">Ocurrió un problema durante la actualizacion de un registro en la base de datos.</string>
+    <string name="database_delete_error">Ocurrió un problema durante la eliminación de un registro en la base de datos.</string>
+    <string name="database_decypt_error">Ocurrió un problema durante la desencriptacion del archivo SQL.</string>
+    <string name="database_insert_success">Inserción exitosa.</string>
+    <string name="database_update_success">Actualización exitosa.</string>
+    <string name="database_delete_success">Eliminación exitosa.</string>
+    <string name="cstigo_database">CSTIGO Database</string>
+    <string name="location_gps">Localización del dispositivo a través de GPS</string>
+    <string name="location_network">Localización del dispositivo a través de la RED</string>
+    <string name="location_cellid">Localización del dispositivo a través del CELL-ID</string>
+    <string name="database_gps_success">Localización exitosa a través de GPS.</string>
+    <string name="database_read_asset">Hubo un problema leyendo el archivo sql.</string>
+    <string name="database_statement_exec">Hubo un problema ejecutando una sentencia sql.</string>
+    <string name="database_error_more_than_one">Se recupero mas de un registro de la tabla.Se esperaba solo uno.</string>
+    <string name="database_exec_sql">Ejecución sentencia SQL.</string>
+    <string name="guard_mark_code_not_empty">El campo "Codigo de Guardia" requiere de un valor.</string>
+    <string name="no_location_title">GPS Desactivado.</string>
+    <string name="no_location">El dispositivo no pudo ser localizado.</string>
+    <string name="no_location_notif">Active por favor</string>
+    <string name="no_location_disabled_on_listening">Se desactivo mientras se recuperaba la localización.</string>
+    <string name="could_not_get_location_title">El dispositivo no pudo ser localizado.</string>
+    <string name="could_not_get_location_message">El GPS esta encendido pero las condiciones no fueron las optimas para obtener un punto GPS preciso.</string>
+    <string name="shiftguard_name">RONDAS DE GUARDIA</string>
+    <string name="shiftguard">Guardias</string>
+    <string name="message_history_no_message">No hay mensajes en el historico de mensajes.</string>
+    <string name="platform_new_message">Nuevo mensaje de la plataforma.</string>
+    <string name="visit_start">Iniciar</string>
+    <string name="visit_end">Terminar</string>
+    <string name="visit_quick_visit">Visita Rápida</string>
+    <string name="visit_start_clientCode">Codigo de cliente</string>
+    <string name="visit_start_observation">Observación</string>
+    <string name="visit_start_startVisit">Iniciar Visita</string>
+    <string name="visit_start_code_not_empty">El campo "Código de Cliente" requiere de un valor.</string>
+    <string name="visit_end_motive">Motivo</string>
+    <string name="visit_end_observation">Observación</string>
+    <string name="visit_end_endVisit">Finalizar Visita</string>
+    <string name="visit_end_motive_not_empty">El campo "Motivo" requiere de un valor.</string>
+    <string name="visit_quick_clientCode">Codigo de cliente</string>
+    <string name="visit_quick_motive">Motivo</string>
+    <string name="visit_quick_observation">Observación</string>
+    <string name="visit_quick_endVisit">Marcar</string>
+    <string name="visit_quick_code_not_empty">El campo "Código de Cliente" requiere de un valor.</string>
+    <string name="visit_quick_motive_not_empty">El campo "Motivo" requiere de un valor.</string>
+    <string name="platform_update">Actualización del dispositivo</string>
+    <string name="updates">Actualizaciones</string>
+    <string name="platform_update_services">Actualizar Servicios</string>
+    <string name="icon_update_services">Actualizar Iconos</string>
+    <string name="services">SERVICIOS</string>
+    <string name="messages">Mensajes</string>
+    <string name="options">Opciones</string>
+    <string name="user_data">Datos de Usuario</string>
+    <string name="updated_application">Actualización del dispositivo</string>
+    <string name="updated_application_desc">Los servicios para el dispositivo han sido actualizados</string>
+    <string name="platform_general_options">Opciones Generales</string>
+    <string name="platform_general_options_service_disabled">Visualizar servicios inhabilitados</string>
+    <string name="platform_vibrate">Habilitar vibracion</string>
+    <string name="platform_sms_show_all">Mostrar texto completo del mensaje</string>
+    <string name="sms_no_messages">No hay mensajes de la plataforma registrados en el dispositivo</string>
+    <string name="no_enabled_device">El dispositivo no se encuentra habilitado para realizar esta operacion.</string>
+    <string name="platform_enable_device">Habilitar dispositivo</string>
+    <string name="order_observation">Observación</string>
+    <string name="order_priceList">Lista de precios</string>
+    <string name="order_saleCondition">Condición de venta</string>
+    <string name="order_register">Registrar</string>
+    <string name="processing_detail">Su mensaje esta siendo procesado por la plataforma</string>
+    <string name="order_product">Producto</string>
+    <string name="order_product_code">Codigo Producto</string>
+    <string name="order_quantity">Cantidad</string>
+    <string name="order_discount">Descuento</string>
+    <string name="order_unit_price">Precio Unitario</string>
+    <string name="order_client_code_not_empty">El campo "Código de Cliente" requiere de un valor.</string>
+    <string name="order_price_list_not_empty">El campo "Lista de Precio" requiere de un valor.</string>
+    <string name="order_sale_condition_not_empty">El campo "Condición de venta" requiere de un valor.</string>
+    <string name="order_product_code_not_empty">El campo "Codigo de Producto" requiere de un valor.</string>
+    <string name="order_quantity_not_empty">El campo "Cantidad" requiere de un valor.</string>
+    <string name="order_details_not_empty">El pedido debe contener al menos un detalle.</string>
+    <string name="imagen">Imagen</string>
+    <string name="medical_visit_clinic_start">Inicio Visita Local</string>
+    <string name="medical_visit_medic_start">Inicio Visita Medico</string>
+    <string name="medical_visit_product_register">Registro de productos</string>
+    <string name="medical_visit_medic_end">Finalizar Visita Medico</string>
+    <string name="medical_visit_clinic_end">Finalizar Visita Local</string>
+    <string name="medic_visit_medic_end_clinic">Finalizar Visita</string>
+    <string name="medic_visit_notification_option">Opciones Notificación</string>
+    <string name="medical_visit_quick_visit">Visita Rapida Local</string>
+    <string name="medic_visit_name">Visitadores medicos</string>
+    <string name="medic_visit_clinic_start_initial_km">Kilometraje Actual</string>
+    <string name="medic_visit_clinic_start_final_km">Kilometraje Final</string>
+    <string name="medic_visit_clinic_end_clinic">Finalizar Visita</string>
+    <string name="medic_visit_medic_cod">Cod. Medico</string>
+    <string name="medic_visit_clinic_start_visit">Iniciar Visita</string>
+    <string name="medic_visit_medic_start_visit">Iniciar Visita</string>
+    <string name="medic_visit_notification_date">Fecha Evento</string>
+    <string name="medic_visit_notification_msg">Mensaje Evento</string>
+    <string name="medic_visit_motive_cod">Cod. Motivo</string>
+    <string name="medic_visit">Visitadores Medicos</string>
+    <string name="no_notification">Sin notificar</string>
+    <string name="one_day_before">Un dia antes</string>
+    <string name="three_hour_before">Tres horas Antes</string>
+    <string name="one_hour_before">Una hora antes</string>
+    <string name="medic_clinic_code">Cod. Local</string>
+    <string name="medic_clinic_code_not_empty">El campo "Cod. Local" requiere de un valor.</string>
+    <string name="medic_clinic_motive_not_empty">El campo "Cod. Motivo" requiere de un valor.</string>
+    <string name="medic_clinic_medic_not_empty">El campo "Cod. Medico" requiere de un valor.</string>
+    <string name="medic_notif_date_restiction">La fecha de evento no debe ser anterior a la fecha actual.</string>
+    <string name="medic_visit_notification_msg_restriction">El campo "Mensaje Evento" requiere de un valor.</string>
+    <string name="courier_delivered">Entregado</string>
+    <string name="courier_not_delivered">No Entregado</string>
+    <string name="courier">Courrier</string>
+    <string name="courier_recipient_name">Nombre Receptor</string>
+    <string name="courier_observation">Observación</string>
+    <string name="courier_cod_motive">Codigo Motivo</string>
+    <string name="courier_register">Registrar</string>
+    <string name="courier_delivered_item">Items</string>
+    <string name="courier_item_code">Codigo Item</string>
+    <string name="courier_receipt_name_not_empty">El campo "Nombre Receptor" requiere de un valor.</string>
+    <string name="courier_motive_code_not_empty">El campo "Codigo Motivo" requiere de un valor.</string>
+    <string name="courier_item_not_empty">El registro del servicio debe contener al menos un detalle.</string>
+    <string name="service_order_simple">Pedido</string>
+    <string name="service_order_ilimit">Pedido Ilimitado</string>
+    <string name="order_end">Finalizar</string>
+    <string name="order_start">Iniciar</string>
+    <string name="disabled_device">Dispositivo deshabilitado</string>
+    <string name="disabled_device_desc">Este dispositivo se encuentra deshabilitado. Seleccione la opcion actualziar en la pantalla de configuraciones.</string>
+    <string name="internet_option">Opciones de Internet</string>
+    <string name="service_option">Opciones de Servicios</string>
+    <string name="order_alfanumeric">Precio y Cantidad Alfanumericos</string>
+    <string name="ci_alfanumeric">Cédula Alfanumerica</string>
+    <string name="internet_enabled">Habilitar internet</string>
+    <string name="internet_apn_change">Habiltar cambio APN</string>
+    <string name="apn_name">APN</string>
+    <string name="save_internet">Guardar cambios</string>
+    <string name="warning">Atención</string>
+    <string name="apn_change_notification">No realizó el cambio de APN</string>
+    <string name="could_not_send_message_without_gps_localization">No se puede enviar el Mensaje sin la localización GPS. Vuelva a intentarlo.</string>
+    <string name="metadata_crud_service">Datos de Cliente</string>
+
+    <!-- Permission Service -->
+
+    <string name="permission_enable_device_message_title">Habilitación de dispositivo.</string>
+    <string name="permission_enable_device_message_success">El dispositivo se ha habilitado correctamente.</string>
+    <string name="permission_enable_device_message_error">El dispositivo no pudo habilitarse de manera correcta.</string>
+    <string name="permission_service_update_message_title">Actualización de servicios.</string>
+    <string name="permission_service_update_message_success">Los servicios disponibles han sido actualizados.</string>
+    <string name="permission_service_update_message_error">Los servicios disponibles no pueden mostrarse correctamente.</string>
+    <string name="permission_metadata_read_message_title">Consulta de datos.</string>
+    <string name="permission_metadata_read_message_success">Los datos de cliente disponibles para consultas han sido actualizados.</string>
+    <string name="permission_metadata_read_message_error">Los datos de cliente disponibles para consultas no pudieron ser actualizados correctamente.</string>
+    <string name="permission_metadata_create_message_title">Creación de datos.</string>
+    <string name="permission_metadata_create_message_success">Los datos de cliente disponibles para creación han sido actualizados.</string>
+    <string name="permission_metadata_create_message_error">Los datos de cliente disponibles para creación no pudieron ser actualizados correctamente.</string>
+    <string name="permission_service_deletable_message_title">Eliminación de marcaciones.</string>
+    <string name="permission_service_deletable_message_success">Los servicios disponibles para eliminación de marcaciones han sido actualizados.</string>
+    <string name="permission_service_deletable_message_error">Los servicios disponibles para eliminación de marcaciones no pudieron ser actualizados correctamente.</string>
+    <string name="permission_userphone.update_message_title">Actualizar usuarios telefónicos.</string>
+    <string name="permission_userphone.update_message_success">La lista de usuarios telefónicos ha sido actualizada correctamente.</string>
+    <string name="permission_userphone.update_message_error">La lista de usuarios telefónicos no pudo ser actualizada correctamente.</string>
+    <string name="permission_internet.not.enabled.for.update">La actualización no pudo ser realizada ya que requiere que el internet este habilitado.</string>
+    <string name="permission_update_icon_message_title">Actualización de iconos del mapa.</string>
+    <string name="permission_update_icon_message_success">Los iconos del mapa se han actualizado correctamente.</string>
+    <string name="permission_update_icon_message_error">El dispositivo no pudo actualizar de manera correcta los iconos del mapa.</string>
+
+    <!-- END Permission Service -->
+
+
+    <!-- Visit Service -->
+
+    <string name="visit_init_message_title">Inicio de Visita.</string>
+    <string name="visit_init_message_success">La marcación de inicio de  visita fue realizada correctamente.</string>
+    <string name="visit_init_message_error">La marcación de inicio de visita no fue realizada correctamente.</string>
+    <string name="visit_end_message_title">Finalización de Visita.</string>
+    <string name="visit_end_message_success">La marcación de visita de finalización fue realizada correctamente.</string>
+    <string name="visit_end_message_error">La marcación de visita de finalización no fue realizada correctamente.</string>
+    <string name="visit_quick_message_title">Visita Rápida.</string>
+    <string name="visit_quick_message_success">La marcación de visita rápida fue realizada correctamente.</string>
+    <string name="visit_quick_message_error">La marcación de visita rápida no fue realizada correctamente.</string>
+    <string name="visit_register_message_title">Visita.</string>
+    <string name="visit_register_message_success">La marcación de visita fue realizada correctamente.</string>
+    <string name="visit_register_message_error">La marcación de visita no fue realizada correctamente.</string>
+    <string name="visit_geolocalize_button">Visita Geolocalizada</string>
+    <string name="visit_geolocalize_title">Visita Geolocalizada</string>
+    <string name="visit_normal_button">Visita</string>
+    <string name="marker_accept_button">Seleccionar</string>
+    <string name="internet.not.enabled.for.update">La opción de internet de la aplicación no se encuentra habilitada, verifique su configuración.</string>
+    <string name="internet.not.available">No posee conexión a internet, verifique su configuración.</string>
+    <string name="geolocalize.message.info.windows">Haga click en la ventana para seleccionar el punto y continuar con la marcación.</string>
+
+    <!-- END  Visit Service -->
+
+
+    <!-- Order Service -->
+
+    <string name="order_init_message_title">Inicio de Pedido</string>
+    <string name="order_init_message_success">La marcación de inicio de pedido fue realizada correctamente.</string>
+    <string name="order_init_message_error">La marcación de inicio de pedido no fue realizada correctamente.</string>
+    <string name="order_end_message_title">Finalización de Pedido</string>
+    <string name="order_end_message_success">La marcación de finalización de pedido fue realizada correctamente.</string>
+    <string name="order_end_message_error">La marcación de finalización de pedido no fue realizada correctamente.</string>
+    <string name="order_reg_message_title">Registro de producto</string>
+    <string name="order_reg_message_success">La marcación de registro de producto fue realizada correctamente.</string>
+    <string name="order_reg_message_error">La marcación de registro de producto no fue realizada correctamente.</string>
+    <string name="order_register_message_title">Registro de pedido</string>
+    <string name="order_register_message_success">La marcación de pedido fue realizada correctamente.</string>
+    <string name="order_register_message_error">La marcación de pedido fue realizada correctamente.</string>
+
+    <!-- END  Order Service -->
+
+
+    <!-- Tracking Service -->
+
+    <string name="tracking_location_message_title">Rastreo.</string>
+    <string name="tracking_location_message_success"></string>
+    <string name="tracking_location_message_error"></string>
+
+    <!-- END  Order Tracking -->
+
+
+    <!-- MetadateCrud Service -->
+
+    <string name="metadatacrud_create_message_title">Creación de datos de cliente.</string>
+    <string name="metadatacrud_create_message_success">La creación de datos fue exitosa.</string>
+    <string name="metadatacrud_create_message_error">La creación de datos no fue exitosa.</string>
+    <string name="metadatacrud_read_message_title">Consulta de datos de cliente.</string>
+    <string name="metadatacrud_read_message_success">La consulta de datos de cliente fue exitosa.</string>
+    <string name="metadatacrud_read_message_error">La consulta de datos de cliente no fue exitosa.</string>
+    <string name="metadatacrud_register_message_title">Registro de datos de cliente.</string>
+    <string name="metadatacrud_register_message_success">El registro de datos de clientes fue realizada.</string>
+    <string name="metadatacrud_register_message_error">La consulta de datos de clientes fue realizada.</string>
+    <string name="metadatacrud_geolocation_message_title">Geolocalización</string>
+    <string name="metadatacrud_geolocation_message_success">Los puntos cercanos a su localización fueron obtenidos exitosamente</string>
+    <string name="metadatacrud_geolocation_message_error">Los puntos cercanos a su localización no pudieron ser obtenidos</string>
+
+    <!-- END MetadateCrud -->
+
+
+    <!-- Inventory Service -->
+    <string name="inventory_deposit_code">Cód. Depósito</string>
+    <string name="inventory_product_code">Cód. Producto</string>
+    <string name="inventory_quantity">Cantidad</string>
+    <string name="inventory_register">Registrar</string>
+    <string name="inventory_deposit_code_not_empty">El campo Cód. Depósito no puede estar vacío.</string>
+    <string name="inventory_product_code_not_empty">El campo Cód. Producto no puede estar vacío.</string>
+    <string name="inventory_quantity_not_empty">El campo Cantidad no puede estar vacío.</string>
+    <string name="inventory_register_message_title">Inventario</string>
+    <string name="inventory_register_message_success">Registro de inventario.</string>
+    <string name="inventory_register_message_error">Registro de inventario.</string>
+
+    <!-- END Inventory Service -->
+
+
+    <!-- Attendance Service -->
+    <string name="continue_attendance">Continuar</string>
+    <string name="attendance_employee_code">Cod. Empleado</string>
+    <string name="attendance_observation">Observación</string>
+    <string name="attendance_presence">Presencia</string>
+    <string name="attendance_break">Break</string>
+    <string name="attendance_lunch">Almuerzo</string>
+    <string name="attendance_init">Inicio</string>
+    <string name="attendance_finish">Fin</string>
+    <string name="register_attendance">Registrar</string>
+    <string name="attendance_code_employee_not_empty">El campo "Código de Empleado" requiere de un valor.</string>
+    <string name="attendance_obervation_not_empty">El campo "Observación" requiere de un valor.</string>
+    <string name="attendance_presence_init_message_title">Asistencia</string>
+    <string name="attendance_presence_init_message_success">Registro de inicio de presencia exitoso.</string>
+    <string name="attendance_presence_init_message_error">Registro de inicio de presencia con problemas.</string>
+    <string name="attendance_presence_finish_message_title">Asistencia</string>
+    <string name="attendance_presence_finish_message_success">Registro de finalizacion de presencia exitoso.</string>
+    <string name="attendance_presence_finish_message_error">Registro de finalizacion de presencia con problemas.</string>
+    <string name="attendance_break_init_message_title">Asistencia</string>
+    <string name="attendance_break_init_message_success">Registro de inicio de receso exitoso.</string>
+    <string name="attendance_break_init_message_error">Registro de inicio de receso con problemas.</string>
+    <string name="attendance_break_finish_message_title">Asistencia</string>
+    <string name="attendance_break_finish_message_success">Registro de finalizacion de receso exitoso.</string>
+    <string name="attendance_break_finish_message_error">Registro de finalizacion de receso con problemas.</string>
+    <string name="attendance_lunch_init_message_title">Asistencia</string>
+    <string name="attendance_lunch_init_message_success">Registro de inicio de almuerzo exitoso.</string>
+    <string name="attendance_lunch_init_message_error">Registro de inicio de almuerzo con problemas.</string>
+    <string name="attendance_lunch_finish_message_title">Asistencia</string>
+    <string name="attendance_lunch_finish_message_success">Registro de finalizacion de almuerzo exitoso.</string>
+    <string name="attendance_lunch_finish_message_error">Registro de finalizacion de almuerzo con problemas.</string>
+    <string name="attendance_register_message_title">Asistencia</string>
+    <string name="attendance_register_message_success">Registro de asistencia.</string>
+    <string name="attendance_register_message_error">Registro de asistencia.</string>
+
+    <!-- END Attendance Service -->
+
+
+    <!-- Shiftguard Service -->
+    <string name="shiftguard_register_message_title">Ronda de guardia</string>
+    <string name="shiftguard_register_message_success">Registro de ronda de guardia exitoso.</string>
+    <string name="shiftguard_register_message_error">Registro de ronda de guardia con problemas.</string>
+
+    <!-- END Shiftguard Service -->
+
+
+    <!-- Medic Visit Service -->
+    <string name="medic_visit_clinic_start_message_title">Visitadores médicos</string>
+    <string name="medic_visit_clinic_start_message_success">Registro de inicio de local exitoso.</string>
+    <string name="medic_visit_clinic_start_message_error">Registro de inicio de local con problemas.</string>
+    <string name="medic_visit_clinic_end_message_title">Visitadores médicos</string>
+    <string name="medic_visit_clinic_end_message_success">Registro de finalización de local exitoso.</string>
+    <string name="medic_visit_clinic_end_message_error">Registro de finalización de local con problemas.</string>
+    <string name="medic_visit_medic_start_message_title">Visitadores médicos</string>
+    <string name="medic_visit_medic_start_message_success">Registro de inicio de medico exitoso.</string>
+    <string name="medic_visit_medic_start_message_error">Registro de inicio de medico con problemas.</string>
+    <string name="medic_visit_medic_end_message_title">Visitadores médicos</string>
+    <string name="medic_visit_medic_end_message_success">Registro de finalización de médico exitoso.</string>
+    <string name="medic_visit_medic_end_message_error">Registro de finalización de médico con problemas.</string>
+    <string name="medic_visit_product_reg_message_title">Visitadores médicos</string>
+    <string name="medic_visit_product_reg_message_success">Registro de productos exitoso.</string>
+    <string name="medic_visit_product_reg_message_error">Registro de productos con problemas.</string>
+    <string name="medic_visit_clinic_quick_message_title">Visitadores médicos</string>
+    <string name="medic_visit_clinic_quick_message_success">Registro de visita rápida exitoso.</string>
+    <string name="medic_visit_clinic_quick_message_error">Registro de visita rápida con problemas.</string>
+    <string name="medic_visit_register_message_title">Visitadores médicos</string>
+    <string name="medic_visit_register_message_success">Registro de visitadores médicos.</string>
+    <string name="medic_visit_register_message_error">Registro de visitadores médicos.</string>
+
+    <!-- END Medic Visit Service -->
+
+
+    <!-- Courier Service -->
+    <string name="courier_register_message_title">Courrier</string>
+    <string name="courier_register_message_success">Registro de courrier exitoso.</string>
+    <string name="courier_register_message_error">Registro de courrier con problemas.</string>
+
+    <!-- END Courier Service -->
+
+
+    <!-- Collection Service -->
+    <string name="average_collection">Cobranza Media</string>
+    <string name="collection_client_code">Cod. Cliente</string>
+    <string name="collection_receipt_num">Num. Recibo</string>
+    <string name="collection_amount">Monto</string>
+    <string name="collection_check_number">Num. Cheque</string>
+    <string name="collection_bank_cod">Cod. Banco</string>
+    <string name="collection_observation">Observación</string>
+    <string name="collection_cash">Efectivo</string>
+    <string name="collection_cheque">Cheque</string>
+    <string name="collection_client_code_not_empty">El campo "Código de Cliente" requiere de un valor.</string>
+    <string name="collection_receipt_number_not_empty">El campo "Número de Recibo" requiere de un valor.</string>
+    <string name="collection_average_collection">Cobranza Media</string>
+    <string name="collection_start">Iniciar</string>
+    <string name="collection_register_invoice">Registrar Factura</string>
+    <string name="collection_register_payment_cash">Registrar Activo - Efectivo</string>
+    <string name="collection_register_payment_check">Registrar Activo - Cheque</string>
+    <string name="collection_invoice">Factura</string>
+    <string name="collection_payment">Activo</string>
+    <string name="collection_end">Finalizar</string>
+    <string name="collection_start_client_code">Código Cliente</string>
+    <string name="collection_start_receipt_number">Nro. Recibo</string>
+    <string name="collection_register">Registrar</string>
+    <string name="collection_invoice_number_not_empty">El campo "Nro.Factura" requiere de un valor.</string>
+    <string name="collection_invoice_amount_not_empty">El campo "Monto Factura" requiere de un valor.</string>
+    <string name="collection_payment_amount_not_empty">El campo "Monto" requiere de un valor.</string>
+    <string name="collection_type_must_be_checked">Debe seleccionar "Factura" o "Activo".</string>
+    <string name="collection_detail_reached_max_number">Ya se llegó al máximo valor de detalles permitido.</string>
+    <string name="invoice_number">Nro. Factura</string>
+    <string name="invoice_amount">Monto</string>
+    <string name="payment_amount">Monto</string>
+    <string name="payment_check_number">Nro. Cheque</string>
+    <string name="payment_bank">Banco</string>
+    <string name="payment_check_date">Fecha Cheque</string>
+    <string name="payment_check_expiration_date">Fecha Venc.Cheque</string>
+    <string name="collection_cash_cheque_not_empty">Debe seleccionar "Efectivo" o "Cheque".</string>
+    <string name="collection_payment_cheque_num_not_empty">El campo "Número de Cheque" requiere de un valor.</string>
+    <string name="collection_registration_cant_be_empty">Debe ingresar algún registro.</string>
+    <string name="collection_open_message_title">Cobranzas</string>
+    <string name="collection_open_message_success">Inicio de cobranza exitoso.</string>
+    <string name="collection_open_message_error">Inicio de cobranza con problemas.</string>
+    <string name="collection_close_message_title">Cobranzas</string>
+    <string name="collection_close_message_success">Finalización de cobranza exitosa.</string>
+    <string name="collection_close_message_error">Finalización de cobranza con problemas.</string>
+    <string name="collection_reg_message_title">Cobranzas</string>
+    <string name="collection_reg_message_success">Registro de cobranza.</string>
+    <string name="collection_reg_message_error">Registro de cobranza.</string>
+
+    <!-- END Collection Service -->
+
+
+    <!-- SERVICE OPERATION SECTION -->
+
+    <string name="service_operation_service">Operaciones de servicios</string>
+    <string name="service_operation">OPERACIONES</string>
+    <string name="service_operation_minus">Operaciones de servicios</string>
+    <string name="service_operation_delete">ELIMINACIÓN</string>
+    <string name="service_operation_delete_minus">Eliminación de marcaciones</string>
+    <string name="service_operation_delete_send">Eliminar</string>
+    <string name="service_operation_delete_must_select_service">Debe seleccionar un servicio para recuperar sus marcaciones.</string>
+    <string name="service_operation_retrieve_send">Recuperar marcaciones</string>
+    <string name="service_operation_delete_retrieved_records">Registros recuperados</string>
+    <string name="service_operation_delete_position">Seleccione un registro a eliminar</string>
+    <string name="service_operation_delete_update">Actualizar servicios disponibles</string>
+    <string name="service_operation_delete_updated_notif">Servicios actualizados</string>
+    <string name="service_operation_delete_retrieved_notif">Registros recuperados</string>
+    <string name="service_deletable_retrieve_title">Eliminacion de marcaciones</string>
+    <string name="service_deletable_retrieve_message_success">Se recuperaron los registros exitosamente.</string>
+    <string name="service_deletable_retrieve_message_error">No se pudo recuperar los registros para eliminacion.</string>
+    <string name="service_deletable_title">Eliminacion de marcaciones</string>
+    <string name="service_deletable_message_success">El registro se ha eliminado exitosamente.</string>
+    <string name="service_deletable_message_error">No se pudo eliminar el registro.</string>
+    <string name="register_message_title">Recuperacion de marcaciones.</string>
+
+    <!-- END SERVICE OPERATION SECTION -->
+    <string name="visit_name">VISITAS</string>
+    <string name="visit">Visitas</string>
+    <string name="order">Pedidos</string>
+    <string name="visit_order">Visita-Pedido</string>
+    <string name="collection">Cobranzas</string>
+    <string name="delivery">Entregas</string>
+    <string name="fleet">Flota</string>
+    <string name="inventory">Inventario</string>
+    <string name="attendance">Asistencia</string>
+    <string name="supervisor">Supervisor</string>
+
+    <!-- METADATA SECTION -->
+
+    <string name="metadata">Datos del Cliente</string>
+    <string name="metadata_read_minus">Consultas</string>
+    <string name="metadata_create_minus">Creación</string>
+    <string name="metadata_client">Clientes</string>
+    <string name="metadata_product">Productos</string>
+    <string name="metadata_motive">Motivos</string>
+    <string name="metadata_guard">Guardias</string>
+    <string name="metadata_deliverer">Repartidores</string>
+    <string name="metadata_invoice_type">Tipo Factura</string>
+    <string name="metadata_employee">Empleados</string>
+    <string name="metadata_vehicle">Vehículos</string>
+    <string name="metadata_bank">Bancos</string>
+    <string name="metadata_deposit">Depositos</string>
+    <string name="metadata_clinic">Locales</string>
+    <string name="metadata_medic">Medicos</string>
+    <string name="metadata_contact">Contacto</string>
+    <string name="metadata_manager">Encargado</string>
+    <string name="metadata_machine">Maquina</string>
+    <string name="metadata_operator">Operador</string>
+    <string name="metadata_select">Seleccione el tipo de dato a buscar</string>
+    <string name="metadata_read_code">Por código</string>
+    <string name="metadata_read_name">Por nombre</string>
+    <string name="metadata_read">CONSULTA DE DATOS</string>
+    <string name="metadata_read_send">Consultar</string>
+    <string name="metadata_create_send">Crear</string>
+    <string name="metadata_create_code_empty">Para autogenerar código, enviar vacío.</string>
+    <string name="metadata_create_autogenerate_code">Autogenerar código?</string>
+    <string name="metadata_create_get_gps_point">Tomar punto GPS actual?</string>
+    <string name="metadata_create_get_gps_point_message">(Se tomará el punto GPS del lugar donde se encuentra actualmente)</string>
+    <string name="metadata_create_code">Código</string>
+    <string name="metadata_create_value">Valor</string>
+    <string name="metadata_read_select_option">Seleccione el campo por el cual realizar la busqueda</string>
+    <string name="metadata_create_insert_value">Ingrese un valor para realizar la busqueda</string>
+    <string name="metadata_create_insert_code">Ingrese un código para realizar la creación</string>
+    <string name="metadata_read_insert_value">Ingrese un valor para realizar la busqueda</string>
+    <string name="metadata_create">CREACIÓN DE DATOS</string>
+    <string name="metadata_update_read">Actualizar Consulta de Datos</string>
+    <string name="metadata_update_create">Actualizar Creación de Datos</string>
+
+    <!-- END METADATA SECTION -->
+
+    <string name="retry">Mensaje no enviado. Favor vuelva a intentar</string>
+
+    <!-- TERPORT SERVICE SECTION -->
+
+    <string name="terport_login_name">Inicio de sesión</string>
+    <string name="terport_username">Usuario</string>
+    <string name="terport_password">Contraseña</string>
+    <string name="terport_login">Iniciar sesión</string>
+    <string name="terport_username_not_empty">El campo Usuario no puede estar vacío.</string>
+    <string name="terport_password_not_empty">El campo Contraseña no puede estar vacío.</string>
+    <string name="terport_new_register">Nuevo registro</string>
+    <string name="terport_logout">Cerrar sesión</string>
+    <string name="terport">Terport</string>
+    <string name="terport_name">Terport</string>
+    <string name="terport_register_operator">Operador</string>
+    <string name="terport_register_machine">Máquina</string>
+    <string name="terport_register_detail">Detalles</string>
+    <string name="terport_register_is_new_ubication">Plazoleta/Camión</string>
+    <string name="terport_register_container">Contenedor</string>
+    <string name="terport_register_ubication">Nueva Ubicación</string>
+    <string name="terport_login_title">Terport - Inicio de sesión</string>
+    <string name="terport_login_login">Inicio de sesión</string>
+    <string name="terport_login_valid_credentials">Credenciales validas</string>
+    <string name="terport_login_invalid_credentials">Credenciales invalidas</string>
+    <string name="terport_login_disabled_user">Usuario deshabilitado</string>
+    <string name="terport_register_guion">-</string>
+    <string name="terport_register_barra">/</string>
+    <string name="terport_register_operator_not_selected">El campo "Operador" requiere de un valor.</string>
+    <string name="terport_register_machine_not_selected">El campo "Maquina" requiere de un valor.</string>
+    <string name="terport_register_container_1_not_empty">El campo "Container 1" requiere de un valor.</string>
+    <string name="terport_register_container_2_not_empty">El campo "Container 2" requiere de un valor.</string>
+    <string name="terport_register_container_3_not_empty">El campo "Container 3" requiere de un valor.</string>
+    <string name="terport_register_ubication_1_not_empty">El campo "Ubicación 1" requiere de un valor.</string>
+    <string name="terport_register_ubication_2_not_empty">El campo "Ubicación 2" requiere de un valor.</string>
+    <string name="terport_register_ubication_3_not_empty">El campo "Ubicación 3" requiere de un valor.</string>
+    <string name="terport_register_ubication_4_not_empty">El campo "Ubicación 4" requiere de un valor.</string>
+    <string name="terport_register_ubication_5_not_empty">El campo "Ubicación 5" requiere de un valor.</string>
+    <string name="terport_register_registration_number">Numero de chapa</string>
+    <string name="terport_register_registration_number_not_empty">El campo "Nro. de Chapa" requiere de un valor.</string>
+
+    <!-- END TERPORT SERVICE SECTION -->
+
+
+    <!-- INTERFISA SERVICE SECTION -->
+
+    <string name="interfisa_name">Interfisa</string>
+    <string name="interfisa">Interfisa</string>
+    <string name="interfisa_informconf">Informconf</string>
+    <string name="interfisa_informconf_document">Cédula</string>
+    <string name="interfisa_informconf_register">Registrar</string>
+    <string name="informconf_interfisa_document_not_empty">El campo "Cédula" requiere de un valor.</string>
+    <string name="interfisa_informconf_title">Interfisa.</string>
+    <string name="interfisa_informconf_message">Solicitud de Informconf.</string>
+
+    <!-- END INTERFISA SERVICE SECTION -->
+
+
+    <!-- TRACKING ON DEMAND -->
+    <string name="tracking_on_demand_title">RASTREO EN LÍNEA</string>
+    <string name="tracking_on_demand_update_userphones">Actualizar Usuarios</string>
+    <string name="return_message">Mensaje</string>
+    <string name="tracking_on_demand_track_button">Localizar</string>
+    <string name="tracking_on_demand_select">Seleccione el Usuario telefónico</string>
+    <!-- TRACKING ON DEMAND -->
+
+
+    <!-- SUPERVISOR SERVICE SECTION -->
+    <string name="supervisor_return_message">Mapa</string>
+    <string name="supervisor_userphone_select">Seleccione el Usuario telefónico</string>
+    <string name="supervisor_userphone_button_update">Actualizar Usuarios Telefónicos</string>
+    <string name="supervisor_track_button">Localizar</string>
+    <string name="supervisor_title">Supervisor</string>
+    <string name="supervisor_location_message_title">Supervisión</string>
+    <string name="supervisor_location_message_success">El usuario telefónico fue localizado exitosamente.</string>
+    <string name="supervisor_location_message_error">El usuario {0} no pudo ser localizado.</string>
+    <string name="supervisor.process.response_error">Error al parsear fecha</string>
+    <string name="entity.cant.convert.gson.err">Error al conertir la entidad a gson</string>
+    <string name="tracking.status.AndroidCellInfoGpsOn">Rastreo android exitoso. Se realizo el mismo con la informacion de celdas enviado desde el dispositivo. El GPS esta encendido pero las condiciones no fueron las optimas para obtener un punto GPS preciso. El usuario puede no estar obteniendo datos del satelite.</string>
+    <string name="tracking.status.AndroidCellInfoGpsUnknowState">Rastreo android exitoso. Se realizo el mismo con la informacion de celdas enviado desde el dispositivo. Verifique que el GPS del dispositivo este encendido.</string>
+    <string name="tracking.status.AndroidCellInfoGpsOff">Rastreo android exitoso. Se realizo el mismo con la informacion de celdas enviado desde el dispositivo. El GPS esta apagado.</string>
+    <string name="tracking.status.AndroidGeoPoint">Rastreo android exitoso.</string>
+    <string name="tracking.status.AndroidNoApp">Rastreo exitoso. Se realizo el rastreo por tringulación de celdas. Se intento realizar el rastreo al dispositivo android,pero este puede no tener instalada la aplicación de Soluciones Corporativas o bien no esta correctamente configurada</string>
+    <string name="tracking.status.NoLocation">Rastreo no disponible. No se puede rastrear en este momento al dispositivo. El mismo puede estar apagado o fuera del area de cobertura. Verifique ademas que el desvio de llamadas no se encuentre disponible en el movil y el mismo este apagado.</string>
+    <string name="tracking.status.OTA">Rastreo exitoso. Se realizo enviando un mensaje al movil. (OTA)</string>
+    <string name="tracking.status.LBS">Rastreo exitoso. Se realizo el rastreo por triangulación de celdas.</string>
+    <string name="tracking.status.NoLocationNoCellInfo">Rastreo no disponible. No se recupero informacion de la celda del dispositivo.</string>
+    <string name="tracking.status.NoStatusMessage">Informacion de rastreo no disponible.</string>
+    <string name="supervisor.message.UserphoneLocate">Codigo: {0,number,#}. Nombre: {1}. Tel: {2}.</string>
+
+    <!-- END SUPERVISOR SERVICE SECTION -->
+
+
+    <!-- DYNAMIC FORM SECTION -->
+
+    <string name="dynamicform">Formularios dinámicos</string>
+    <string name="dynamicFormTitle">Formularios dinámicos</string>
+    <string name="dynamicform_register">Registrar</string>
+    <string name="dynamicform_update">Actualizar</string>
+    <string name="dynamicform_select">Selección de Formulario</string>
+    <string name="dynamic_form_find_message_title">Formularios dinámicos</string>
+    <string name="dynamic_form_find_message_success">Registro de Formularios dinámicos exitoso.</string>
+    <string name="dynamic_form_find_message_error">Registro de Formularios dinámicos con problemas.</string>
+    <string name="dynamic_form_update_message_title">Formularios dinámicos</string>
+    <string name="dynamic_form_update_message_success">Registro de Formularios dinámicos exitoso.</string>
+    <string name="dynamic_form_update_message_error">Registro de Formularios dinámicos con problemas.</string>
+    <string name="dynamic_form_register_message_title">Formularios dinámicos</string>
+    <string name="dynamic_form_register_message_success">Registro de Formularios dinámicos exitoso.</string>
+    <string name="dynamic_form_register_message_error">Registro de Formularios dinámicos con problemas.</string>
+    <string name="dynamic_form_not_empty">El campo "{0}" requiere de un valor.</string>
+    <string name="dynamic_form_must_select">Debe seleccionar un valor para el campo "{0}".</string>
+
+    <!-- END DYNAMIC FORM  SECTION -->
+    <string name="invalid_operator">La operadora es invalida. Debe insertar su simcard TIGO.</string>
+    <!-- METADATA CREATE SECTION -->
+    <string name="metadata_select_icon">Seleccione icono</string>
+    <string name="metadata_capture_image">Capturar imagen</string>
+    <string name="metadata_start_camera">Iniciar camara</string>
+    <!-- END METADATA CREATE SECTION -->
+
+
+    <!-- TIGO MONEY SECTION -->
+    <string name="tigomoney">Tigo Money</string>
+    <string name="tigomoney_login_management">Manejo de Sesión</string>
+    <string name="tigomoney_consult_id">Consulta de CI</string>
+    <string name="tigomoney_title">TIGO MONEY</string>
+    <string name="tigomoney_register_id_title">REGISTRAR CI</string>
+    <string name="tigomoney_pdv_logged">Ud. ya cuenta con una sesión iniciada</string>
+    <string name="tigomoney_logout">Cerrar sesión</string>
+    <string name="tigomoney_login_cellphoneNumber">Nro. Línea (Ej:09xx123456)</string>
+    <string name="tigomoney_login_password">Clave</string>
+    <string name="tigomoney_login">Ingresar</string>
+    <string name="tigomoney_login_title">Autenticación PDV</string>
+    <string name="tigomoney_consult_status_title">Consultar Cédula</string>
+    <string name="tigomoney_consult_status_identification">Nro.Cédula</string>
+    <string name="tigomoney_consult">Consultar</string>
+    <string name="tigomoney_cellphone_not_empty">El campo "Nro.Línea" requiere de un valor.</string>
+    <string name="tigomoney_cellphone_too_short">El campo "Nro.Línea" posee una longitud menor a la permitida.</string>
+    <string name="tigomoney_password_not_empty">El campo "Password" requiere de un valor.</string>
+    <string name="tigomoney_identification_not_empty">El campo "Nro.Cédula" requiere de un valor.</string>
+    <string name="tigomoney_id_not_empty">El campo "Nro.Céduda" requiere de un valor.</string>
+    <string name="tigomoney_user_name">Nombre</string>
+    <string name="tigomoney_birth_date">Fecha de Nacimiento</string>
+    <string name="tigomoney_address">Dirección</string>
+    <string name="tigomoney_city">Ciudad</string>
+    <string name="tigomoney_front_photo">Foto del frente de la cédula</string>
+    <string name="tigomoney_back_photo">Foto del dorso de la cédula</string>
+    <string name="tigomoney_take_photo">Capturar foto</string>
+    <string name="tigomoney_go_next">Siguiente</string>
+    <string name="tigomoney_go_back">Atrás</string>
+    <string name="tigomoney_logged_out_successfully">Usuario finalizó sesión exitosamente.</string>
+    <string name="tigomoney_address_not_empty">El campo "Dirección" requiere de un valor.</string>
+    <string name="tigomoney_city_not_empty">El campo "Ciudad" requiere de un valor.</string>
+    <string name="tigomoney_city_in_list">El campo "Ciudad" debe ser un valor dentro de la lista.</string>
+    <string name="tigomoney_delete_button">Borrar</string>
+    <string name="tigomoney_must_init_session">Debe iniciar sesión para poder registrar usuarios.</string>
+    <string name="tigomoney_must_init_session_for_consulting">Debe iniciar sesión para poder consultar CI.</string>
+    <string name="tigomoney_consulting_id_message_title">Consulta de CI</string>
+    <string name="tigomoney_consulting_id_message_success">La consulta de CI fue realizada exitosamente.</string>
+    <string name="tigomoney_consulting_id_message_error">Hubo un error al realizar la consulta por CI.</string>
+    <string name="tigomoney_user_not_registered">Usuario no registrado.</string>
+    <string name="tigomoney_user_already_registered">El usuario ya se encuentra registrado.</string>
+    <string name="tigomoney_login_message_title">Inicio de Sesión</string>
+    <string name="tigomoney_login_message_success">Se inició sesión exitosamente.</string>
+    <string name="tigomoney_login_message_error">Error al iniciar la sesión.</string>
+    <string name="tigomoney_front_photo_not_empty">Debe cargar una foto del frente de la cédula.</string>
+    <string name="tigomoney_back_photo_not_empty">Debe cargar una foto del dorso de la cédula.</string>
+    <string name="tigomoney_can_not_detect_faces">No se detecta el rostro en la foto frontal.</string>
+    <string name="tigomoney_register_message_title">Registro de CI</string>
+    <string name="tigomoney_register_message_success">Cédula de Identidad registrada exitosamente.</string>
+    <string name="tigomoney.message.ciNotRegistered">Cédula de Identidad no registrada.</string>
+    <string name="tigomoney_register_message_error">Hubo un error al realizar el registro de CI.</string>
+
+    <!-- END TIGO MONEY OPTION -->
+
+    <string name="no_internet_connection">No hay conexión de datos disponible.</string>
+    <string name="message_will_be_sent_later">No hay conexión de datos disponible. El mensaje se intentará enviar más tarde.</string>
+    <string name="not_default_app">Soluciones Corporativas requiere ser la aplicación principal de SMS para funcionar correctamente. Necesitamos tu confirmación para activarla.</string>
+    <string name="change_default_app">Realizar configuración</string>
+    <string name="no_valid_simcard">Soluciones Corporativas requiere el uso de una simcard válida. La simcard utilizada no es una simcard de un operador registrado.</string>
+    <string name="fly_mode">Soluciones Corporativas requiere el uso del dispositivo en condiciones validas. Su dispositivo se encuentra en modi fuera de linea.</string>
+    <string name="must_enable_gps">Debe encender su GPS. Se envia notificacion sobre estado del GPS.</string>
+
+</resources>

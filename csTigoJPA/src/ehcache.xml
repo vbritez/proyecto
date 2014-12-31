@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+
+	<diskStore path="java.io.tmpdir" />
+
+	<defaultCache maxElementsInMemory="100000"
+		timeToIdleSeconds="120" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.AndroidVersion"
+		maxEntriesLocalHeap="100" eternal="true" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.AuditoryAction"
+		maxEntriesLocalHeap="100" timeToLiveSeconds="86400" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.Cell" maxEntriesLocalHeap="10000"
+		timeToLiveSeconds="86400" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.CheckDatatype"
+		maxEntriesLocalHeap="10" timeToLiveSeconds="86400" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.Classificacion"
+		maxEntriesLocalHeap="5000" timeToIdleSeconds="120" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.Client" maxEntriesLocalHeap="2000"
+		timeToLiveSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.ClientGoal" maxEntriesLocalHeap="2000"
+		timeToLiveSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.ClientParameter"
+		maxEntriesLocalHeap="50" timeToLiveSeconds="86400" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.ClientParameterValue"
+		maxEntriesLocalHeap="50" timeToLiveSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.ClientServiceFunctionality"
+		maxEntriesLocalHeap="5000" timeToLiveSeconds="120" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.DataCheck" maxEntriesLocalHeap="50"
+		timeToLiveSeconds="86400" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.Feature" maxEntriesLocalHeap="50"
+		timeToLiveSeconds="86400" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.FeatureElement"
+		maxEntriesLocalHeap="2000" timeToLiveSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.FeatureElementEntry"
+		maxEntriesLocalHeap="5000" timeToLiveSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.FeatureEntryType"
+		maxEntriesLocalHeap="50" timeToLiveSeconds="86400" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.FeatureValue" maxBytesLocalHeap="64M"
+		timeToIdleSeconds="120" maxBytesLocalDisk="2G" copyOnRead="true"
+		copyOnWrite="true" statistics="true">
+		<persistence strategy="localTempSwap" synchronousWrites="false" />
+	</cache>
+
+	<cache name="com.tigo.cs.domain.FeatureValueData"
+		maxBytesLocalHeap="64M" timeToIdleSeconds="120" maxBytesLocalDisk="2G"
+		copyOnRead="true" copyOnWrite="true" statistics="true">
+		<persistence strategy="localTempSwap" synchronousWrites="false" />
+	</cache>
+
+	<cache name="com.tigo.cs.domain.Functionality"
+		maxEntriesLocalHeap="50" timeToLiveSeconds="864000" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.GlobalParameter"
+		maxEntriesLocalHeap="500" timeToLiveSeconds="600" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.IconType" maxEntriesLocalHeap="500"
+		timeToLiveSeconds="600" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.MapMark" maxEntriesLocalHeap="5000"
+		timeToLiveSeconds="600" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.Message" maxBytesLocalHeap="64M"
+		timeToIdleSeconds="120" maxBytesLocalDisk="2G" copyOnRead="true"
+		copyOnWrite="true" statistics="true">
+		<persistence strategy="localTempSwap" synchronousWrites="false" />
+	</cache>
+
+	<cache name="com.tigo.cs.domain.Meta" maxEntriesLocalHeap="100"
+		timeToIdleSeconds="86400" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.MetaClient" maxEntriesLocalHeap="1000"
+		timeToIdleSeconds="120" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.MetaData" maxBytesLocalHeap="64M"
+		timeToIdleSeconds="600" maxBytesLocalDisk="2G" copyOnRead="true"
+		copyOnWrite="true" statistics="true">
+		<persistence strategy="localTempSwap" synchronousWrites="false" />
+	</cache>
+
+	<cache name="com.tigo.cs.domain.MetaMember" maxEntriesLocalHeap="100"
+		timeToLiveSeconds="86400" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.ModuleClient"
+		maxEntriesLocalHeap="100" timeToLiveSeconds="86400" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.Phone" maxEntriesLocalHeap="1000"
+		timeToIdleSeconds="600" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.PhoneList" maxEntriesLocalHeap="1000"
+		timeToIdleSeconds="60" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.ReportConfig"
+		maxEntriesLocalHeap="100" timeToIdleSeconds="120" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.ReportConfigMail"
+		maxEntriesLocalHeap="1000" timeToIdleSeconds="120" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.RoleClient" maxEntriesLocalHeap="1000"
+		timeToIdleSeconds="120" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.RoleClientScreen"
+		maxEntriesLocalHeap="5000" timeToIdleSeconds="120" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.Route" maxEntriesLocalHeap="5000"
+		timeToIdleSeconds="120" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.RouteDetail" maxEntriesLocalHeap="5000"
+		timeToIdleSeconds="120" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.RouteDetailUserphone"
+		maxEntriesLocalHeap="5000" timeToIdleSeconds="120" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.RouteType" maxEntriesLocalHeap="50"
+		timeToLiveSeconds="86400" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.RouteTypeConf"
+		maxEntriesLocalHeap="50" timeToLiveSeconds="86400" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.RouteUserphone"
+		maxEntriesLocalHeap="100" timeToLiveSeconds="120" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.Screen" maxEntriesLocalHeap="100"
+		timeToLiveSeconds="86400" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.Screenclient"
+		maxEntriesLocalHeap="100" timeToLiveSeconds="86400" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.Seller" maxEntriesLocalHeap="100"
+		timeToLiveSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.Service" maxEntriesLocalHeap="100"
+		timeToLiveSeconds="86400" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.ServiceColumn"
+		maxEntriesLocalHeap="100" timeToLiveSeconds="86400" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.ServiceFunctionality"
+		maxEntriesLocalHeap="100" timeToLiveSeconds="86400" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.ServiceValue" maxBytesLocalHeap="64M"
+		timeToIdleSeconds="300" maxBytesLocalDisk="2G" copyOnRead="true"
+		copyOnWrite="true" statistics="true">
+		<persistence strategy="localTempSwap" synchronousWrites="false" />
+	</cache>
+
+	<cache name="com.tigo.cs.domain.ServiceValueDetail"
+		maxBytesLocalHeap="64M" timeToIdleSeconds="1800" maxBytesLocalDisk="2G"
+		copyOnRead="true" copyOnWrite="true" statistics="true">
+		<persistence strategy="localTempSwap" synchronousWrites="false" />
+	</cache>
+
+	<cache name="com.tigo.cs.domain.ShiftConfiguration"
+		maxEntriesLocalHeap="100" timeToLiveSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.ShiftPeriod" maxEntriesLocalHeap="50"
+		timeToLiveSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.TrackingConfiguration"
+		maxEntriesLocalHeap="100" timeToLiveSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.TrackingPeriod"
+		maxEntriesLocalHeap="50" timeToLiveSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.Useradmin" maxEntriesLocalHeap="1000"
+		timeToIdleSeconds="120" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.Userphone" maxEntriesLocalHeap="5000"
+		timeToIdleSeconds="120" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.UserphoneMeta"
+		maxEntriesLocalHeap="5000" timeToIdleSeconds="120" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.Userweb" maxEntriesLocalHeap="1000"
+		timeToIdleSeconds="120" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataActivity"
+		maxEntriesLocalHeap="100" timeToIdleSeconds="600" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataArpTipoFactura"
+		maxEntriesLocalHeap="100" timeToIdleSeconds="600" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataAttendant"
+		maxEntriesLocalHeap="100" timeToIdleSeconds="600" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataBank"
+		maxEntriesLocalHeap="100" timeToIdleSeconds="600" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataClient"
+		maxEntriesLocalHeap="1000" timeToIdleSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataClinic"
+		maxEntriesLocalHeap="500" timeToIdleSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataContacts"
+		maxEntriesLocalHeap="100" timeToIdleSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataDeliveryman"
+		maxEntriesLocalHeap="100" timeToIdleSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataDeposit"
+		maxEntriesLocalHeap="100" timeToIdleSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataEmployee"
+		maxEntriesLocalHeap="1000" timeToIdleSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataGuard"
+		maxEntriesLocalHeap="150" timeToIdleSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataIcon"
+		maxEntriesLocalHeap="100" timeToIdleSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataMachine"
+		maxEntriesLocalHeap="100" timeToIdleSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataMedic"
+		maxEntriesLocalHeap="15000" timeToIdleSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataMotive"
+		maxEntriesLocalHeap="1000" timeToIdleSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataOperator"
+		maxEntriesLocalHeap="1000" timeToIdleSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataProduct"
+		maxEntriesLocalHeap="40000" timeToIdleSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataTicketCSIUser"
+		maxEntriesLocalHeap="100" timeToIdleSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataVehicle"
+		maxEntriesLocalHeap="100" timeToIdleSeconds="300" statistics="true" />
+
+	<cache name="com.tigo.cs.domain.view.DataZone"
+		maxEntriesLocalHeap="100" timeToIdleSeconds="300" statistics="true" />
+
+	<cache name="org.hibernate.cache.UpdateTimestampsCache"
+		maxEntriesLocalHeap="50000" eternal="true" overflowToDisk="true"
+		statistics="true" />
+
+	<cache name="org.hibernate.cache.StandardQueryCache"
+		maxBytesLocalHeap="64M" timeToIdleSeconds="1800" maxBytesLocalDisk="5G"
+		copyOnRead="true" copyOnWrite="true" statistics="true">
+		<persistence strategy="localTempSwap" synchronousWrites="false" />
+	</cache>
+
+<!-- 	<cacheManagerPeerListenerFactory -->
+<!-- 		class="org.terracotta.ehcachedx.monitor.probe.ProbePeerListenerFactory" -->
+<!-- 		properties="monitorAddress=localhost, monitorPort=9889, memoryMeasurement=true" /> -->
+
+</ehcache>
